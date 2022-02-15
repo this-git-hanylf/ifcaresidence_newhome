@@ -37,20 +37,30 @@ const HeaderHome = props => {
             ComponentRight
           ) : (
             <TouchableOpacity
-              style={{position: 'relative'}}
+              // style={{position: 'relative'}}
               onPress={() => navigation.navigate('Notification')}>
-              <Icon name={'bell'} solid size={20} color={BaseColor.grayColor}>
-                <Text>0</Text>
-              </Icon>
+              <View style={{flexDirection: 'row'}}>
+                <View>
+                  <Icon
+                    name={'bell'}
+                    solid
+                    size={24}
+                    color={BaseColor.grayColor}></Icon>
 
-              <View
-                style={[
-                  styles.notyHeader,
-                  {
-                    borderColor: BaseColor.whiteColor,
-                    backgroundColor: colors.primary,
-                  },
-                ]}></View>
+                  <View
+                    style={[
+                      styles.notyHeader,
+                      {
+                        borderColor: BaseColor.whiteColor,
+                        backgroundColor: colors.primary,
+                      },
+                    ]}></View>
+                </View>
+
+                <Text style={{fontWeight: 'bold', fontSize: 16, marginLeft: 5}}>
+                  0
+                </Text>
+              </View>
             </TouchableOpacity>
           )}
         </View>

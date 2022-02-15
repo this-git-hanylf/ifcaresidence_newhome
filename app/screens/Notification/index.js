@@ -30,94 +30,6 @@ const Notification = props => {
   // POST
   // body : email, entity_cd, project_no, device (hardcode aja valuenya Mobile)
   //-----FOR GET ENTITY & PROJJECT
-  const getTower = async () => {
-    const data = {
-      email: email,
-      app: 'O',
-    };
-
-    const config = {
-      headers: {
-        accept: 'application/json',
-        'Content-Type': 'application/json',
-        // token: "",
-      },
-    };
-
-    await axios
-      .get(
-        `http://34.87.121.155:2121/apiwebpbi/api/getData/mysql/${data.email}/${data.app}`,
-      )
-      .then(res => {
-        const datas = res.data;
-
-        const arrDataTower = datas.Data;
-        arrDataTower.map(dat => {
-          if (dat) {
-            setdataTowerUser(dat);
-            getNotification(dat);
-          }
-        });
-        setArrDataTowerUser(arrDataTower);
-        setSpinner(false);
-
-        // return res.data;
-      })
-      .catch(error => {
-        console.log('error get tower api', error);
-        alert('error get');
-      });
-  };
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-      getTower(users);
-    }, 3000);
-  }, []);
-
-  const getNotification = async data => {
-    const formData = {
-      email: email,
-      entity_cd: data.entity_cd,
-      project_no: data.project_no,
-      device: 'Mobile',
-    };
-
-    console.log('form data notif', formData);
-
-    const config = {
-      headers: {
-        accept: 'application/json',
-        'Content-Type': 'application/json',
-        token: '',
-      },
-    };
-
-    console.log(
-      'http://34.87.121.155:8181/apiwebifca/api/notification',
-      formData,
-    );
-
-    await axios
-      .post('http://34.87.121.155:8181/apiwebifca/api/notification', formData)
-      .then(res => {
-        // console.log('res tiket multi', res.data);
-        const resNotif = res.data;
-
-        console.log('resNotif', resNotif);
-        setDataNotif(resNotif);
-        setSpinner(false);
-        // return res.data;
-      })
-      .catch(error => {
-        console.log('err data notif', error);
-        alert('error nih');
-      });
-  };
-  const goNotifDetail = item => () => {
-    navigation.navigate('NotificationDetail', {item: item});
-  };
 
   return (
     <SafeAreaView
@@ -138,29 +50,6 @@ const Notification = props => {
         onPressLeft={() => {
           navigation.goBack();
         }}
-      />
-      <FlatList
-        contentContainerStyle={{paddingHorizontal: 20}}
-        refreshControl={
-          <RefreshControl
-            colors={[colors.primary]}
-            tintColor={colors.primary}
-            refreshing={refreshing}
-            onRefresh={() => {}}
-          />
-        }
-        data={dataNotif}
-        keyExtractor={(item, index) => item.NotificationID}
-        renderItem={({item, index}) => (
-          <ListThumbCircleNotif
-            // image={item.image}
-            txtLeftTitle1={item.Report_no}
-            txtLeftTitle2={item.NotificationCd}
-            txtContent={item.Remarks}
-            txtRight={item.NotificationDate}
-            onPress={goNotifDetail(item)}
-          />
-        )}
       />
     </SafeAreaView>
   );

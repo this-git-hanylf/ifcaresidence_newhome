@@ -163,9 +163,7 @@ const DetailFacility = props => {
   const detail = data?.map(post => {
     return (
       <View key={post.id}>
-        <Text
-          headline
-          style={{marginTop: 20, fontSize: 20, fontWeight: 'bold'}}>
+        <Text headline style={{marginTop: 0, fontSize: 20, fontWeight: 'bold'}}>
           {post.title}
         </Text>
 
@@ -241,6 +239,24 @@ const DetailFacility = props => {
             description={'Location'}
             title={post.location}
           /> */}
+        </View>
+
+        <View style={styles.specifications}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('TermsConditions', dataTowerUser);
+            }}>
+            <View>
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: BaseColor.grayColor,
+                  fontWeight: 'bold',
+                }}>
+                Terms & Conditions
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     );

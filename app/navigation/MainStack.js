@@ -56,6 +56,7 @@ import BookingFacility from '../screens/Facility/BookingFacility';
 import BookingDetail from '../screens/Facility/BookingDetail';
 import FSendMoney from '../screens/FSendMoney';
 import ModalProduct from '../screens/Facility/ModalProduct';
+import TermsConditions from '../screens/Facility/TermsCondition';
 
 import BookingList from '../screens/Facility/BookingList';
 import BookingListDetail from '../screens/Facility/BookingListDetail';
@@ -340,6 +341,11 @@ function MainStack() {
       <Stack.Screen
         name="ChooseEditPartner"
         component={ChooseEditPartner}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="TermsConditions"
+        component={TermsConditions}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

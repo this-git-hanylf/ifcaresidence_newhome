@@ -77,10 +77,10 @@ const removeUser = user => ({
   user: null,
 });
 
-export const login = (email, password) => async dispatch => {
+export const login = (email, password, token_firebase) => async dispatch => {
   dispatch(loginRequest());
   try {
-    const user = await UserController.login(email, password);
+    const user = await UserController.login(email, password, token_firebase);
     dispatch(loginSuccess(user.Data));
     console.log('userrrrr', user);
     // alert("JSON.stringify(user)");

@@ -11,6 +11,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import {useSelector, useDispatch} from 'react-redux';
@@ -20,6 +21,9 @@ import getUser from '../../selectors/UserSelectors';
 import errorsSelector from '../../selectors/ErrorSelectors';
 import {isLoadingSelector} from '../../selectors/StatusSelectors';
 import {login, actionTypes} from '../../actions/UserActions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import messaging from '@react-native-firebase/messaging';
+import firebase from 'react-native-firebase';
 
 const SignIn = props => {
   const {navigation} = props;
@@ -30,6 +34,9 @@ const SignIn = props => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const [token_firebase, setTokenFirebase] = useState('');
+  const [token, setTokenBasic] = useState('');
+
   const user = useSelector(state => getUser(state));
   const isLoading = useSelector(state =>
     isLoadingSelector([actionTypes.LOGIN], state),
@@ -39,9 +46,10 @@ const SignIn = props => {
   );
 
   const loginUser = useCallback(
-    () => dispatch(login(email, password)),
-    [email, password, dispatch],
+    () => dispatch(login(email, password, token_firebase)),
+    [email, password, token_firebase, dispatch],
   );
+
   const passwordChanged = useCallback(value => setPassword(value), []);
   const emailChanged = useCallback(value => setEmail(value), []);
 
@@ -50,6 +58,33 @@ const SignIn = props => {
       props.navigation.navigate('MainStack');
     }
   });
+
+  useEffect(() => {
+    requestUserPermission();
+  }, []);
+
+  const requestUserPermission = async () => {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      getFcmToken();
+      console.log('Authorization status:', authStatus);
+    }
+  };
+
+  const getFcmToken = async () => {
+    const fcmToken = await messaging().getToken();
+    if (fcmToken) {
+      console.log(fcmToken);
+      console.log('Your Firebase Token is:', fcmToken);
+      setTokenFirebase(fcmToken);
+    } else {
+      console.log('Failed', 'No token received');
+    }
+  };
 
   const offsetKeyboard = Platform.select({
     ios: 0,

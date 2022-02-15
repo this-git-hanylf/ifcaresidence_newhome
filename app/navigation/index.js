@@ -4,6 +4,7 @@ import {ApplicationActions} from '@actions';
 import {AssistiveTouch} from '@components';
 import {BaseSetting, useTheme} from '@config';
 import {NavigationContainer} from '@react-navigation/native';
+
 import {createStackNavigator} from '@react-navigation/stack';
 import {languageSelect} from '@selectors';
 import * as Utils from '@utils';
@@ -22,19 +23,27 @@ import Loading from '../screens/Loading';
 const RootStack = createStackNavigator();
 import {StackActions} from '@react-navigation/native';
 import MainStack from './MainStack';
+import Notification from '../screens/Notification';
 import getUser from '../selectors/UserSelectors';
 import Skip from '../screens/Skip';
 import EProductDetail from '../screens/EProductDetail';
+import messaging from '@react-native-firebase/messaging';
 
 const Navigator = props => {
   const {theme, colors} = useTheme();
   const isDarkMode = useDarkMode();
   const language = useSelector(languageSelect);
-  const {navigation} = props;
+  const {navigation, route} = props;
+  console.log('navigation from app for notif', navigation);
+  console.log('route from app for notif', route);
+
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const navigationRef = useRef(null);
   const user = useSelector(state => getUser(state));
+  const [initialRoute, setInitialRoute] = useState('Home');
+  const [dataNotif, setDataNotif] = useState(false);
+  const [isidataNotif, setisidataNotif] = useState([]);
 
   console.log('user null ?? ', user);
 
@@ -60,11 +69,58 @@ const Navigator = props => {
       setTimeout(() => {
         Utils.enableExperimental();
         setLoading(false);
-        // navigationRef?.current?.dispatch(StackActions.replace('OnBoard'));
+        //    navigationRef?.current?.dispatch(StackActions.replace('OnBoard'));
       }, 300);
     };
     onProcess();
   }, []);
+
+  useEffect(() => {
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+      console.log('remoteMessage.data.type', remoteMessage.data.type);
+      // navigation.navigate('Notification');
+      setDataNotif(true);
+      setisidataNotif(remoteMessage.notification);
+    });
+
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.notification,
+          );
+          console.log('remoteMessage get initial notification', remoteMessage);
+          // setInitialRoute(remoteMessage.data.type); // e.g. "Settings"/
+          setInitialRoute('Notification');
+          setDataNotif(true);
+          setisidataNotif(remoteMessage.notification);
+          // navigation.navigate('Notification');
+        }
+        setLoading(false);
+      });
+
+    messaging().setBackgroundMessageHandler(function (payload) {
+      console.log('Message received: ', payload);
+      console.log('PAYLOAD DATA->>>', payload.data);
+      const parsedJSON = JSON.parse(payload.data['json-data']);
+      console.log('Actions:', parsedJSON);
+    });
+  }, []);
+
+  const goToNotification = () => {
+    navigation.navigate('Notification');
+  };
+
+  if (loading) {
+    return null;
+  }
 
   // const goToApp = name => {
   //   navigationRef?.current?.navigate(name);
@@ -82,8 +138,12 @@ const Navigator = props => {
               <RootStack.Screen name="Loading" component={Loading} />
             ) : user == null || user == '' || user == 0 ? (
               <RootStack.Screen name="SignIn" component={SignIn} />
-            ) : (
+            ) : isidataNotif == null ||
+              isidataNotif == '' ||
+              dataNotif == false ? (
               <RootStack.Screen name="MainStack" component={MainStack} />
+            ) : (
+              <RootStack.Screen name="Notification" component={Notification} />
             )}
             <RootStack.Screen name="Skip" component={Skip} />
             <RootStack.Screen

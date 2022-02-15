@@ -141,11 +141,11 @@ const Home = props => {
         )}
 
         <ScrollView
-          contentContainerStyle={styles.paddingSrollView}
+          // contentContainerStyle={styles.paddingSrollView}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
-          <Image
+          {/* <Image
             source={require('../../assets/images/pakubuwono.png')}
             style={{
               height: 60,
@@ -158,19 +158,23 @@ const Home = props => {
               flexDirection: 'row',
               alignSelf: 'center',
             }}
-          />
-          <View>
+          /> */}
+          <View style={{paddingTop: 10}}>
             <Swiper
               dotStyle={{
                 backgroundColor: BaseColor.dividerColor,
                 marginBottom: 8,
+                padding: 0,
               }}
               activeDotStyle={{
                 marginBottom: 8,
               }}
               paginationStyle={{bottom: 0}}
               loop={false}
-              style={{height: ((Utils.getWidthDevice() - 30) * 3) / 6}}
+              style={{
+                height: (Utils.getWidthDevice() * 3) / 5,
+                width: '100%',
+              }}
               activeDotColor={colors.primary}
               removeClippedSubviews={false}
               onIndexChanged={index => onSelect(index)}>
@@ -181,7 +185,7 @@ const Home = props => {
                     style={{
                       flex: 1,
                       width: '100%',
-                      borderRadius: 10,
+                      // borderRadius: 10,
                     }}
                     source={{uri: item.pict}}
                   />
@@ -196,10 +200,10 @@ const Home = props => {
             style={{marginTop: 1}}
             title={mainNews.title}
           /> */}
-          <View style={{flexDirection: 'row', marginVertical: 15}}>
+          <View style={{flexDirection: 'row', marginVertical: 15, padding: 20}}>
             <View style={{flex: 1, paddingRight: 7}}>
               <CardReport06
-                style={{backgroundColor: colors.primary}}
+                style={{backgroundColor: colors.primary, borderRadius: 25}}
                 icon="arrow-up"
                 title="Invoice Due"
                 // price="$0.68"
@@ -209,7 +213,7 @@ const Home = props => {
             </View>
             <View style={{flex: 1, paddingLeft: 7}}>
               <CardReport06
-                style={{backgroundColor: colors.primary}}
+                style={{backgroundColor: colors.primary, borderRadius: 25}}
                 icon="arrow-up"
                 title="Total"
                 // price="$0.68"
