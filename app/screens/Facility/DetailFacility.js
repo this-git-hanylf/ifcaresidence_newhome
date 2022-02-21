@@ -54,9 +54,10 @@ const DetailFacility = props => {
   const [email, setEmail] = useState(users.user);
   const [dataTowerUser, setdataTowerUser] = useState([]);
   const [arrDataTowerUser, setArrDataTowerUser] = useState([]);
+  const [arrImages, setArrayImage] = useState();
 
   const [spinner, setSpinner] = useState(true);
-
+  const onSelect = indexSelected => {};
   // --- for get tower
   const getTower = async () => {
     const data = {
@@ -136,7 +137,24 @@ const DetailFacility = props => {
     );
     console.log('response fasility detail: ', response.data);
     setData(response.data);
-    setSpinner(false);
+
+    // const dataArr = response.data[0];
+    const dataAll = response.data;
+    console.log('data all', dataAll);
+
+    // const imagefor = dataAll.forEach((image, i) => {
+    //   console.log('images foreach', image.images);
+
+    //   setArrayImage(image.images);
+    // });
+    const arrImage = dataAll.map((imgs, keyimgs) => {
+      console.log('imgs[0', imgs.images);
+      return imgs.images;
+    });
+    console.log('coba arrimages isinya', ...arrImage);
+    setArrayImage(...arrImage);
+
+    setSpinner(arrImage != '' ? false : true);
   };
 
   const headerBackgroundColor = scrollY.interpolate({
@@ -261,6 +279,7 @@ const DetailFacility = props => {
       </View>
     );
   });
+
   return (
     <SafeAreaView
       style={[BaseStyle.safeAreaView, {flex: 1}]}
@@ -290,7 +309,7 @@ const DetailFacility = props => {
         </View>
       ) : (
         <ScrollView
-          contentContainerStyle={styles.paddingSrollView}
+          // contentContainerStyle={styles.paddingSrollView}
           height={'100%'}>
           <Animated.View
             style={[
@@ -298,9 +317,12 @@ const DetailFacility = props => {
               {
                 opacity: headerImageOpacity,
                 height: heightViewImg,
+                padding: 0,
               },
             ]}>
             <Swiper
+              // showsButtons
+              style={{padding: 0}}
               dotStyle={{
                 backgroundColor: BaseColor.dividerColor,
                 marginBottom: 8,
@@ -309,35 +331,56 @@ const DetailFacility = props => {
                 marginBottom: 8,
               }}
               paginationStyle={{bottom: 0}}
-              loop={false}
+              loop={true}
+              autoplay={true}
+              autoplayTimeout={3}
               activeDotColor={colors.primary}
               removeClippedSubviews={false}
               onIndexChanged={index => onSelect(index)}>
-              {data.map((item, key) => {
-                return (
-                  <TouchableOpacity
-                    key={key}
-                    style={{flex: 1}}
-                    activeOpacity={1}
-                    onPress={() =>
-                      navigation.navigate('PreviewImage', {images: images})
-                    }>
-                    <Image
+              {arrImages != undefined ? (
+                arrImages.map &&
+                arrImages.map((item, key) => {
+                  return (
+                    <TouchableOpacity
                       key={key}
-                      style={{
-                        width: '100%',
-                        height: Utils.scaleWithPixel(150),
-                      }}
-                      source={{uri: `${item.images[0].pict}`}}
+                      style={{flex: 1, padding: 0}}
+                      activeOpacity={1}
+                      onPress={() =>
+                        navigation.navigate('PreviewImage', {images: images})
+                      }>
+                      <View key={key}>
+                        {/* <Text style={{color: 'black'}}>{item.pict}</Text> */}
+                        <Image
+                          key={key}
+                          style={{
+                            width: '100%',
+                            height: Utils.scaleWithPixel(250),
+                          }}
+                          source={{uri: `${item.pict}`}}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })
+              ) : (
+                <View>
+                  {/* <Spinner visible={this.state.spinner} /> */}
+                  <Placeholder
+                    style={{marginVertical: 4, paddingHorizontal: 10}}>
+                    <PlaceholderLine
+                      width={100}
+                      noMargin
+                      style={{height: 40}}
                     />
-                  </TouchableOpacity>
-                );
-              })}
+                  </Placeholder>
+                </View>
+              )}
             </Swiper>
           </Animated.View>
-          <View>{data && detail}</View>
+          <View style={styles.paddingSrollView}>{data && detail}</View>
         </ScrollView>
       )}
+
       <TouchableOpacity
         onPress={() => navigation.navigate('BookingFacility', route.params)}>
         <View

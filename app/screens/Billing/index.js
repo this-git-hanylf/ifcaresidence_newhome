@@ -82,7 +82,7 @@ const Billing = ({
         `http://34.87.121.155:2121/apiwebpbi/api/getDataDue/IFCAPB/${user.user}`,
       );
       setDataCurrent(res.data.Data);
-      console.log('datasss', data);
+      console.log('DATA DUE DATE -->', dataCurrent);
     } catch (error) {
       setErrors(error.ressponse.data);
       alert(hasError.toString());
@@ -100,7 +100,7 @@ const Billing = ({
         `http://34.87.121.155:2121/apiwebpbi/api/getDataCurrent/IFCAPB/${user.user}`,
       );
       setData(res.data.Data);
-      console.log('data', dataCurrent);
+      console.log('data', data);
     } catch (error) {
       setErrors(error.ressponse.data);
       alert(hasError.toString());

@@ -88,7 +88,7 @@ const Home = props => {
         `http://34.87.121.155:2121/apiwebpbi/api/getDataDue/IFCAPB/${user.user}`,
       );
       setDataDue(res.data.Data);
-      console.log('data', getDataDue);
+      console.log('data get data due', getDataDue);
     } catch (error) {
       setErrors(error.ressponse.data);
       alert(hasError.toString());
@@ -98,18 +98,46 @@ const Home = props => {
   const galery = [...data];
 
   //TOTAL
-  const sum = getDataDue.reduceRight((max, bills) => {
-    return (max += parseInt(bills.mbal_amt));
-  }, 0);
+  const sum =
+    getDataDue == 0
+      ? 0
+      : getDataDue.reduceRight((max, bills) => {
+          return (max += parseInt(bills.mbal_amt));
+        }, 0);
+
   console.log('sum', sum);
 
   //LENGTH
   const onSelect = indexSelected => {};
 
-  const unique = [...new Set(getDataDue.map(item => item.doc_no))];
-  console.log('sumss', unique);
+  const unique =
+    getDataDue == 0 ? 0 : [...new Set(getDataDue.map(item => item.doc_no))];
+  console.log('unique', unique);
 
   const invoice = unique.length;
+  console.log('invoice', invoice);
+
+  const headerBackgroundColor = scrollY.interpolate({
+    inputRange: [0, 140],
+    outputRange: [BaseColor.whiteColor, colors.text],
+    extrapolate: 'clamp',
+    useNativeDriver: true,
+  });
+
+  //For header image opacity
+  const headerImageOpacity = scrollY.interpolate({
+    inputRange: [0, 250 - heightHeader - 20],
+    outputRange: [1, 0],
+    extrapolate: 'clamp',
+    useNativeDriver: true,
+  });
+
+  //artist profile image position from top
+  const heightViewImg = scrollY.interpolate({
+    inputRange: [0, 250 - heightHeader],
+    outputRange: [250, heightHeader],
+    useNativeDriver: true,
+  });
 
   useEffect(() => {
     console.log('galery', galery);
@@ -159,7 +187,16 @@ const Home = props => {
               alignSelf: 'center',
             }}
           /> */}
-          <View style={{paddingTop: 10}}>
+          {/* <V style={{paddingTop: 10}}> */}
+          <Animated.View
+            style={[
+              styles.headerImageStyle,
+              {
+                opacity: headerImageOpacity,
+                height: heightViewImg,
+                padding: 0,
+              },
+            ]}>
             <Swiper
               dotStyle={{
                 backgroundColor: BaseColor.dividerColor,
@@ -170,11 +207,14 @@ const Home = props => {
                 marginBottom: 8,
               }}
               paginationStyle={{bottom: 0}}
-              loop={false}
-              style={{
-                height: (Utils.getWidthDevice() * 3) / 5,
-                width: '100%',
-              }}
+              loop={true}
+              // style={{
+              //   height: (Utils.getWidthDevice() * 3) / 5,
+              //   width: '100%',
+              // }}
+              style={{padding: 0}}
+              autoplay={true}
+              autoplayTimeout={3}
               activeDotColor={colors.primary}
               removeClippedSubviews={false}
               onIndexChanged={index => onSelect(index)}>
@@ -192,7 +232,8 @@ const Home = props => {
                 );
               })}
             </Swiper>
-          </View>
+          </Animated.View>
+          {/* </ScrollView> */}
 
           {/* <News43
             loading={loading}
@@ -207,7 +248,7 @@ const Home = props => {
                 icon="arrow-up"
                 title="Invoice Due"
                 // price="$0.68"
-                percent={invoice}
+                percent={invoice == undefined ? 0 : invoice}
                 onPress={() => navigation.navigate('Billing')}
               />
             </View>
@@ -229,6 +270,7 @@ const Home = props => {
               <Categories style={{marginTop: 10}} />
             )}
           </View>
+
           {/* {loading ? renderPlaceholder() : renderContent()} */}
         </ScrollView>
       </SafeAreaView>

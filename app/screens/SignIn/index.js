@@ -23,7 +23,6 @@ import {isLoadingSelector} from '../../selectors/StatusSelectors';
 import {login, actionTypes} from '../../actions/UserActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
-import firebase from 'react-native-firebase';
 
 const SignIn = props => {
   const {navigation} = props;
