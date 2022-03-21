@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Picker,
   Text,
+  useWindowDimensions,
 } from 'react-native';
 import styles from './styles';
 import {
@@ -36,6 +37,7 @@ import {Button} from '../../components';
 
 import {useSelector} from 'react-redux';
 import getUser from '../../selectors/UserSelectors';
+import RenderHtml from 'react-native-render-html';
 
 const DetailFacility = props => {
   const {navigation, route} = props;
@@ -43,6 +45,7 @@ const DetailFacility = props => {
   console.log('routes from facility menu', route.params);
   const {t} = useTranslation();
   const {colors} = useTheme();
+  const {width} = useWindowDimensions();
   const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
   const scrollY = useRef(new Animated.Value(0)).current;
   const [data, setData] = useState([]);
@@ -57,6 +60,7 @@ const DetailFacility = props => {
   const [arrImages, setArrayImage] = useState();
 
   const [spinner, setSpinner] = useState(true);
+  const [terms, setDataTerms] = useState([]);
   const onSelect = indexSelected => {};
   // --- for get tower
   const getTower = async () => {
@@ -109,6 +113,7 @@ const DetailFacility = props => {
   useEffect(() => {
     // getTower();
     getData();
+    getTermsConditions();
   }, [dataTowerUser]);
 
   useEffect(() => {}, []);
@@ -155,6 +160,20 @@ const DetailFacility = props => {
     setArrayImage(...arrImage);
 
     setSpinner(arrImage != '' ? false : true);
+  };
+
+  const getTermsConditions = async () => {
+    const entity_cd = dataTowerUser.entity_cd;
+    const project_no = dataTowerUser.project_no;
+    const response = await axios(
+      'http://34.87.121.155:2121/apiwebpbi/api/fb_master-getFacilityTermsAndConditions/' +
+        entity_cd +
+        '/' +
+        project_no,
+    );
+    console.log('response terms data: ', response.data);
+    setDataTerms(response.data.Data);
+    setSpinner(false);
   };
 
   const headerBackgroundColor = scrollY.interpolate({
@@ -260,7 +279,26 @@ const DetailFacility = props => {
         </View>
 
         <View style={styles.specifications}>
-          <TouchableOpacity
+          <View>
+            <Text
+              style={{
+                fontSize: 16,
+                color: BaseColor.grayColor,
+                // fontWeight: 'bold',
+              }}>
+              Terms & Conditions
+            </Text>
+            {terms.map((dataTerms, index) => (
+              <View key={index} style={{marginRight: 20, textAlign: 'justify'}}>
+                <RenderHtml
+                  source={{html: dataTerms.description}}
+                  contentWidth={width}
+                />
+              </View>
+            ))}
+          </View>
+
+          {/* <TouchableOpacity
             onPress={() => {
               navigation.navigate('TermsConditions', dataTowerUser);
             }}>
@@ -274,7 +312,7 @@ const DetailFacility = props => {
                 Terms & Conditions
               </Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     );
@@ -346,7 +384,9 @@ const DetailFacility = props => {
                       style={{flex: 1, padding: 0}}
                       activeOpacity={1}
                       onPress={() =>
-                        navigation.navigate('PreviewImage', {images: images})
+                        navigation.navigate('PreviewImages', {
+                          images: arrImages,
+                        })
                       }>
                       <View key={key}>
                         {/* <Text style={{color: 'black'}}>{item.pict}</Text> */}

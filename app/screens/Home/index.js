@@ -206,7 +206,7 @@ const Home = props => {
               activeDotStyle={{
                 marginBottom: 8,
               }}
-              paginationStyle={{bottom: 0}}
+              // paginationStyle={{bottom: 0}}
               loop={true}
               // style={{
               //   height: (Utils.getWidthDevice() * 3) / 5,
@@ -214,9 +214,9 @@ const Home = props => {
               // }}
               style={{padding: 0}}
               autoplay={true}
-              autoplayTimeout={3}
+              // autoplayTimeout={3}
               activeDotColor={colors.primary}
-              removeClippedSubviews={false}
+              // removeClippedSubviews={false}
               onIndexChanged={index => onSelect(index)}>
               {data.map((item, key) => {
                 return (

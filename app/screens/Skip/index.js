@@ -92,20 +92,25 @@ const Skip = props => {
               alignItems: 'center',
               marginHorizontal: 100,
               flexDirection: 'row',
+              justifyContent: 'center',
+              alignSelf: 'center',
             }}
           />
           <View style={styles.titleAbout}>
             {/* <Text title1 semibold whiteColor>
               {t('about_us')}
             </Text> */}
-            <Text subhead greyColor style={{marginTop: 70}}>
+            <Text
+              subhead
+              greyColor
+              style={{marginTop: 70, textAlign: 'center'}}>
               {/* {t('slogan_about_us')} */}
               {data.about_title}
             </Text>
           </View>
         </View>
         <View style={{padding: 20}}>
-          <Text headline semibold>
+          <Text headline semibold style={{textAlign: 'center'}}>
             {/* {t('who_we_are')} */}
             {data.about_title}
           </Text>

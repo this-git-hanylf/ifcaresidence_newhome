@@ -18,7 +18,7 @@ class NotificationHandler {
   }
 
   onAction(notification) {
-    console.log('Notification action received:');
+    console.log('Notification action received --->>> :', notification);
     console.log(notification.action);
     console.log(notification);
 

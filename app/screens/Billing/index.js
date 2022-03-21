@@ -82,16 +82,20 @@ const Billing = ({
         `http://34.87.121.155:2121/apiwebpbi/api/getDataDue/IFCAPB/${user.user}`,
       );
       setDataCurrent(res.data.Data);
-      console.log('DATA DUE DATE -->', dataCurrent);
+      console.log('DATA DUE DATE -->', res.data.Data);
     } catch (error) {
       setErrors(error.ressponse.data);
-      alert(hasError.toString());
+      // alert(hasError.toString());
     }
   }
 
-  const sum = dataCurrent.reduceRight((max, bills) => {
-    return (max += parseInt(bills.mbal_amt));
-  }, 0);
+  // ----- ini gak kepake kan? ga ada yang panggil const sum
+  const sum =
+    dataCurrent != null
+      ? dataCurrent.reduceRight((max, bills) => {
+          return (max += parseInt(bills.mbal_amt));
+        }, 0)
+      : null;
   console.log('sum', sum);
 
   async function fetchDataCurrent() {
@@ -103,7 +107,7 @@ const Billing = ({
       console.log('data', data);
     } catch (error) {
       setErrors(error.ressponse.data);
-      alert(hasError.toString());
+      // alert(hasError.toString());
     }
   }
 

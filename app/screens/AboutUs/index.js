@@ -76,24 +76,32 @@ const AboutUs = props => {
               alignItems: 'center',
               marginHorizontal: 100,
               flexDirection: 'row',
+              justifyContent: 'center',
+              alignSelf: 'center',
             }}
           />
           <View style={styles.titleAbout}>
             {/* <Text title1 semibold whiteColor>
               {t('about_us')}
             </Text> */}
-            <Text subhead greyColor style={{marginTop: 70}}>
+            <Text
+              subhead
+              greyColor
+              style={{marginTop: 70, textAlign: 'center'}}>
               {/* {t('slogan_about_us')} */}
               {data.about_title}
             </Text>
           </View>
         </View>
         <View style={{padding: 20}}>
-          <Text headline semibold>
+          <Text
+            headline
+            semibold
+            style={{textAlign: 'center', paddingBottom: 20}}>
             {/* {t('who_we_are')} */}
             {data.about_title}
           </Text>
-          <View>
+          {/* <View>
             <Text
               body2
               style={{
@@ -103,21 +111,12 @@ const AboutUs = props => {
               numberOfLines={100}>
               {data.about_us?.replace(/<\/?[^>]+(>|$;)/gi, '')}
             </Text>
-          </View>
+          </View> */}
           <View style={styles.address}>
             <Text
               semibold
               style={{
-                fontSize: 18,
-                paddingBottom: 15,
-              }}>
-              Contact Us
-            </Text>
-            <Text body>{data.address}</Text>
-            <Text
-              semibold
-              style={{
-                paddingTop: 20,
+                paddingTop: 0,
                 paddingBottom: 10,
                 fontSize: 15,
               }}>
@@ -133,6 +132,19 @@ const AboutUs = props => {
               <Icon name="envelope" size={20} />
               <Text> {data.contact_email}</Text>
             </View>
+
+            <Text
+              semibold
+              style={{
+                fontSize: 18,
+                paddingBottom: 10,
+                paddingTop: 15,
+              }}>
+              Contact Us
+            </Text>
+            <Text body style={{paddingBottom: 5}}>
+              {data.address}
+            </Text>
           </View>
         </View>
       </ScrollView>

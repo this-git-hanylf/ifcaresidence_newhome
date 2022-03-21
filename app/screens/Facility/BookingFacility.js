@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Picker,
   Dimensions,
+  StyleSheet,
 } from 'react-native';
 import styles from './styles';
 import {
@@ -46,8 +47,7 @@ import ModalProduct from './ModalProduct';
 import {useSelector} from 'react-redux';
 import getUser from '../../selectors/UserSelectors';
 
-import {FTypes} from '@data';
-import {color} from 'react-native-elements/dist/helpers';
+import ListTransaction from '@components/List/Transaction';
 
 function BookingFacility({route}) {
   // console.log('route in booking facility', route.params);
@@ -83,6 +83,9 @@ function BookingFacility({route}) {
   const [dataBooked2, setDataBooked2] = useState([]);
   const [dataBooked3, setDataBooked3] = useState([]);
   const [dataBooked4, setDataBooked4] = useState([]);
+  const isExpandInit = useState(false);
+  const [isExpand, setIsExpand] = useState(false);
+  const [isIconUp, setIconUp] = useState(false);
 
   useEffect(() => {
     axios
@@ -112,21 +115,6 @@ function BookingFacility({route}) {
     book_date: datatime.timeget,
   };
 
-  // useEffect(() => {
-  //   axios
-  //     .get(
-  //       `http://34.87.121.155:2121/apiwebpbi/api/facility/book/hours?entity_cd=01&project_no=01&facility_cd=CA`,
-  //     )
-  //     .then(res => {
-  //       console.log('data date book', res.data[0]);
-  //       setData(res.data);
-  //       setDatabookDate(res.data[0]);
-  //       setSpinner(false);
-  //     })
-  //     .catch(error => console.error(error))
-  //     .finally(() => setLoading(false));
-  // }, []);
-
   useEffect(() => {
     axios
       .get(
@@ -142,19 +130,6 @@ function BookingFacility({route}) {
       .catch(error => console.error(error.response.data))
       .finally(() => setLoading(false));
   }, []);
-
-  // const fetchDataDays = async () => {
-  //   try {
-  //     const res = await axios.get(
-  //       'http://34.87.121.155:2121/apiwebpbi/api/facility/book/hours_id?entity_cd=01&project_no=01&facility_cd=CA&book_date=2021-12-08&id=2',
-  //     );
-  //     setDays(res.data);
-  //     console.log('dayss', res.data);
-  //   } catch (error) {
-  //     setErrors(error.ressponse.data);
-  //     alert(hasError.toString());
-  //   }
-  // };
 
   useEffect(() => {
     // fetchDataDays();
@@ -354,11 +329,6 @@ function BookingFacility({route}) {
       })
       .catch(error => console.error(error.response.data));
   };
-
-  // useEffect(() => {
-  //   console.log('sblm dilempar params bookdate', databookdate);
-  //   getBooked(dataTowerUser, databookdate, '');
-  // }, [dataTowerUser, databookdate]);
 
   const getBooked = async (datas, databookdates, venue_klik) => {
     console.log('option', venue_klik);
@@ -593,6 +563,12 @@ function BookingFacility({route}) {
     navigation.navigate('BookingDetail', item);
   };
 
+  const setExpandIcon = indexs => {
+    console.log('indexs', indexs);
+    setIsExpand(!isExpand);
+    setIconUp(indexs ? !isIconUp : isIconUp);
+  };
+
   return (
     <SafeAreaView
       style={[BaseStyle.safeAreaView, {flex: 1}]}
@@ -753,7 +729,7 @@ function BookingFacility({route}) {
               <View
                 style={{
                   flex: 1,
-                  paddingHorizontal: 20,
+                  paddingHorizontal: 5,
                 }}>
                 {tab.id == 1 && (
                   <Text style={{fontStyle: 'italic'}}>
@@ -766,15 +742,22 @@ function BookingFacility({route}) {
                     dataBooked1?.slot_hours.map((items, indexs) => (
                       <View
                         key={indexs}
-                        style={{
-                          paddingVertical: 15,
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                          alignContent: 'space-between',
-                          borderRadius: 15,
-                          borderColor: '#dbdbdb',
-                          borderBottomWidth: 1,
-                        }}>
+                        style={StyleSheet.flatten([
+                          {
+                            paddingVertical: 15,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignContent: 'space-between',
+                            borderRadius: 15,
+                            borderColor: '#dbdbdb',
+                            borderBottomWidth: 1,
+                          },
+                          !isExpand && {
+                            borderBottomWidth: 1,
+
+                            borderBottomColor: colors.border,
+                          },
+                        ])}>
                         <Text key={items.id} bold>
                           {items.jam}
                         </Text>
@@ -784,66 +767,154 @@ function BookingFacility({route}) {
                           : 'kurang dari jam'}
                       </Text> */}
 
-                        <View style={{flexDirection: 'column'}}>
+                        <View>
                           {items.databook != ''
                             ? items.databook.map((itemdatabook, keys) => (
                                 <View key={keys}>
-                                  <Text>
-                                    {/* {itemdatabook.remarks} -{' '} */}
-                                    {itemdatabook.venue_name}
+                                  <Text
+                                    bold
+                                    style={{
+                                      width: 250,
+                                    }}>
+                                    {itemdatabook.name}
                                   </Text>
-                                  {/* <Text>{itemdatabook.name}</Text> */}
-                                  <Text>{itemdatabook.reservation_no}</Text>
-                                  <Text>
+                                  <Text bold>{itemdatabook.unit}</Text>
+                                  {/* <Text>
+                                    Created date :{' '}
                                     {moment(
                                       itemdatabook.reservation_date,
                                     ).format('DD MMM YYYY hh:mm:ss')}
-                                  </Text>
+                                  </Text> */}
                                   {/* minta tambahin kolom venue_name   */}
                                 </View>
                               ))
                             : null}
-                          {items.datapartner != ''
-                            ? items.datapartner.map((itemdatapartner, keys) => (
-                                <View key={keys}>
-                                  <Text>
-                                    {itemdatapartner.staff_first_name}{' '}
-                                    {itemdatapartner.staff_last_name}
-                                  </Text>
-                                  <Text style={{width: 150}}>
-                                    as a {itemdatapartner.position}
-                                  </Text>
-                                </View>
-                              ))
-                            : null}
+
+                          {isExpand && (
+                            <View>
+                              {items.databook != ''
+                                ? items.databook.map((itemdatabook, keys) => (
+                                    <View key={keys} style={{width: '100%'}}>
+                                      <Text>
+                                        Created date :{' '}
+                                        {moment(
+                                          itemdatabook.reservation_date,
+                                        ).format('DD MMM YYYY hh:mm:ss')}
+                                      </Text>
+                                      <Text>
+                                        Duration : {itemdatabook.duration}{' '}
+                                        {itemdatabook.duration > 1
+                                          ? 'Hour'
+                                          : 'Hours'}
+                                      </Text>
+                                      {/* minta tambahin kolom venue_name   */}
+                                    </View>
+                                  ))
+                                : null}
+                              {items.datapartner != ''
+                                ? items.datapartner.map(
+                                    (itemdatapartner, keys) => (
+                                      <View key={keys}>
+                                        {console.log(
+                                          'itemdata partner',
+                                          itemdatapartner,
+                                        )}
+                                        <Text>
+                                          Partner :{' '}
+                                          {itemdatapartner.staff_first_name}{' '}
+                                          {itemdatapartner.staff_last_name}
+                                        </Text>
+
+                                        <Text>
+                                          Status :{' '}
+                                          {itemdatapartner.confirm_status == 'W'
+                                            ? 'Waiting Confirm'
+                                            : 'Confirm'}
+                                        </Text>
+                                        {/* <Text style={{width: 150}}>
+                                          as a {itemdatapartner.position}
+                                        </Text> */}
+                                      </View>
+                                    ),
+                                  )
+                                : null}
+                            </View>
+                          )}
                         </View>
 
-                        <TouchableOpacity
-                          disabled={
-                            items.status_avail != 'Y' || time.jam > items.jam
-                              ? true
-                              : false || dataBooked1.open_book > items.jam
-                              ? true
-                              : false || dataBooked1.close_book < items.jam
-                              ? true
-                              : false
-                          }
-                          onPress={() => onBookingPress(dataBooked1, items.jam)}
-                          style={{
-                            backgroundColor:
-                              items.status_avail == 'Y' && time.jam < items.jam
-                                ? colors.primary
-                                : items.databook[0].status == 'O'
-                                ? BaseColor.orangeColor
-                                : BaseColor.redColor,
-                            padding: 15,
-                            borderRadius: 15,
-                            justifyContent: 'center',
-                          }}>
-                          <Text whiteColor subheadline bold>
-                            Booking
-                          </Text>
-                        </TouchableOpacity>
+                        {(items.status_avail == 'Y' && time.jam < items.jam) ||
+                        dataBooked1.open_book > items.jam ||
+                        dataBooked1.close_book < items.jam ? (
+                          <TouchableOpacity
+                            disabled={
+                              items.status_avail != 'Y' || time.jam > items.jam
+                                ? true
+                                : false || dataBooked1.open_book > items.jam
+                                ? true
+                                : false || dataBooked1.close_book < items.jam
+                                ? true
+                                : false
+                            }
+                            onPress={() =>
+                              onBookingPress(dataBooked1, items.jam)
+                            }
+                            style={StyleSheet.flatten([
+                              {
+                                height: 50,
+                                backgroundColor:
+                                  items.status_avail == 'Y' &&
+                                  time.jam < items.jam
+                                    ? colors.primary
+                                    : items.databook[0].status == 'O'
+                                    ? BaseColor.orangeColor
+                                    : BaseColor.redColor,
+                                padding: 15,
+                                borderRadius: 15,
+                                justifyContent: 'center',
+                              },
+                              isExpand && {
+                                height: 50,
+                                backgroundColor:
+                                  items.status_avail == 'Y' &&
+                                  time.jam < items.jam
+                                    ? colors.primary
+                                    : items.databook[0].status == 'O'
+                                    ? BaseColor.orangeColor
+                                    : BaseColor.redColor,
+                                padding: 15,
+                                borderRadius: 15,
+                                justifyContent: 'center',
+                              },
+                            ])}>
+                            <Text whiteColor subheadline bold>
+                              Booking
+                            </Text>
+                          </TouchableOpacity>
+                        ) : (
+                          <TouchableOpacity
+                            style={{marginRight: 5}}
+                            onPress={() => setExpandIcon(indexs)}>
+                            {/* {console.log('boolean apasi ini', indexs)} */}
+                            <View
+                              style={{
+                                width: 25,
+                                height: 25,
+                                borderRadius: 10,
+                                backgroundColor: colors.primary,
+                                alignSelf: 'center',
+                                alignItems: 'center',
+                                alignContent: 'center',
+                                justifyContent: 'center',
+                              }}>
+                              <Icon
+                                name={
+                                  'chevron-down'
+                                  // isIconUp ? 'chevron-up' : 'chevron-down'
+                                }
+                                color={'#fff'}></Icon>
+                            </View>
+                          </TouchableOpacity>
+                        )}
                       </View>
                     ))
                   : tab.id == 1 && (
@@ -911,66 +982,137 @@ function BookingFacility({route}) {
                           {items.jam}
                         </Text>
 
-                        <View style={{flexDirection: 'column'}}>
+                        <View>
                           {items.databook != ''
                             ? items.databook.map((itemdatabook, keys) => (
                                 <View key={keys}>
-                                  <Text>
-                                    {/* {itemdatabook.remarks} -{' '} */}
-                                    {itemdatabook.venue_name}
+                                  <Text
+                                    bold
+                                    style={{
+                                      width: 250,
+                                    }}>
+                                    {itemdatabook.name}
                                   </Text>
-                                  {/* <Text>{itemdatabook.name}</Text> */}
-                                  <Text>{itemdatabook.reservation_no}</Text>
-                                  <Text>
+                                  <Text bold>{itemdatabook.unit}</Text>
+                                  {/* <Text>
+                                    Created date :{' '}
                                     {moment(
                                       itemdatabook.reservation_date,
                                     ).format('DD MMM YYYY hh:mm:ss')}
-                                  </Text>
+                                  </Text> */}
                                   {/* minta tambahin kolom venue_name   */}
                                 </View>
                               ))
                             : null}
-                          {items.datapartner != ''
-                            ? items.datapartner.map((itemdatapartner, keys) => (
-                                <View key={keys}>
-                                  <Text>
-                                    {itemdatapartner.staff_first_name}{' '}
-                                    {itemdatapartner.staff_last_name}
-                                  </Text>
-                                  <Text style={{width: 150}}>
-                                    as a {itemdatapartner.position}
-                                  </Text>
-                                </View>
-                              ))
-                            : null}
+
+                          {isExpand && (
+                            <View>
+                              {items.databook != ''
+                                ? items.databook.map((itemdatabook, keys) => (
+                                    <View key={keys} style={{width: '100%'}}>
+                                      <Text>
+                                        Created date :{' '}
+                                        {moment(
+                                          itemdatabook.reservation_date,
+                                        ).format('DD MMM YYYY hh:mm:ss')}
+                                      </Text>
+                                      <Text>
+                                        Duration : {itemdatabook.duration}{' '}
+                                        {itemdatabook.duration > 1
+                                          ? 'Hour'
+                                          : 'Hours'}
+                                      </Text>
+                                      {/* minta tambahin kolom venue_name   */}
+                                    </View>
+                                  ))
+                                : null}
+                              {items.datapartner != ''
+                                ? items.datapartner.map(
+                                    (itemdatapartner, keys) => (
+                                      <View key={keys}>
+                                        {console.log(
+                                          'itemdata partner',
+                                          itemdatapartner,
+                                        )}
+                                        <Text>
+                                          Partner :{' '}
+                                          {itemdatapartner.staff_first_name}{' '}
+                                          {itemdatapartner.staff_last_name}
+                                        </Text>
+
+                                        <Text>
+                                          Status :{' '}
+                                          {itemdatapartner.confirm_status == 'W'
+                                            ? 'Waiting Confirm'
+                                            : 'Confirm'}
+                                        </Text>
+                                        {/* <Text style={{width: 150}}>
+                                          as a {itemdatapartner.position}
+                                        </Text> */}
+                                      </View>
+                                    ),
+                                  )
+                                : null}
+                            </View>
+                          )}
                         </View>
 
-                        <TouchableOpacity
-                          disabled={
-                            items.status_avail != 'Y'
-                              ? true
-                              : false || dataBooked2.open_book > items.jam
-                              ? true
-                              : false || dataBooked2.close_book < items.jam
-                              ? true
-                              : false
-                          }
-                          onPress={() => onBookingPress(dataBooked2, items.jam)}
-                          style={{
-                            backgroundColor:
-                              items.status_avail == 'Y'
-                                ? colors.primary
-                                : items.databook[0].status == 'O'
-                                ? BaseColor.orangeColor
-                                : BaseColor.redColor,
-                            padding: 15,
-                            borderRadius: 15,
-                            justifyContent: 'center',
-                          }}>
-                          <Text whiteColor subheadline bold>
-                            Booking
-                          </Text>
-                        </TouchableOpacity>
+                        {items.status_avail == 'Y' ||
+                        dataBooked2.open_book > items.jam ||
+                        dataBooked2.close_book < items.jam ? (
+                          <TouchableOpacity
+                            disabled={
+                              items.status_avail != 'Y'
+                                ? true
+                                : false || dataBooked2.open_book > items.jam
+                                ? true
+                                : false || dataBooked2.close_book < items.jam
+                                ? true
+                                : false
+                            }
+                            onPress={() =>
+                              onBookingPress(dataBooked2, items.jam)
+                            }
+                            style={{
+                              backgroundColor:
+                                items.status_avail == 'Y'
+                                  ? colors.primary
+                                  : items.databook[0].status == 'O'
+                                  ? BaseColor.orangeColor
+                                  : BaseColor.redColor,
+                              padding: 15,
+                              borderRadius: 15,
+                              justifyContent: 'center',
+                            }}>
+                            <Text whiteColor subheadline bold>
+                              Booking
+                            </Text>
+                          </TouchableOpacity>
+                        ) : (
+                          <TouchableOpacity
+                            style={{marginRight: 5}}
+                            onPress={() => setExpandIcon(indexs)}>
+                            {/* {console.log('boolean apasi ini', indexs)} */}
+                            <View
+                              style={{
+                                width: 25,
+                                height: 25,
+                                borderRadius: 10,
+                                backgroundColor: colors.primary,
+                                alignSelf: 'center',
+                                alignItems: 'center',
+                                alignContent: 'center',
+                                justifyContent: 'center',
+                              }}>
+                              <Icon
+                                name={
+                                  'chevron-down'
+                                  // isIconUp ? 'chevron-up' : 'chevron-down'
+                                }
+                                color={'#fff'}></Icon>
+                            </View>
+                          </TouchableOpacity>
+                        )}
                       </View>
                     ))
                   : tab.id == 2 && (
@@ -1038,66 +1180,137 @@ function BookingFacility({route}) {
                           {items.jam}
                         </Text>
 
-                        <View style={{flexDirection: 'column'}}>
+                        <View>
                           {items.databook != ''
                             ? items.databook.map((itemdatabook, keys) => (
                                 <View key={keys}>
-                                  <Text>
-                                    {/* {itemdatabook.remarks} -{' '} */}
-                                    {itemdatabook.venue_name}
+                                  <Text
+                                    bold
+                                    style={{
+                                      width: 250,
+                                    }}>
+                                    {itemdatabook.name}
                                   </Text>
-                                  {/* <Text>{itemdatabook.name}</Text> */}
-                                  <Text>{itemdatabook.reservation_no}</Text>
-                                  <Text>
+                                  <Text bold>{itemdatabook.unit}</Text>
+                                  {/* <Text>
+                                    Created date :{' '}
                                     {moment(
                                       itemdatabook.reservation_date,
                                     ).format('DD MMM YYYY hh:mm:ss')}
-                                  </Text>
+                                  </Text> */}
                                   {/* minta tambahin kolom venue_name   */}
                                 </View>
                               ))
                             : null}
-                          {items.datapartner != ''
-                            ? items.datapartner.map((itemdatapartner, keys) => (
-                                <View key={keys}>
-                                  <Text>
-                                    {itemdatapartner.staff_first_name}{' '}
-                                    {itemdatapartner.staff_last_name}
-                                  </Text>
-                                  <Text style={{width: 150}}>
-                                    as a {itemdatapartner.position}
-                                  </Text>
-                                </View>
-                              ))
-                            : null}
+
+                          {isExpand && (
+                            <View>
+                              {items.databook != ''
+                                ? items.databook.map((itemdatabook, keys) => (
+                                    <View key={keys} style={{width: '100%'}}>
+                                      <Text>
+                                        Created date :{' '}
+                                        {moment(
+                                          itemdatabook.reservation_date,
+                                        ).format('DD MMM YYYY hh:mm:ss')}
+                                      </Text>
+                                      <Text>
+                                        Duration : {itemdatabook.duration}{' '}
+                                        {itemdatabook.duration > 1
+                                          ? 'Hour'
+                                          : 'Hours'}
+                                      </Text>
+                                      {/* minta tambahin kolom venue_name   */}
+                                    </View>
+                                  ))
+                                : null}
+                              {items.datapartner != ''
+                                ? items.datapartner.map(
+                                    (itemdatapartner, keys) => (
+                                      <View key={keys}>
+                                        {console.log(
+                                          'itemdata partner',
+                                          itemdatapartner,
+                                        )}
+                                        <Text>
+                                          Partner :{' '}
+                                          {itemdatapartner.staff_first_name}{' '}
+                                          {itemdatapartner.staff_last_name}
+                                        </Text>
+
+                                        <Text>
+                                          Status :{' '}
+                                          {itemdatapartner.confirm_status == 'W'
+                                            ? 'Waiting Confirm'
+                                            : 'Confirm'}
+                                        </Text>
+                                        {/* <Text style={{width: 150}}>
+                                          as a {itemdatapartner.position}
+                                        </Text> */}
+                                      </View>
+                                    ),
+                                  )
+                                : null}
+                            </View>
+                          )}
                         </View>
 
-                        <TouchableOpacity
-                          disabled={
-                            items.status_avail != 'Y'
-                              ? true
-                              : false || dataBooked3.open_book > items.jam
-                              ? true
-                              : false || dataBooked3.close_book < items.jam
-                              ? true
-                              : false
-                          }
-                          onPress={() => onBookingPress(dataBooked3, items.jam)}
-                          style={{
-                            backgroundColor:
-                              items.status_avail == 'Y'
-                                ? colors.primary
-                                : items.databook[0].status == 'O'
-                                ? BaseColor.orangeColor
-                                : BaseColor.redColor,
-                            padding: 15,
-                            borderRadius: 15,
-                            justifyContent: 'center',
-                          }}>
-                          <Text whiteColor subheadline bold>
-                            Booking
-                          </Text>
-                        </TouchableOpacity>
+                        {items.status_avail == 'Y' ||
+                        dataBooked3.open_book > items.jam ||
+                        dataBooked3.close_book < items.jam ? (
+                          <TouchableOpacity
+                            disabled={
+                              items.status_avail != 'Y'
+                                ? true
+                                : false || dataBooked3.open_book > items.jam
+                                ? true
+                                : false || dataBooked3.close_book < items.jam
+                                ? true
+                                : false
+                            }
+                            onPress={() =>
+                              onBookingPress(dataBooked3, items.jam)
+                            }
+                            style={{
+                              backgroundColor:
+                                items.status_avail == 'Y'
+                                  ? colors.primary
+                                  : items.databook[0].status == 'O'
+                                  ? BaseColor.orangeColor
+                                  : BaseColor.redColor,
+                              padding: 15,
+                              borderRadius: 15,
+                              justifyContent: 'center',
+                            }}>
+                            <Text whiteColor subheadline bold>
+                              Booking
+                            </Text>
+                          </TouchableOpacity>
+                        ) : (
+                          <TouchableOpacity
+                            style={{marginRight: 5}}
+                            onPress={() => setExpandIcon(indexs)}>
+                            {/* {console.log('boolean apasi ini', indexs)} */}
+                            <View
+                              style={{
+                                width: 25,
+                                height: 25,
+                                borderRadius: 10,
+                                backgroundColor: colors.primary,
+                                alignSelf: 'center',
+                                alignItems: 'center',
+                                alignContent: 'center',
+                                justifyContent: 'center',
+                              }}>
+                              <Icon
+                                name={
+                                  'chevron-down'
+                                  // isIconUp ? 'chevron-up' : 'chevron-down'
+                                }
+                                color={'#fff'}></Icon>
+                            </View>
+                          </TouchableOpacity>
+                        )}
                       </View>
                     ))
                   : tab.id == 3 && (
@@ -1165,66 +1378,137 @@ function BookingFacility({route}) {
                           {items.jam}
                         </Text>
 
-                        <View style={{flexDirection: 'column'}}>
+                        <View>
                           {items.databook != ''
                             ? items.databook.map((itemdatabook, keys) => (
                                 <View key={keys}>
-                                  <Text>
-                                    {/* {itemdatabook.remarks} -{' '} */}
-                                    {itemdatabook.venue_name}
+                                  <Text
+                                    bold
+                                    style={{
+                                      width: 250,
+                                    }}>
+                                    {itemdatabook.name}
                                   </Text>
-                                  {/* <Text>{itemdatabook.name}</Text> */}
-                                  <Text>{itemdatabook.reservation_no}</Text>
-                                  <Text>
+                                  <Text bold>{itemdatabook.unit}</Text>
+                                  {/* <Text>
+                                    Created date :{' '}
                                     {moment(
                                       itemdatabook.reservation_date,
                                     ).format('DD MMM YYYY hh:mm:ss')}
-                                  </Text>
+                                  </Text> */}
                                   {/* minta tambahin kolom venue_name   */}
                                 </View>
                               ))
                             : null}
-                          {items.datapartner != ''
-                            ? items.datapartner.map((itemdatapartner, keys) => (
-                                <View key={keys}>
-                                  <Text>
-                                    {itemdatapartner.staff_first_name}{' '}
-                                    {itemdatapartner.staff_last_name}
-                                  </Text>
-                                  <Text style={{width: 150}}>
-                                    as a {itemdatapartner.position}
-                                  </Text>
-                                </View>
-                              ))
-                            : null}
+
+                          {isExpand && (
+                            <View>
+                              {items.databook != ''
+                                ? items.databook.map((itemdatabook, keys) => (
+                                    <View key={keys} style={{width: '100%'}}>
+                                      <Text>
+                                        Created date :{' '}
+                                        {moment(
+                                          itemdatabook.reservation_date,
+                                        ).format('DD MMM YYYY hh:mm:ss')}
+                                      </Text>
+                                      <Text>
+                                        Duration : {itemdatabook.duration}{' '}
+                                        {itemdatabook.duration > 1
+                                          ? 'Hour'
+                                          : 'Hours'}
+                                      </Text>
+                                      {/* minta tambahin kolom venue_name   */}
+                                    </View>
+                                  ))
+                                : null}
+                              {items.datapartner != ''
+                                ? items.datapartner.map(
+                                    (itemdatapartner, keys) => (
+                                      <View key={keys}>
+                                        {console.log(
+                                          'itemdata partner',
+                                          itemdatapartner,
+                                        )}
+                                        <Text>
+                                          Partner :{' '}
+                                          {itemdatapartner.staff_first_name}{' '}
+                                          {itemdatapartner.staff_last_name}
+                                        </Text>
+
+                                        <Text>
+                                          Status :{' '}
+                                          {itemdatapartner.confirm_status == 'W'
+                                            ? 'Waiting Confirm'
+                                            : 'Confirm'}
+                                        </Text>
+                                        {/* <Text style={{width: 150}}>
+                                          as a {itemdatapartner.position}
+                                        </Text> */}
+                                      </View>
+                                    ),
+                                  )
+                                : null}
+                            </View>
+                          )}
                         </View>
 
-                        <TouchableOpacity
-                          disabled={
-                            items.status_avail != 'Y'
-                              ? true
-                              : false || dataBooked4.open_book > items.jam
-                              ? true
-                              : false || dataBooked4.close_book < items.jam
-                              ? true
-                              : false
-                          }
-                          onPress={() => onBookingPress(dataBooked4, items.jam)}
-                          style={{
-                            backgroundColor:
-                              items.status_avail == 'Y'
-                                ? colors.primary
-                                : items.databook[0].status == 'O'
-                                ? BaseColor.orangeColor
-                                : BaseColor.redColor,
-                            padding: 15,
-                            borderRadius: 15,
-                            justifyContent: 'center',
-                          }}>
-                          <Text whiteColor subheadline bold>
-                            Booking
-                          </Text>
-                        </TouchableOpacity>
+                        {items.status_avail == 'Y' ||
+                        dataBooked4.open_book > items.jam ||
+                        dataBooked4.close_book < items.jam ? (
+                          <TouchableOpacity
+                            disabled={
+                              items.status_avail != 'Y'
+                                ? true
+                                : false || dataBooked4.open_book > items.jam
+                                ? true
+                                : false || dataBooked4.close_book < items.jam
+                                ? true
+                                : false
+                            }
+                            onPress={() =>
+                              onBookingPress(dataBooked4, items.jam)
+                            }
+                            style={{
+                              backgroundColor:
+                                items.status_avail == 'Y'
+                                  ? colors.primary
+                                  : items.databook[0].status == 'O'
+                                  ? BaseColor.orangeColor
+                                  : BaseColor.redColor,
+                              padding: 15,
+                              borderRadius: 15,
+                              justifyContent: 'center',
+                            }}>
+                            <Text whiteColor subheadline bold>
+                              Booking
+                            </Text>
+                          </TouchableOpacity>
+                        ) : (
+                          <TouchableOpacity
+                            style={{marginRight: 5}}
+                            onPress={() => setExpandIcon(indexs)}>
+                            {/* {console.log('boolean apasi ini', indexs)} */}
+                            <View
+                              style={{
+                                width: 25,
+                                height: 25,
+                                borderRadius: 10,
+                                backgroundColor: colors.primary,
+                                alignSelf: 'center',
+                                alignItems: 'center',
+                                alignContent: 'center',
+                                justifyContent: 'center',
+                              }}>
+                              <Icon
+                                name={
+                                  'chevron-down'
+                                  // isIconUp ? 'chevron-up' : 'chevron-down'
+                                }
+                                color={'#fff'}></Icon>
+                            </View>
+                          </TouchableOpacity>
+                        )}
                       </View>
                     ))
                   : tab.id == 4 && (

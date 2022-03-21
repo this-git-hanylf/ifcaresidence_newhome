@@ -60,11 +60,16 @@ const ModalProduct = props => {
   const image = {uri: item.url_picture};
 
   return (
-    <Modal swipeDirection={['down']} style={styles.bottomModal} {...attrs}>
-      <ScrollView style={{width: '100%', backgroundColor: cardColor}}>
-        <View
-          style={[styles.contentFilterBottom, {backgroundColor: cardColor}]}>
-          {/* <View style={{paddingVertical: 20}}>
+    <View>
+      {/* // <ScrollView style={{backgroundColor: cardColor}}> */}
+      <Modal style={styles.bottomModal} {...attrs}>
+        <ScrollView style={{width: '100%', backgroundColor: cardColor}}>
+          <View
+            style={[
+              styles.contentFilterBottom,
+              {backgroundColor: cardColor, width: '100%'},
+            ]}>
+            {/* <View style={{paddingVertical: 20}}>
           <Text>Choose Partners</Text>
         </View>
         <View
@@ -81,7 +86,7 @@ const ModalProduct = props => {
             onPress={() => goToScreen('FSendMoney')}
           />
         </View> */}
-          {/* <View style={{flexDirection: 'row', marginBottom: 10}}>
+            {/* <View style={{flexDirection: 'row', marginBottom: 10}}>
           {item.map((items, index) => (
             <View
               key={index}
@@ -99,69 +104,77 @@ const ModalProduct = props => {
             </View>
           ))}
         </View> */}
-          <View style={{paddingVertical: 20}}>
-            <Text style={{fontSize: 16}}>Detail Partners</Text>
-          </View>
+            <View style={{paddingVertical: 20}}>
+              <Text style={{fontSize: 16}}>Detail Partners</Text>
+            </View>
 
-          <View key={item.rowID}>
-            <Image
-              source={{uri: item.url_picture}}
-              style={{
-                width: 200,
-                height: 200,
-                borderRadius: 50,
-                alignSelf: 'center',
-              }}
-            />
+            <View key={item.rowID}>
+              <Image
+                source={{uri: item.url_picture}}
+                style={{
+                  width: 200,
+                  height: 200,
+                  borderRadius: 50,
+                  alignSelf: 'center',
+                }}
+              />
 
-            <Text
-              style={{alignSelf: 'center', fontSize: 20, fontWeight: 'bold'}}>
-              {item.staff_first_name} {item.staff_last_name}
-            </Text>
-            <Text
-              style={{alignSelf: 'center', fontSize: 14, fontWeight: 'bold'}}>
-              {item.sex}
-            </Text>
-            <Text
-              style={{alignSelf: 'center', fontSize: 16, fontWeight: 'bold'}}>
-              {item.position}
-              {/* {item.ballboy == 1
+              <Text
+                style={{alignSelf: 'center', fontSize: 20, fontWeight: 'bold'}}>
+                {item.staff_first_name} {item.staff_last_name}
+              </Text>
+              <Text
+                style={{alignSelf: 'center', fontSize: 14, fontWeight: 'bold'}}>
+                {item.sex}
+              </Text>
+              <Text
+                style={{alignSelf: 'center', fontSize: 16, fontWeight: 'bold'}}>
+                {item.position}
+                {/* {item.ballboy == 1
                 ? 'Ballboy'
                 : null || item.coach == 1
                 ? 'Coach'
                 : null || item.hittingpartner == 1
                 ? 'Hitting Partner'
                 : null} */}
-            </Text>
-          </View>
-          {/* <RenderHtml source={{html: item.resume}} contentWidth={width} /> */}
-          <View
-            style={{
-              marginTop: 30,
-              backgroundColor: '#fff',
-              padding: 20,
-              borderRadius: 10,
-            }}>
-            {item.resume ? (
-              // <Text>{item.resume}</Text>
-              <RenderHtml source={{html: item.resume}} contentWidth={width} />
-            ) : (
-              <Text>{item.resume}</Text>
-            )}
+              </Text>
+            </View>
+            <View style={{justifyContent: 'center', alignSelf: 'center'}}>
+              <Button
+                style={{
+                  marginTop: 10,
+                  marginBottom: 20,
+                  width: 100,
+                  height: 50,
+                }}
+                onPress={onApply}
+                // onItems={item}
+              >
+                {t('Choose')}
+              </Button>
+            </View>
 
-            {/* kalo dipakein  .replace, error. error undefined item.resume */}
+            {/* <RenderHtml source={{html: item.resume}} contentWidth={width} /> */}
+            <View
+              style={{
+                marginTop: 30,
+                backgroundColor: '#fff',
+                padding: 20,
+                borderRadius: 10,
+              }}>
+              {item.resume ? (
+                // <Text>{item.resume}</Text>
+                <RenderHtml source={{html: item.resume}} contentWidth={width} />
+              ) : (
+                <Text>{item.resume}</Text>
+              )}
+
+              {/* kalo dipakein  .replace, error. error undefined item.resume */}
+            </View>
           </View>
-          <Button
-            full
-            style={{marginTop: 10, marginBottom: 20}}
-            onPress={onApply}
-            // onItems={item}
-          >
-            {t('Choose')}
-          </Button>
-        </View>
-      </ScrollView>
-    </Modal>
+        </ScrollView>
+      </Modal>
+    </View>
   );
 };
 

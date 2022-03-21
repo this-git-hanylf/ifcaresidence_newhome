@@ -60,3 +60,4 @@ export {FNotificationData} from './fNotification';
 // export { MaziListApp } from "./maziHome";
 export {FCategoryData} from './fCategory';
 export {notfound} from './notfound.json';
+export {dummyPackage} from './dummyPackage';

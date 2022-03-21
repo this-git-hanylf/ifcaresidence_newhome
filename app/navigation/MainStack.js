@@ -20,6 +20,7 @@ import Billing from '../screens/Billing';
 import Facility from '../screens/Facility';
 import Announce from '../screens/Announce';
 import AnnounceDetail from '../screens/AnnouceDetail';
+import PreviewImages from '../screens/AnnouceDetail/PreviewImages';
 import News from '../screens/News';
 import Rent from '../screens/Rent';
 import EProductDetail from '../screens/EProductDetail';
@@ -33,6 +34,7 @@ import EProductPageNotFound from '../screens/EProductPageNotFound';
 
 import ModalLocation from '../screens/Helpdesk/ModalLocation';
 import Package from '../screens/Package';
+import PackageDetail from '../screens/Package/PackageDetail';
 import Privacy from '../screens/Privacy';
 import Skip from '../screens/Skip';
 import Emergency from '../screens/Emergency';
@@ -346,6 +348,16 @@ function MainStack() {
       <Stack.Screen
         name="TermsConditions"
         component={TermsConditions}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="PackageDetail"
+        component={PackageDetail}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="PreviewImages"
+        component={PreviewImages}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

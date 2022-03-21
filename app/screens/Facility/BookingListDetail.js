@@ -91,6 +91,7 @@ export default BookingListDetail = props => {
   ];
 
   const getDetailList = async () => {
+    // fdura;
     const reservation_no = route.params.reservation_no;
     console.log(
       'url datalist detail',
@@ -107,11 +108,33 @@ export default BookingListDetail = props => {
         setDetailBooking(res.data.Data);
         const datalog = res.data.Data.datalog;
         let temp = datalog.map(datalog => {
-          return {
-            title: datalog.check_by_name,
-            time: moment(datalog.check_date).format('DD-MM-YYYY   hh:mm:ss A'),
-            description: datalog.remarks,
-          };
+          if (datalog.status == 'B') {
+            return {
+              title: datalog.check_by_name,
+              title2: null,
+              time: moment(datalog.check_date).format(
+                'DD-MM-YYYY   hh:mm:ss A',
+              ),
+              description: datalog.remarks,
+              reason:
+                datalog.reason == null ? null : 'Reason : ' + datalog.reason,
+            };
+          } else {
+            return {
+              title: datalog.check_by_name,
+              title2:
+                'Staff : ' +
+                datalog.staff_first_name +
+                ' ' +
+                datalog.staff_last_name,
+              time: moment(datalog.check_date).format(
+                'DD-MM-YYYY   hh:mm:ss A',
+              ),
+              description: datalog.remarks,
+              reason:
+                datalog.reason == null ? null : 'Reason : ' + datalog.reason,
+            };
+          }
         });
         console.log('datalog edited', temp);
         setDataLog(temp);
@@ -523,8 +546,8 @@ export default BookingListDetail = props => {
                       }>
                       {/* <Text>{datapartner.staff_first_name}</Text> */}
                       {/* <View>{renderFilterPartner(onDetailBooking.datapartner)}</View> */}
-                      <Text>{userId}</Text>
-                      <Text>{datas.audit_user}</Text>
+                      {/* <Text>{userId}</Text>
+                      <Text>{datas.audit_user}</Text> */}
                       <View
                         style={{
                           //   paddingVertical: 20,
@@ -538,29 +561,6 @@ export default BookingListDetail = props => {
                             Your Partners
                           </Text>
                         </View>
-                        {userId != datas.audit_user ? null : datas.status ==
-                          'B' ? (
-                          <Button
-                            onPress={() =>
-                              onEditPartner(
-                                reservation_no,
-                                onDetailBooking.datapartner,
-                              )
-                            }
-                            style={{height: 60, width: 60}}>
-                            <IconIonicons
-                              name="person-add"
-                              size={20}
-                              color={BaseColor.whiteColor}
-                              style={{
-                                justifyContent: 'center',
-                                alignContent: 'center',
-                                alignItems: 'center',
-                                alignSelf: 'center',
-                              }}></IconIonicons>
-                            {/* <Text style={{fontSize: 14}}>Add Partner</Text> */}
-                          </Button>
-                        ) : null}
                       </View>
 
                       {/* <ScrollView> */}
@@ -594,34 +594,6 @@ export default BookingListDetail = props => {
                               <Text>as a {data.position}</Text>
                             </View>
                           </View>
-
-                          {userId != datas.audit_user ? null : (
-                            <View>
-                              {datas.status == 'B' ? (
-                                <Button
-                                  onPress={() =>
-                                    onRemovePartner(data, reservation_no)
-                                  }
-                                  style={{
-                                    height: 60,
-                                    width: 60,
-                                    backgroundColor: BaseColor.orangeColor,
-                                  }}>
-                                  <IconFontisto
-                                    name="trash"
-                                    size={20}
-                                    color={BaseColor.whiteColor}
-                                    style={{
-                                      justifyContent: 'center',
-                                      alignContent: 'center',
-                                      alignItems: 'center',
-                                      alignSelf: 'center',
-                                    }}></IconFontisto>
-                                  {/* <Text style={{fontSize: 15}}>Remove</Text> */}
-                                </Button>
-                              ) : null}
-                            </View>
-                          )}
                         </View>
                       ))}
                       {/* </ScrollView> */}
@@ -821,6 +793,7 @@ export default BookingListDetail = props => {
           }}
           style={{marginTop: 20, flex: 1, marginLeft: 10}}
           data={datalogEdited}
+          // data={dataDummy}
         />
       </View>
       <View>

@@ -14,6 +14,7 @@ import {Alert} from 'react-native';
 Utils.setupLayoutAnimation();
 
 const Mazi = props => {
+  const {navigation} = props;
   const [registerToken, setRegisterToken] = useState('');
   const [fcmRegistered, setFcmRegistered] = useState(false);
   // const navigation = useNavigation();
@@ -26,7 +27,7 @@ const Mazi = props => {
 
   const onNotif = notif => {
     console.log('notif di on notif', notif);
-    // navigation.navigate('Notification');
+    // navigation.navigate('Notification', notif);
     console.log('notif data title di onnotif', notif.data.title);
     console.log('notif data body di onnotif', notif.data.body);
     // Alert.alert('di index.app on notif');

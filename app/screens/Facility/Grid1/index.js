@@ -43,7 +43,7 @@ const Grid1 = ({
       <Button
         disabled
         style={{height: 35, width: '100%', borderRadius: 15, marginTop: 10}}>
-        <Text style={{fontSize: 14, color: BaseColor.whiteColor}}>
+        <Text style={{fontSize: 12, color: BaseColor.whiteColor}}>
           Check Availability
         </Text>
       </Button>

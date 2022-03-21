@@ -50,10 +50,11 @@ const HouseRoles = props => {
           navigation.goBack();
         }}
       />
+
       <View style={{flex: 1}}>
         <WebView
           source={{
-            uri: 'http://34.87.121.155:8181/apiwebpbi/MasterHouseRuleslow1-6/index.html',
+            uri: 'http://34.87.121.155:2121/apiwebpbi/MasterHouseRuleslow1-6/index.html',
           }}
         />
       </View>

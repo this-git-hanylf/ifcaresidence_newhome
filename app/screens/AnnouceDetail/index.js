@@ -140,7 +140,7 @@ const AnnouceDetail = props => {
                   style={{flex: 1}}
                   activeOpacity={1}
                   onPress={() =>
-                    navigation.navigate('PreviewImage', {images: images})
+                    navigation.navigate('PreviewImages', {images: images})
                   }>
                   <Image
                     key={key}

@@ -83,6 +83,7 @@ const Navigator = props => {
       );
       console.log('remoteMessage.data.type', remoteMessage.data.type);
       // navigation.navigate('Notification');
+      navigation.navigate('Notification', remoteMessage.notification);
       setDataNotif(true);
       setisidataNotif(remoteMessage.notification);
     });
@@ -98,7 +99,8 @@ const Navigator = props => {
           );
           console.log('remoteMessage get initial notification', remoteMessage);
           // setInitialRoute(remoteMessage.data.type); // e.g. "Settings"/
-          setInitialRoute('Notification');
+          setInitialRoute('Notification', {params: remoteMessage.notification});
+          // navigation.navigate('Notification', emoteMessage.notification);
           setDataNotif(true);
           setisidataNotif(remoteMessage.notification);
           // navigation.navigate('Notification');
@@ -109,8 +111,8 @@ const Navigator = props => {
     messaging().setBackgroundMessageHandler(function (payload) {
       console.log('Message received: ', payload);
       console.log('PAYLOAD DATA->>>', payload.data);
-      const parsedJSON = JSON.parse(payload.data['json-data']);
-      console.log('Actions:', parsedJSON);
+      // const parsedJSON = JSON.parse(payload.data['json-data']);
+      // console.log('Actions:', parsedJSON);
     });
   }, []);
 

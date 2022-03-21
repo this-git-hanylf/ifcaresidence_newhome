@@ -8,9 +8,10 @@ import {
   Text,
   Header,
   Icon,
+  Tag,
   colors,
 } from '@components';
-import {BaseStyle, useTheme} from '@config';
+import {BaseStyle, useTheme, BaseColor} from '@config';
 import {
   HomeChannelData,
   HomeListData,
@@ -22,11 +23,33 @@ import axios from 'axios';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {FlatList, ScrollView, View, ActivityIndicator} from 'react-native';
+import {
+  FlatList,
+  ScrollView,
+  View,
+  ActivityIndicator,
+  RefreshControl,
+} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {NewsList, NotFound} from '../../components';
-import List from '../../components/Product/List';
+
+import {useSelector} from 'react-redux';
+import getUser from '../../selectors/UserSelectors';
+
 import styles from './styles';
+
+const TABS = [
+  {
+    id: 1,
+    title: 'Pending',
+    status: 'P',
+  },
+  {
+    id: 2,
+    title: 'Close',
+    status: 'C',
+  },
+];
 
 const Package = props => {
   const {navigation} = props;
@@ -35,23 +58,64 @@ const Package = props => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hasError, setErrors] = useState(false);
+  const [dataPackage, setDataPackage] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const users = useSelector(state => getUser(state));
+
+  const [tabChoosed, setTabChoosed] = useState(TABS[0]);
 
   useEffect(() => {
-    axios
-      .get('http://34.87.121.155:8000/ifcaprop-api/api/news/')
-      .then(({data}) => {
-        console.log('defaultApp -> data', data.data[0].status);
-        setData(data.data);
-      })
-      .catch(error => console.error(error))
-      .finally(() => setLoading(false));
-  }, []);
+    // console.log('email di useefect', email);
+    getPackage();
+  }, [tabChoosed]);
 
-  useEffect(() => {
-    setTimeout(() => {
+  // useEffect(() => {
+  //   // enableExperimental();
+  //   console.log('tab', [tabChoosed.status]);
+  //   console.log('dummy package', dataPackage);
+
+  //   const dataFilter = dataPackage.filter(data =>
+  //     // console.log(
+  //     //   'data filter',
+  //     //   data.status === tabChoosed.status ? data.status : null,
+  //     // ),
+  //     data.status === tabChoosed.status ? data : null,
+  //   );
+  //   // setDataPackage(dummyPackage.filter(data => data[tabChoosed.id]));
+  //   console.log('filter', dataFilter);
+  //   setDataPackage(dataFilter);
+  // }, [tabChoosed]);
+
+  async function getPackage() {
+    try {
+      const email = users.user;
+      console.log('email where', email);
+      const res = await axios.get(
+        `http://34.87.121.155:2121/apiwebpbi/api/package/getDataPackage/` +
+          email,
+      );
+      const datas = res.data.Data;
+      console.log('data package', data);
+      const dataFilter = datas.filter(data =>
+        // console.log(
+        //   'data filter',
+        //   data.status === tabChoosed.status ? data.status : null,
+        // ),
+        data.status === tabChoosed.status ? data : null,
+      );
+      setDataPackage(dataFilter);
       setLoading(false);
-    }, 1000);
-  }, []);
+    } catch (error) {
+      setErrors(error.response.data);
+      alert(hasError.toString());
+    }
+  }
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setLoading(false);
+  //   }, 5000);
+  // }, []);
 
   const goPost = item => () => {
     navigation.navigate('Post', {item: item});
@@ -86,36 +150,161 @@ const Package = props => {
             navigation.goBack();
           }}
         />
-        <ScrollView contentContainerStyle={styles.paddingSrollView}>
-          {data.length == 0 ? (
-            <FlatList
-              scrollEnabled={false}
-              contentContainerStyle={styles.paddingFlatList}
-              data={data}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({item, index}) => (
-                <NewsList
-                  loading={loading}
-                  image={{uri: `${item.url_image}`}}
-                  subtitle={item.news_descs}
-                  title={item.news_title}
-                  source={item.source}
-                  date={moment(item.date_created).startOf('hour').fromNow()}
-                  style={{
-                    marginBottom: index == data.length - 1 ? 0 : 15,
-                  }}
-                  onPress={goPostDetail(item)}
-                />
-              )}
-            />
-          ) : loading ? (
-            <View>
-              <ActivityIndicator size="large" color="#37BEB7" />
+        <View
+          style={{
+            flexDirection: 'row',
+            paddingHorizontal: 20,
+            paddingVertical: 16,
+          }}>
+          {TABS.map(tab => (
+            <View key={tab.id} style={{flex: 1, padding: 4}}>
+              <Tag
+                primary={true}
+                style={{
+                  backgroundColor:
+                    tab.id == tabChoosed.id
+                      ? colors.primary
+                      : colors.background,
+                }}
+                textStyle={{
+                  color:
+                    tab.id == tabChoosed.id
+                      ? BaseColor.whiteColor
+                      : colors.text,
+                  fontSize: 14,
+                }}
+                onPress={() => setTabChoosed(tab)}>
+                {tab.title}
+              </Tag>
             </View>
-          ) : (
-            <NotFound />
-          )}
-        </ScrollView>
+          ))}
+        </View>
+
+        {loading == true ? (
+          <View>
+            <ActivityIndicator size="large" color="#37BEB7" />
+          </View>
+        ) : (
+          <SafeAreaView style={[styles.paddingSrollView, {flex: 1}]}>
+            {/* <ScrollView contentContainerStyle={styles.paddingSrollView}> */}
+            {dataPackage != null ? (
+              <FlatList
+                scrollEnabled={true}
+                contentContainerStyle={styles.paddingFlatList}
+                data={dataPackage}
+                refreshControl={
+                  <RefreshControl
+                    colors={[colors.primary]}
+                    tintColor={colors.primary}
+                    refreshing={refreshing}
+                    onRefresh={() => {}}
+                  />
+                }
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({item, index}) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => navigation.navigate('PackageDetail', item)}>
+                    <View>
+                      <Text
+                        style={{
+                          fontWeight: 'bold',
+                          fontSize: 16,
+                          paddingBottom: 15,
+                          paddingTop: 15,
+                        }}>
+                        Your Package has arrived at{' '}
+                        {item.status == 'P' ? 'Security' : 'TRO'}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text style={{fontWeight: 'bold', fontSize: 14}}>
+                        # {item.package_id}
+                      </Text>
+                    </View>
+
+                    <View
+                      style={{flexDirection: 'row', alignContent: 'center'}}>
+                      <View
+                        style={{
+                          justifyContent: 'flex-start',
+                          flex: 1,
+                          alignSelf: 'center',
+                        }}>
+                        <View style={{paddingVertical: 5}}>
+                          <Text>To : {item.tenant_name}</Text>
+                        </View>
+                        <View style={{paddingVertical: 5}}>
+                          <Text>From : {item.sender_name}</Text>
+                        </View>
+                      </View>
+                      <View
+                        style={{
+                          paddingRight: 10,
+                        }}>
+                        <View style={{paddingVertical: 5}}>
+                          <Text>
+                            Type :{' '}
+                            {item.package_type == 'MP' ? 'Market Place' : null}
+                          </Text>
+                        </View>
+
+                        <View style={{paddingVertical: 5}}>
+                          <Text>Quantity : {item.package_qty}</Text>
+                        </View>
+                      </View>
+                    </View>
+                    <View
+                      style={{flexDirection: 'row', alignContent: 'center'}}>
+                      <View
+                        style={{
+                          justifyContent: 'flex-start',
+                          flex: 1,
+                          alignSelf: 'center',
+                        }}>
+                        <Text>Received date: {item.received_date}</Text>
+                      </View>
+                      <View
+                        style={{
+                          height: 30,
+                          width: 80,
+                          marginHorizontal: 10,
+                          marginVertical: 10,
+                          backgroundColor:
+                            item.status == 'P'
+                              ? BaseColor.yellowColor
+                              : BaseColor.blueColor,
+                          alignItems: 'center',
+                          borderRadius: 8,
+                          justifyContent: 'center',
+                        }}>
+                        <Text
+                          style={{
+                            textAlign: 'center',
+                          }}>
+                          {item.status == 'P' ? 'Pending' : 'Close'}
+                        </Text>
+                      </View>
+                    </View>
+                    {/* ----- DIVIDER HERE---- */}
+                    <View
+                      style={{
+                        // width: 1,
+                        // backgroundColor: BaseColor.dividerColor,
+                        marginRight: 10,
+                        borderBottomWidth: 1,
+                        borderColor: BaseColor.dividerColor,
+                      }}></View>
+                    {/* ----- CLSOE DIVIDER HERE---- */}
+                  </TouchableOpacity>
+                )}
+              />
+            ) : (
+              <NotFound />
+            )}
+            {/* </ScrollView> */}
+          </SafeAreaView>
+        )}
       </SafeAreaView>
     );
   };
