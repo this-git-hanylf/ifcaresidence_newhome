@@ -3,7 +3,8 @@
 import {ApplicationActions} from '@actions';
 import {AssistiveTouch} from '@components';
 import {BaseSetting, useTheme} from '@config';
-import {NavigationContainer} from '@react-navigation/native';
+// import { NavigationContainer } from '@react-navigation/native';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
 
 import {createStackNavigator} from '@react-navigation/stack';
 import {languageSelect} from '@selectors';
@@ -28,22 +29,26 @@ import getUser from '../selectors/UserSelectors';
 import Skip from '../screens/Skip';
 import EProductDetail from '../screens/EProductDetail';
 import messaging from '@react-native-firebase/messaging';
+import Home from '../screens/Home';
 
 const Navigator = props => {
   const {theme, colors} = useTheme();
   const isDarkMode = useDarkMode();
   const language = useSelector(languageSelect);
-  const {navigation, route} = props;
-  console.log('navigation from app for notif', navigation);
+  // const {navigation, route} = props;
+  const {route} = props;
+  console.log('navigation from app for notif', props);
+  const navigation = useNavigation();
   console.log('route from app for notif', route);
 
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const navigationRef = useRef(null);
   const user = useSelector(state => getUser(state));
-  const [initialRoute, setInitialRoute] = useState('Home');
+  const [initialRoute, setInitialRoute] = useState('MainStack');
   const [dataNotif, setDataNotif] = useState(false);
   const [isidataNotif, setisidataNotif] = useState([]);
+  const [noti, setNoti] = useState(false);
 
   console.log('user null ?? ', user);
 
@@ -75,17 +80,62 @@ const Navigator = props => {
     onProcess();
   }, []);
 
+  // useEffect(() => {
+  //   messaging().onNotificationOpenedApp(remoteMessage => {
+  //     console.log(
+  //       'Notification caused app to open from background state:',
+  //       remoteMessage.notification,
+  //     );
+  //     console.log('remoteMessage.data.type', remoteMessage.data.type);
+  //     // navigation.navigate('Notification');
+  //     // navigation.navigate('Notification', remoteMessage.notification);
+  //     navigation.navigate('Notification');
+  //     setDataNotif(true);
+  //     setisidataNotif(remoteMessage.notification);
+  //   });
+
+  //   // Check whether an initial notification is available
+  //   messaging()
+  //     .getInitialNotification()
+  //     .then(remoteMessage => {
+  //       if (remoteMessage) {
+  //         console.log(
+  //           'Notification caused app to open from quit state:',
+  //           remoteMessage.notification,
+  //         );
+  //         console.log('remoteMessage get initial notification', remoteMessage);
+  //         // setInitialRoute(remoteMessage.data.type); // e.g. "Settings"/
+  //         // setInitialRoute('Notification', {params: remoteMessage.notification});
+  //         // navigation.navigate('Notification', remoteMessage.notification);
+  //         setDataNotif(true);
+  //         setisidataNotif(remoteMessage.notification);
+  //         // navigation.navigate('Notification');
+  //       }
+  //       setLoading(false);
+  //     });
+
+  //   messaging().setBackgroundMessageHandler(function (payload) {
+  //     console.log('Message received: ', payload);
+  //     console.log('PAYLOAD DATA->>>', payload.data);
+  //     // const parsedJSON = JSON.parse(payload.data['json-data']);
+  //     // console.log('Actions:', parsedJSON);
+  //   });
+  // }, []);
+
   useEffect(() => {
+    // Assume a message-notification contains a "type" property in the data payload of the screen to open
+    messaging().setBackgroundMessageHandler(async remoteMessage => {
+      console.log('Message handled in the background!', remoteMessage);
+    });
+
     messaging().onNotificationOpenedApp(remoteMessage => {
       console.log(
         'Notification caused app to open from background state:',
         remoteMessage.notification,
       );
-      console.log('remoteMessage.data.type', remoteMessage.data.type);
-      // navigation.navigate('Notification');
-      navigation.navigate('Notification', remoteMessage.notification);
-      setDataNotif(true);
-      setisidataNotif(remoteMessage.notification);
+      navigation.navigate('Notification');
+      setNoti(true);
+      setInitialRoute('Notification');
     });
 
     // Check whether an initial notification is available
@@ -97,27 +147,15 @@ const Navigator = props => {
             'Notification caused app to open from quit state:',
             remoteMessage.notification,
           );
-          console.log('remoteMessage get initial notification', remoteMessage);
-          // setInitialRoute(remoteMessage.data.type); // e.g. "Settings"/
-          setInitialRoute('Notification', {params: remoteMessage.notification});
-          // navigation.navigate('Notification', emoteMessage.notification);
-          setDataNotif(true);
-          setisidataNotif(remoteMessage.notification);
-          // navigation.navigate('Notification');
+          setNoti(true);
+          setInitialRoute('Notification'); // e.g. "Settings"
         }
         setLoading(false);
       });
-
-    messaging().setBackgroundMessageHandler(function (payload) {
-      console.log('Message received: ', payload);
-      console.log('PAYLOAD DATA->>>', payload.data);
-      // const parsedJSON = JSON.parse(payload.data['json-data']);
-      // console.log('Actions:', parsedJSON);
-    });
   }, []);
 
   const goToNotification = () => {
-    navigation.navigate('Notification');
+    // navigation.navigate('Notification');
   };
 
   if (loading) {
@@ -135,7 +173,8 @@ const Navigator = props => {
           <RootStack.Navigator
             screenOptions={{
               headerShown: false,
-            }}>
+            }}
+            initialRouteName={initialRoute}>
             {loading ? (
               <RootStack.Screen name="Loading" component={Loading} />
             ) : user == null || user == '' || user == 0 ? (
@@ -143,7 +182,9 @@ const Navigator = props => {
             ) : (
               <RootStack.Screen name="MainStack" component={MainStack} />
             )}
+            {/* <RootStack.Screen name="MainStack" component={MainStack} /> */}
             <RootStack.Screen name="Notification" component={Notification} />
+            {/* <RootStack.Screen name="Home" component={Home} /> */}
             <RootStack.Screen name="Skip" component={Skip} />
             <RootStack.Screen
               name="EProductDetail"

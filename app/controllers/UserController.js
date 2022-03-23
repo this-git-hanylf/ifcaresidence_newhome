@@ -25,6 +25,7 @@ class UserController {
       });
       // alert(result.Pesan);
       console.log('vardums result -->', result);
+      // ini ada isreset dalemnya, sementara dihilangin, buat biar ga nyangkut insert token firebase
       if (result.Error) {
         return Promise.reject(result.Pesan);
       } else {

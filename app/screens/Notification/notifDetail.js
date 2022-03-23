@@ -48,7 +48,7 @@ const NotificationDetail = props => {
       style={BaseStyle.safeAreaView}
       edges={['right', 'top', 'left']}>
       <Header
-        title={t('notification_detail')}
+        title={t('Notification Detail')}
         renderLeft={() => {
           return (
             <Icon

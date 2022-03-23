@@ -13,8 +13,8 @@ import {Alert} from 'react-native';
 
 Utils.setupLayoutAnimation();
 
-const Mazi = props => {
-  const {navigation} = props;
+const Mazi = () => {
+  // const {navigation} = props;
   const [registerToken, setRegisterToken] = useState('');
   const [fcmRegistered, setFcmRegistered] = useState(false);
   // const navigation = useNavigation();
@@ -71,7 +71,7 @@ const Mazi = props => {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <SafeAreaProvider>
-          <App notification={notif} />
+          <App />
         </SafeAreaProvider>
       </PersistGate>
     </Provider>
