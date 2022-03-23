@@ -31,6 +31,7 @@ import {
   Animated,
   ImageBackground,
   RefreshControl,
+  Dimensions,
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useSelector} from 'react-redux';
@@ -63,6 +64,7 @@ const Home = props => {
   const [getDataDue, setDataDue] = useState([]);
   const [hasError, setErrors] = useState(false);
   const [data, setData] = useState([]);
+  const {width} = Dimensions.get('window');
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -188,6 +190,9 @@ const Home = props => {
             }}
           /> */}
           {/* <V style={{paddingTop: 10}}> */}
+
+          {/* </ScrollView> */}
+
           <Animated.View
             style={[
               styles.headerImageStyle,
@@ -195,45 +200,74 @@ const Home = props => {
                 opacity: headerImageOpacity,
                 height: heightViewImg,
                 padding: 0,
+                flex: 1,
               },
             ]}>
             <Swiper
-              dotStyle={{
-                backgroundColor: BaseColor.dividerColor,
-                marginBottom: 8,
-                padding: 0,
-              }}
-              activeDotStyle={{
-                marginBottom: 8,
-              }}
-              // paginationStyle={{bottom: 0}}
-              loop={true}
-              // style={{
-              //   height: (Utils.getWidthDevice() * 3) / 5,
-              //   width: '100%',
-              // }}
-              style={{padding: 0}}
+              height={240}
+              onMomentumScrollEnd={(e, state, context) =>
+                console.log('index:', state.index)
+              }
               autoplay={true}
-              // autoplayTimeout={3}
-              activeDotColor={colors.primary}
-              // removeClippedSubviews={false}
-              onIndexChanged={index => onSelect(index)}>
+              autoplayTimeout={5}
+              dot={
+                <View
+                  style={{
+                    backgroundColor: 'rgba(0,0,0,.2)',
+                    width: 5,
+                    height: 5,
+                    borderRadius: 4,
+                    marginLeft: 3,
+                    marginRight: 3,
+                    marginTop: 3,
+                    marginBottom: 3,
+                  }}
+                />
+              }
+              activeDot={
+                <View
+                  style={{
+                    backgroundColor: colors.primary,
+                    width: 8,
+                    height: 8,
+                    borderRadius: 4,
+                    marginLeft: 3,
+                    marginRight: 3,
+                    marginTop: 3,
+                    marginBottom: 3,
+                  }}
+                />
+              }
+              paginationStyle={{
+                bottom: -18,
+                // left: null,
+                // right: 10,
+              }}
+              loop>
               {data.map((item, key) => {
                 return (
-                  <Image
-                    key={key}
+                  <View
                     style={{
                       flex: 1,
-                      width: '100%',
-                      // borderRadius: 10,
-                    }}
-                    source={{uri: item.pict}}
-                  />
+                      justifyContent: 'center',
+                      backgroundColor: 'transparent',
+                    }}>
+                    <Image
+                      key={key}
+                      // key={'fast-' + `${item.id}`}
+                      // key={item.length}
+                      style={{
+                        flex: 1,
+                        width,
+                        // borderRadius: 10,
+                      }}
+                      source={{uri: item.pict}}
+                    />
+                  </View>
                 );
               })}
             </Swiper>
           </Animated.View>
-          {/* </ScrollView> */}
 
           {/* <News43
             loading={loading}

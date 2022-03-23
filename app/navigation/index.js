@@ -140,13 +140,10 @@ const Navigator = props => {
               <RootStack.Screen name="Loading" component={Loading} />
             ) : user == null || user == '' || user == 0 ? (
               <RootStack.Screen name="SignIn" component={SignIn} />
-            ) : isidataNotif == null ||
-              isidataNotif == '' ||
-              dataNotif == false ? (
-              <RootStack.Screen name="MainStack" component={MainStack} />
             ) : (
-              <RootStack.Screen name="Notification" component={Notification} />
+              <RootStack.Screen name="MainStack" component={MainStack} />
             )}
+            <RootStack.Screen name="Notification" component={Notification} />
             <RootStack.Screen name="Skip" component={Skip} />
             <RootStack.Screen
               name="EProductDetail"

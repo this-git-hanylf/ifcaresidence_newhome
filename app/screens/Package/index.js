@@ -95,19 +95,28 @@ const Package = props => {
           email,
       );
       const datas = res.data.Data;
-      console.log('data package', data);
-      const dataFilter = datas.filter(data =>
-        // console.log(
-        //   'data filter',
-        //   data.status === tabChoosed.status ? data.status : null,
-        // ),
-        data.status === tabChoosed.status ? data : null,
-      );
-      setDataPackage(dataFilter);
-      setLoading(false);
+
+      console.log('data package', datas);
+
+      if (datas != null) {
+        const dataFilter = datas.filter(data =>
+          // console.log(
+          //   'data filter',
+          //   data.status === tabChoosed.status ? data.status : null,
+          // ),
+          data.status === tabChoosed.status ? data : null,
+        );
+        console.log('datafilter', dataFilter);
+        setDataPackage(dataFilter);
+        setLoading(false);
+      } else {
+        setDataPackage(datas);
+        setLoading(false);
+      }
     } catch (error) {
-      setErrors(error.response.data);
-      alert(hasError.toString());
+      setErrors(error);
+      setLoading(false);
+      // alert(hasError.toString());
     }
   }
 
@@ -131,7 +140,7 @@ const Package = props => {
   const renderContent = () => {
     const mainNews = PostListData[0];
     return (
-      <SafeAreaView
+      <View
         style={[BaseStyle.safeAreaView, {flex: 1}]}
         edges={['right', 'top', 'left']}>
         <Header
@@ -180,12 +189,19 @@ const Package = props => {
           ))}
         </View>
 
+        {/* {dataPackage != null ? (
+          <Text>tidak sama dengan null</Text>
+        ) : (
+          <Text>sama dengan null</Text>
+        )} */}
+
         {loading == true ? (
           <View>
             <ActivityIndicator size="large" color="#37BEB7" />
           </View>
         ) : (
-          <SafeAreaView style={[styles.paddingSrollView, {flex: 1}]}>
+          // <NotFound />
+          <SafeAreaView style={[styles.paddingSrollView]}>
             {/* <ScrollView contentContainerStyle={styles.paddingSrollView}> */}
             {dataPackage != null ? (
               <FlatList
@@ -214,7 +230,7 @@ const Package = props => {
                           paddingTop: 15,
                         }}>
                         Your Package has arrived at{' '}
-                        {item.status == 'P' ? 'Security' : 'TRO'}
+                        {item.status == 'P' ? 'Security' : 'Resident'}
                       </Text>
                     </View>
                     <View>
@@ -243,10 +259,7 @@ const Package = props => {
                           paddingRight: 10,
                         }}>
                         <View style={{paddingVertical: 5}}>
-                          <Text>
-                            Type :{' '}
-                            {item.package_type == 'MP' ? 'Market Place' : null}
-                          </Text>
+                          <Text>Type : {item.package_descs}</Text>
                         </View>
 
                         <View style={{paddingVertical: 5}}>
@@ -300,12 +313,22 @@ const Package = props => {
                 )}
               />
             ) : (
-              <NotFound />
+              <View>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                  }}>
+                  <Text style={{paddingTop: 50}}>Not Available Data</Text>
+                </View>
+                <NotFound />
+              </View>
             )}
             {/* </ScrollView> */}
           </SafeAreaView>
         )}
-      </SafeAreaView>
+      </View>
     );
   };
 

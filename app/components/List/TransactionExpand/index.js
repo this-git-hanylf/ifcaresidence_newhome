@@ -1,11 +1,14 @@
-import Text from '@components/Text';
+import {Text, Button} from '@components';
 import ListTransaction from '@components/List/Transaction';
 import PropTypes from 'prop-types';
 import React, {useState, Fragment} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import styles from './styles';
 import {useTheme} from '@config';
 import numFormat from '../../numFormat';
+import {useNavigation, useRoute} from '@react-navigation/core';
+import Modal from 'react-native-modal';
+import {useTranslation} from 'react-i18next';
 
 const TransactionExpand = ({
   style = {
@@ -23,6 +26,7 @@ const TransactionExpand = ({
   due_date = '',
   doc_date = '',
   tower = '',
+  lot_no = '',
   feeTitle = '',
   feeValue = '',
   costTitle = '',
@@ -31,6 +35,9 @@ const TransactionExpand = ({
   changeValue = '',
   currentTitle = '',
   currentValue = '',
+  debtor_acct = '',
+  entity_cd = '',
+  project_no = '',
   ListTransactionProps = {
     icon: 'exchange-alt',
     name: name,
@@ -40,11 +47,43 @@ const TransactionExpand = ({
     doc_no: doc_no,
     mbal_amt: mbal_amt,
     disabled: true,
+    lot_no: lot_no,
+    debtor_acct: debtor_acct,
+    entity_cd: entity_cd,
+    project_no: project_no,
   },
   isExpandInit = false,
 }) => {
   const {colors} = useTheme();
   const [isExpand, setIsExpand] = useState(isExpandInit);
+  const navigation = useNavigation();
+  const [modalSuccessVisible, showModalSuccess] = useState(false);
+  const [message, setMessage] = useState('');
+  const [hasError, setErrors] = useState(false);
+  const {t} = useTranslation();
+
+  const clickAttachment = data => {
+    console.log('data fior attach', data);
+    const params = {
+      entity_cd: data.entity_cd,
+      project_no: data.project_no,
+      debtor_acct: debtor_acct,
+      doc_no: doc_no,
+    };
+    console.log('params for click attach], params');
+    navigation.navigate('AttachmentBilling', params);
+    // if (data.debtor_acct == '') {
+    //   // alert('Please Choose Debtor First');
+    //   setMessage('Please choose debtor first');
+    //   showModalSuccess(true);
+    // } else {
+
+    // }
+  };
+
+  const onCloseModal = () => {
+    showModalSuccess(false);
+  };
 
   return (
     <View style={style}>
@@ -95,6 +134,17 @@ const TransactionExpand = ({
                 Total
               </Text>
               <Text headline>{mbal_amt}</Text>
+
+              <TouchableOpacity
+                onPress={() =>
+                  clickAttachment({entity_cd, project_no, debtor_acct})
+                }>
+                <Text
+                  style={{color: colors.primary, fontSize: 15, paddingTop: 10}}
+                  bold>
+                  Attachment
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -138,6 +188,10 @@ TransactionExpand.propTypes = {
   tradingPairValue: PropTypes.string,
   priceTitle: PropTypes.string,
   price: PropTypes.string,
+  lot_no: PropTypes.string,
+  debtor_acct: PropTypes.string,
+  entity_cd: PropTypes.string,
+  project_no: PropTypes.string,
   feeTitle: PropTypes.string,
   feeValue: PropTypes.string,
   costTitle: PropTypes.string,

@@ -755,7 +755,7 @@ export default BookingDetail = props => {
 
   const onCloseModal = () => {
     showModalSuccess(false);
-    navigation.navigate('Home');
+    navigation.navigate('Facility');
   };
   return (
     <View style={{flex: 1}}>

@@ -24,6 +24,7 @@ const Grid1 = ({
     <TouchableOpacity style={[styles.grid1, style]} onPress={onPress}>
       <Image
         source={{uri: image}}
+        // source={image}
         style={styles.imageBackgroundGrid1}
         imageStyle={{borderRadius: 8}}
       />

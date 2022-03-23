@@ -62,7 +62,7 @@ const TABS = [
   {
     id: 5,
     title: 'Not Show',
-    status: 'W',
+    status: 'N',
   },
 ];
 
@@ -84,6 +84,7 @@ export default BookingList = props => {
   const [tabChoosed, setTabChoosed] = useState(TABS[0]);
 
   const getListBooking = () => {
+    setSpinner(true);
     axios
       .get(`http://34.87.121.155:2121/apiwebpbi/api/facility/book/all/` + email)
       .then(data => {
@@ -91,18 +92,22 @@ export default BookingList = props => {
 
         const datas = data.data.Data;
         // console.log('data package', datas);
-        setSpinner(true);
-        const dataFilter = datas.filter(data =>
-          // console.log(
-          //   'data filter',
-          //   data.status === tabChoosed.status ? data.status : null,
-          // ),
-          data.status === tabChoosed.status ? data : null,
-        );
-        console.log('datafilter', dataFilter);
+        if (datas != null) {
+          const dataFilter = datas.filter(data =>
+            // console.log(
+            //   'data filter',
+            //   data.status === tabChoosed.status ? data.status : null,
+            // ),
+            data.status === tabChoosed.status ? data : null,
+          );
+          console.log('datafilter', dataFilter);
 
-        setdataBooking(dataFilter);
-        setSpinner(false);
+          setdataBooking(dataFilter);
+          setSpinner(false);
+        } else {
+          setdataBooking(datas);
+          setSpinner(false);
+        }
       })
       .catch(error => console.error(error))
       // .catch(error => console.error(error.response.data))
@@ -133,6 +138,8 @@ export default BookingList = props => {
                       ? BaseColor.redColor
                       : item.status == 'D'
                       ? BaseColor.blueColor
+                      : item.status == 'N'
+                      ? '#000'
                       : BaseColor.orangeColor,
                 }}>
                 # {item.reservation_no}
@@ -149,6 +156,8 @@ export default BookingList = props => {
                   ? 'Ongoing'
                   : item.status == 'D'
                   ? 'Done'
+                  : item.status == 'N'
+                  ? 'Not Show'
                   : null}{' '}
                 by {item.last_update_by}
                 {/* nanti name berubah pake kolom baru */}
@@ -207,7 +216,7 @@ export default BookingList = props => {
   };
 
   const onDetailList = item => {
-    //   console.log('item for detail list', item);
+    console.log('item for detail list', item);
     navigation.navigate('BookingListDetail', item);
   };
   return (
@@ -249,8 +258,9 @@ export default BookingList = props => {
               textStyle={{
                 color:
                   tab.id == tabChoosed.id ? BaseColor.whiteColor : colors.text,
-                fontSize: 14,
+                fontSize: 15,
               }}
+              _numberOfLines={0}
               onPress={() => setTabChoosed(tab)}>
               {/* <View style={{}}> */}
               <Text

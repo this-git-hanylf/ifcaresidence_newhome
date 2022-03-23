@@ -17,6 +17,8 @@ import FCategory from '@screens/FCategory';
 
 import {BottomTabNavigatorMazi, tabBarIcon} from './components';
 import Billing from '../screens/Billing';
+import AttachmentBilling from '../screens/Billing/AttachmentBilling';
+import PDFAttach from '../screens/Billing/PDFAttach';
 import Facility from '../screens/Facility';
 import Announce from '../screens/Announce';
 import AnnounceDetail from '../screens/AnnouceDetail';
@@ -358,6 +360,16 @@ function MainStack() {
       <Stack.Screen
         name="PreviewImages"
         component={PreviewImages}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AttachmentBilling"
+        component={AttachmentBilling}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="PDFAttach"
+        component={PDFAttach}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

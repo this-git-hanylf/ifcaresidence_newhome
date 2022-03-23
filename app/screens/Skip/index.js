@@ -85,36 +85,27 @@ const Skip = props => {
         <View>
           {/* <Image source={Images.trip4} style={{width: '100%', height: 135}} /> */}
           <Image
-            source={require('../../assets/images/pakubuwono.png')}
+            source={require('../../assets/images/logo_about_us.jpg')}
             style={{
-              height: 60,
-              width: 180,
+              height: 150,
+              width: 250,
               alignItems: 'center',
-              marginHorizontal: 100,
+              // marginHorizontal: 100,
               flexDirection: 'row',
               justifyContent: 'center',
               alignSelf: 'center',
             }}
           />
-          <View style={styles.titleAbout}>
-            {/* <Text title1 semibold whiteColor>
-              {t('about_us')}
-            </Text> */}
-            <Text
-              subhead
-              greyColor
-              style={{marginTop: 70, textAlign: 'center'}}>
-              {/* {t('slogan_about_us')} */}
-              {data.about_title}
-            </Text>
-          </View>
         </View>
-        <View style={{padding: 20}}>
-          <Text headline semibold style={{textAlign: 'center'}}>
+        <View style={{paddingTop: 3}}>
+          <Text
+            headline
+            semibold
+            style={{textAlign: 'center', paddingBottom: 20}}>
             {/* {t('who_we_are')} */}
             {data.about_title}
           </Text>
-          <View>
+          {/* <View>
             <Text
               body2
               style={{
@@ -124,21 +115,12 @@ const Skip = props => {
               numberOfLines={100}>
               {data.about_us?.replace(/<\/?[^>]+(>|$;)/gi, '')}
             </Text>
-          </View>
+          </View> */}
           <View style={styles.address}>
             <Text
               semibold
               style={{
-                fontSize: 18,
-                paddingBottom: 15,
-              }}>
-              Contact Us
-            </Text>
-            <Text body>{data.address}</Text>
-            <Text
-              semibold
-              style={{
-                paddingTop: 20,
+                paddingTop: 0,
                 paddingBottom: 10,
                 fontSize: 15,
               }}>
@@ -154,36 +136,20 @@ const Skip = props => {
               <Icon name="envelope" size={20} />
               <Text> {data.contact_email}</Text>
             </View>
-          </View>
-        </View>
 
-        <View style={{flex: 1}}>
-          <FlatList
-            scrollEnabled={false}
-            contentContainerStyle={styles.paddingFlatList}
-            data={rent}
-            renderItem={({item, index}) => (
-              <ProductBlock
-                loading={loading}
-                description={item.description}
-                subject={item.subject}
-                style={{marginVertical: 8}}
-                images={item.images[0].pict}
-                avatar={item.avatar}
-                email={item.email}
-                bath_room={item.bath_room}
-                bed_room={item.bed_room}
-                land_area={item.land_area}
-                build_area={item.build_area}
-                agent_name={item.agent_name}
-                publish_date={moment(item.publish_date).format('H:mm:ss')}
-                price_descs={item.price_descs}
-                onPress={() => goProductDetail(item)}
-                isFavorite={item.isFavorite}
-                salePercent={item.salePercent}
-              />
-            )}
-          />
+            <Text
+              semibold
+              style={{
+                fontSize: 18,
+                paddingBottom: 10,
+                paddingTop: 15,
+              }}>
+              Contact Us
+            </Text>
+            <Text body style={{paddingBottom: 5}}>
+              {data.address}
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

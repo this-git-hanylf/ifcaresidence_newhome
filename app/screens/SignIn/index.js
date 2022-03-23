@@ -53,8 +53,10 @@ const SignIn = props => {
   const emailChanged = useCallback(value => setEmail(value), []);
 
   useEffect(() => {
+    console.log('user for reset? ', user);
     if (user !== null) {
       props.navigation.navigate('MainStack');
+      // navigation.navigate('MainStack');
     }
   });
 

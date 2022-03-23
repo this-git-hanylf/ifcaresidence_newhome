@@ -1,13 +1,13 @@
-import Text from "@components/Text";
-import PropTypes from "prop-types";
-import React, { useEffect } from "react";
-import { StatusBar, TouchableOpacity, View } from "react-native";
-import { useDarkMode } from "react-native-dark-mode";
-import { useSelector } from "react-redux";
-import styles from "./styles";
+import Text from '@components/Text';
+import PropTypes from 'prop-types';
+import React, {useEffect} from 'react';
+import {StatusBar, TouchableOpacity, View} from 'react-native';
+import {useDarkMode} from 'react-native-dark-mode';
+import {useSelector} from 'react-redux';
+import styles from './styles';
 
 export default function Header(props) {
-  const forceDark = useSelector((state) => state.application.force_dark);
+  const forceDark = useSelector(state => state.application.force_dark);
   const {
     style,
     styleLeft,
@@ -25,16 +25,17 @@ export default function Header(props) {
     renderRightSecond,
     renderRight,
     barStyle,
+    _numberOfLines,
   } = props;
   const isDarkMode = useDarkMode();
 
   useEffect(() => {
-    let option = isDarkMode ? "light-content" : "dark-content";
+    let option = isDarkMode ? 'light-content' : 'dark-content';
     if (forceDark) {
-      option = "light-content";
+      option = 'light-content';
     }
     if (forceDark == false) {
-      option = "dark-content";
+      option = 'dark-content';
     }
     if (barStyle) {
       option = barStyle;
@@ -44,20 +45,22 @@ export default function Header(props) {
 
   return (
     <View style={[styles.contain, style]}>
-      <View style={[{ flex: 1 }, styleLeft]}>
+      <View style={[{flex: 1}, styleLeft]}>
         <TouchableOpacity
           style={[styles.contentLeft, styleContentLeft]}
-          onPress={onPressLeft}
-        >
+          onPress={onPressLeft}>
           {renderLeft()}
         </TouchableOpacity>
       </View>
       <View style={[styles.contentCenter, styleContentCenter]}>
-        <Text headline numberOfLines={1}>
+        <Text
+          headline
+          numberOfLines={_numberOfLines == 0 ? 0 : 1}
+          style={{fontSize: 16, textAlign: 'center'}}>
           {title}
         </Text>
 
-        {subTitle != "" && (
+        {subTitle != '' && (
           <Text caption2 light>
             {subTitle}
           </Text>
@@ -66,14 +69,12 @@ export default function Header(props) {
       <View style={[styles.right, styleRight]}>
         <TouchableOpacity
           style={[styles.contentRightSecond, styleRightSecond]}
-          onPress={onPressRightSecond}
-        >
+          onPress={onPressRightSecond}>
           {renderRightSecond()}
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.contentRight, styleContentRight]}
-          onPress={onPressRight}
-        >
+          onPress={onPressRight}>
           {renderRight()}
         </TouchableOpacity>
       </View>
@@ -99,6 +100,7 @@ Header.propTypes = {
   title: PropTypes.string,
   subTitle: PropTypes.string,
   barStyle: PropTypes.string,
+  _numberOfLines: PropTypes.number,
 };
 
 Header.defaultProps = {
@@ -116,7 +118,8 @@ Header.defaultProps = {
   onPressLeft: () => {},
   onPressRight: () => {},
   onPressRightSecond: () => {},
-  title: "Title",
-  subTitle: "",
-  barStyle: "",
+  title: 'Title',
+  subTitle: '',
+  barStyle: '',
+  _numberOfLines: 10,
 };

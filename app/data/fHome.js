@@ -23,7 +23,7 @@ export const FCategories = [
     id: 3,
     screen: 'Announce',
     icon: 'info',
-    title: 'Announce',
+    title: 'Announcement',
     user_facility: 'N',
     user_menu: 'Y',
     icon_url: require('../assets/images/icon_at_home/icon-4.jpeg'),

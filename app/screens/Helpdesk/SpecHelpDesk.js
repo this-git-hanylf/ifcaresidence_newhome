@@ -58,6 +58,7 @@ export default function SpecHelpDesk() {
   const [requiredText, setrequiredText] = useState(false);
   const [textFloor, settextFloor] = useState('');
   const [isDisabled, setDisabled] = useState(false);
+  const [tenant_no, setTenantNo] = useState('');
 
   //-----FOR GET ENTITY & PROJJECT
   const getTower = async () => {
@@ -171,15 +172,20 @@ export default function SpecHelpDesk() {
     getDebtor(data);
   };
 
-  const handleChangeModal = data => {
-    data.data.map(dat => {
-      if (dat) {
-        setDebtor(dat.debtor_acct);
-        settextDebtor(dat.debtor_acct + ' - ' + dat.name);
-        settextNameDebtor(dat.name);
-        getLot(dat.debtor_acct);
-      }
-    });
+  const handleChangeModal = ({data, index}) => {
+    console.log('index,', index);
+    // console.log('data chjange', data);
+    // data.data.map(dat => {
+    //   console.log('data for text debtor', dat);
+    //   if (dat) {
+
+    setDebtor(index.debtor_acct);
+    setTenantNo(index.tenant_no);
+    settextDebtor(index.debtor_acct + ' - ' + index.name);
+    settextNameDebtor(index.name);
+    getLot(index.tenant_no);
+    //   }
+    // });
     setSpinner(false);
   };
 
@@ -188,6 +194,7 @@ export default function SpecHelpDesk() {
       entity_cd: entity,
       project_no: project_no,
       email: email,
+      tenant_no: data,
     };
     const config = {
       headers: {
@@ -344,7 +351,7 @@ export default function SpecHelpDesk() {
               <ModalDropdown_debtor
                 label="Debtor"
                 data={dataDebtor}
-                onChange={() => handleChangeModal({data: dataDebtor})}
+                onChange={index => handleChangeModal({data: dataDebtor, index})}
                 value={textDebtor}
                 style={{marginBottom: 0, paddingBottom: 0}}
               />

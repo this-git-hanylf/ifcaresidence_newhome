@@ -73,7 +73,7 @@ const Announce = props => {
         style={[BaseStyle.safeAreaView, {flex: 1}]}
         edges={['right', 'top', 'left']}>
         <Header
-          title={t('Announce')}
+          title={t('Announcement')}
           renderLeft={() => {
             return (
               <Icon

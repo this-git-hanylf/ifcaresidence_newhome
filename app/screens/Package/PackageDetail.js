@@ -167,7 +167,7 @@ const PackageDetail = props => {
                           paddingTop: 15,
                         }}>
                         Your Package has arrived at{' '}
-                        {item.status == 'P' ? 'Security' : 'TRO'}
+                        {item.status == 'P' ? 'Security' : 'Resident'}
                       </Text>
                     </View>
                     <View
@@ -242,7 +242,7 @@ const PackageDetail = props => {
                           paddingRight: 10,
                         }}>
                         <View style={{paddingVertical: 5}}>
-                          <Text>Type : {item.package_type}</Text>
+                          <Text>Type : {item.package_descs}</Text>
                         </View>
 
                         <View style={{paddingVertical: 5}}>
@@ -349,18 +349,18 @@ const PackageDetail = props => {
                           style={{
                             borderWidth: 1,
                             borderColor: colors.primary,
-                            width: 200,
+                            width: 300,
                             height: 200,
                             marginTop: 10,
                           }}>
                           <Image
                             source={{uri: item.package_picture}}
                             style={{
-                              width: 200,
+                              width: '100%',
                               height: 200,
                               // marginTop: 10,
 
-                              resizeMode: 'center', //auto center dengan maksimal height width hardcode 200px
+                              resizeMode: 'cover', //auto center dengan maksimal height width hardcode 200px
                             }}></Image>
                         </View>
                       )}
@@ -475,18 +475,18 @@ const PackageDetail = props => {
                         style={{
                           borderWidth: 1,
                           borderColor: colors.primary,
-                          width: 200,
+                          width: 300,
                           height: 200,
                           marginTop: 10,
                         }}>
                         <Image
                           source={{uri: item.received_photo_resident}}
                           style={{
-                            width: 200,
+                            width: '100%',
                             height: 200,
                             // marginTop: 10,
 
-                            resizeMode: 'center', //auto center dengan maksimal height width hardcode 200px
+                            resizeMode: 'cover', //auto center dengan maksimal height width hardcode 200px
                           }}></Image>
                       </View>
                     </View>

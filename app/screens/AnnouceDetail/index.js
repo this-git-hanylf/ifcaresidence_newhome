@@ -193,17 +193,24 @@ const AnnouceDetail = props => {
         style={[BaseStyle.safeAreaView]}
         forceInset={{top: 'always', bottom: 'always'}}>
         <Header
-          title={t('Announce')}
-          renderLeft={() => {
-            return (
-              <Icon
-                name="angle-left"
-                size={20}
-                color={colors.primary}
-                enableRTL={true}
-              />
-            );
+          style={{
+            width: '90%',
+            // textAlign: 'center',
+            alignSelf: 'center',
+            // flex: 1,
           }}
+          _numberOfLines={0}
+          // title={t('Announce')}
+          // renderLeft={() => {
+          //   return (
+          //     <Icon
+          //       name="angle-left"
+          //       size={20}
+          //       color={colors.primary}
+          //       enableRTL={true}
+          //     />
+          //   );
+          // }}
           onPressLeft={() => {
             navigation.goBack();
           }}

@@ -112,13 +112,13 @@ const Facility = props => {
   };
 
   useEffect(() => {
-    // getTower();
+    getTower();
     // getdata();
 
-    setTimeout(() => {
-      setLoading(false);
-      getTower();
-    }, 3000);
+    // setTimeout(() => {
+    //   setLoading(false);
+    //   getTower();
+    // }, 3000);
   }, []);
 
   const getdata = data => {
@@ -172,80 +172,82 @@ const Facility = props => {
             navigation.goBack();
           }}
         />
-        {spinner ? (
+        {/* {spinner ? (
           <View>
             <View>
-              {/* <Spinner visible={this.state.spinner} /> */}
+             
               <Placeholder style={{marginVertical: 4, paddingHorizontal: 10}}>
                 <PlaceholderLine width={100} noMargin style={{height: 40}} />
               </Placeholder>
             </View>
           </View>
         ) : (
-          <ScrollView contentContainerStyle={styles.paddingSrollView}>
-            <View
-              style={{
-                flexDirection: 'row',
-                width: '100%',
-                justifyContent: 'space-between',
-              }}>
-              <View>
-                <Text bold headline>
-                  Choose Facility
-                </Text>
-                <Text subtitle>Reserve Facility for Your Activity</Text>
-              </View>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('BookingList')}>
-                <View
-                  style={{
-                    // width: 100,
-                    borderRadius: 8,
-                    backgroundColor: colors.primary,
-                    // padding: 10,
-                    paddingVertical: 6,
-                    paddingHorizontal: 20,
-                  }}>
-                  <Text subtitle style={{color: BaseColor.whiteColor}}>
-                    {' '}
-                    Booking List
-                  </Text>
-                </View>
-              </TouchableOpacity>
+         
+        )} */}
+        <ScrollView contentContainerStyle={styles.paddingSrollView}>
+          <View
+            style={{
+              flexDirection: 'row',
+              width: '100%',
+              justifyContent: 'space-between',
+            }}>
+            <View>
+              <Text bold headline>
+                Choose Facility
+              </Text>
+              <Text subtitle>Reserve Facility for Your Activity</Text>
             </View>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('BookingList')}>
+              <View
+                style={{
+                  // width: 100,
+                  borderRadius: 8,
+                  backgroundColor: colors.primary,
+                  // padding: 10,
+                  paddingVertical: 6,
+                  paddingHorizontal: 20,
+                }}>
+                <Text subtitle style={{color: BaseColor.whiteColor}}>
+                  {' '}
+                  Booking List
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
 
-            <View style={{flex: 1, padding: 15, paddingTop: 10}}>
-              <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-                {/* <View>
+          <View style={{flex: 1, padding: 15, paddingTop: 10}}>
+            <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+              {/* <View>
                 <Text>{data.title}</Text>
               </View> */}
-                {data?.map((item, index) => {
-                  return (
-                    <View key={index} style={{width: '50%', height: 290}}>
-                      <ProductGrid1
-                        key={index}
-                        style={{
-                          width: '100%',
-                          paddingRight: index % 2 == 0 ? 10 : 0,
-                          paddingLeft: index % 2 != 0 ? 10 : 0,
-                        }}
-                        description={item.available}
-                        title={item.title}
-                        image={item.image}
-                        // costPrice={item.costPrice}
-                        // salePrice={item.salePrice}
-                        // isFavorite={item.isFavorite}
-                        onPress={() =>
-                          navigation.navigate('DetailFacility', item)
-                        }
-                      />
-                    </View>
-                  );
-                })}
-              </View>
+              {data?.map((item, index) => {
+                return (
+                  <View key={index} style={{width: '50%', height: 290}}>
+                    <ProductGrid1
+                      key={index}
+                      style={{
+                        width: '100%',
+                        paddingRight: index % 2 == 0 ? 10 : 0,
+                        paddingLeft: index % 2 != 0 ? 10 : 0,
+                      }}
+                      description={item.available}
+                      title={item.title}
+                      image={item.image}
+                      // image={require('@assets/images/avata-01.jpeg')}
+                      // costPrice={item.costPrice}
+                      // salePrice={item.salePrice}
+                      // isFavorite={item.isFavorite}
+                      onPress={() =>
+                        navigation.navigate('DetailFacility', item)
+                      }
+                    />
+                  </View>
+                );
+              })}
             </View>
-          </ScrollView>
-        )}
+          </View>
+        </ScrollView>
       </SafeAreaView>
     );
   };

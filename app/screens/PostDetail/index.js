@@ -198,7 +198,7 @@ const PostDetail = props => {
           source={{uri: `${url_image}`}}
           style={{height: '100%', width: '100%'}}
         />
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={[styles.viewIcon, {backgroundColor: colors.primaryLight}]}
           onPress={() => {
             Linking.openURL(`${item.source}`);
@@ -210,7 +210,7 @@ const PostDetail = props => {
             color={BaseColor.whiteColor}
             // onPress={() => console.log("Your code")}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </Animated.View>
       <Animated.View style={[styles.headerStyle, {position: 'absolute'}]}>
         <SafeAreaView

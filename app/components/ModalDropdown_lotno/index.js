@@ -20,30 +20,47 @@ const ModalDropdown_lotno = props => {
 
   return (
     <View {...attrs}>
-      {props.label && (
-        <Text style={{color: '#000'}}>{`Select ${props.label}`}</Text>
+      {props.data == null ? (
+        <View {...attrs}>
+          {props.label && (
+            <Text style={{color: '#000'}}>{`Select ${props.label}`}</Text>
+          )}
+          <TextInput
+            style={[{colors: '#000'}, _styles.input]}
+            onFocus={() => this.selector.open()}
+            placeholder={'LotNo not Available. Please choose another Debtor.'}
+            editable={false}
+            placeholderTextColor="red"
+            value={props.value}
+          />
+        </View>
+      ) : (
+        <View {...attrs}>
+          {props.label && (
+            <Text style={{color: '#000'}}>{`Select ${props.label}`}</Text>
+          )}
+          <ModalSelector
+            data={props.data}
+            optionTextStyle={{color: '#333'}}
+            selectedItemTextStyle={{color: '#3C85F1'}}
+            accessible={true}
+            keyExtractor={item => item.lot_no}
+            labelExtractor={item => item.lot_no} //khusus untuk lotno
+            cancelButtonAccessibilityLabel={'Cancel Button'}
+            onChange={option => {
+              props.onChange(option);
+            }}>
+            <TextInput
+              style={[{colors: '#000'}, _styles.input]}
+              onFocus={() => this.selector.open()}
+              placeholder={props.label}
+              editable={false}
+              placeholderTextColor="#a9a9a9"
+              value={props.value}
+            />
+          </ModalSelector>
+        </View>
       )}
-
-      <ModalSelector
-        data={props.data}
-        optionTextStyle={{color: '#333'}}
-        selectedItemTextStyle={{color: '#3C85F1'}}
-        accessible={true}
-        keyExtractor={item => item.lot_no}
-        labelExtractor={item => item.lot_no + ` - ` + item.level_no} //khusus untuk debtor
-        cancelButtonAccessibilityLabel={'Cancel Button'}
-        onChange={option => {
-          props.onChange(option);
-        }}>
-        <TextInput
-          style={[{colors: '#000'}, _styles.input]}
-          onFocus={() => this.selector.open()}
-          placeholder={props.label}
-          editable={false}
-          placeholderTextColor="#a9a9a9"
-          value={props.value}
-        />
-      </ModalSelector>
     </View>
   );
 };

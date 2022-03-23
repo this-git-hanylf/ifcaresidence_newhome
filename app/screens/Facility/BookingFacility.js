@@ -86,6 +86,8 @@ function BookingFacility({route}) {
   const isExpandInit = useState(false);
   const [isExpand, setIsExpand] = useState(false);
   const [isIconUp, setIconUp] = useState(false);
+  const [entity, setEntity] = useState('');
+  const [project_no, setProjectNo] = useState('');
 
   useEffect(() => {
     axios
@@ -202,15 +204,13 @@ function BookingFacility({route}) {
     );
   };
 
-  useEffect(() => {
-    // getTower();
-    // const getTower = () => {
-    const datas = {
+  //-----FOR GET ENTITY & PROJJECT
+  const getTower = async () => {
+    const data = {
       email: email,
+      //   email: 'haniyya.ulfah@ifca.co.id',
       app: 'O',
     };
-
-    // console.log('for  data daate', datas);
 
     const config = {
       headers: {
@@ -219,44 +219,54 @@ function BookingFacility({route}) {
         // token: "",
       },
     };
-    console.log(
-      'url api tower',
-      `http://34.87.121.155:2121/apiwebpbi/api/getData/mysql/${datas.email}/${datas.app}`,
-    );
-    axios
+
+    await axios
       .get(
-        `http://34.87.121.155:2121/apiwebpbi/api/getData/mysql/${datas.email}/${datas.app}`,
+        // `http://103.111.204.131/apisysadmin/api/getProject/${data.email}`,
+        `http://103.111.204.131/apiwebpbi/api/getData/mysql/${data.email}/${data.app}`,
         {
           config,
         },
       )
       .then(res => {
         const datas = res.data;
-        // console.log('tower entity projek', datas);
+
         const arrDataTower = datas.Data;
-        console.log('tower entity arrDataTower', arrDataTower[0]);
-        setdataTowerUser(arrDataTower[0]);
-        // getDateBook(arrDataTower[0]);
+        // let dataArr = {};
+        arrDataTower.map(dat => {
+          if (dat) {
+            console.log('data trower', dat.entity_cd);
+            setdataTowerUser(dat);
+            setEntity(dat.entity_cd);
+            setProjectNo(dat.project_no);
+            getDateBook(dat);
+            getdata(dat);
+            // const jsonValue = JSON.stringify(dat);
+            //   setdataFormHelp(saveStorage);
+            // console.log('storage', saveStorage);
+            // dataArr.push(jsonValue);
+          }
+        });
 
-        // getBooked(arrDataTower[0], databookdate, '');
-        // arrDataTower.map(dat => {
-        //   if (dat) {
-        //     setdataTowerUser(dat);
-        //     getDateBook(dat);
-
-        //     getBooked(dat);
-        //   }
-        // });
+        // AsyncStorage.setItem('@DataTower', dataArr);
         setArrDataTowerUser(arrDataTower);
 
-        setTimeout(() => {
-          setSpinner(false);
-        }, 1000);
+        setSpinner(false);
+        // return res.data;
       })
-      // .catch(error => console.error(error))
-      .catch(error => console.error(error.response.data))
-      .finally(() => setLoading(false));
-    // };
+      .catch(error => {
+        console.log('error get tower api', error);
+        // alert('error get');
+      });
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+      getTower(users);
+
+      // setSpinner(false);
+    }, 3000);
   }, []);
 
   useEffect(() => {
@@ -284,7 +294,7 @@ function BookingFacility({route}) {
         // console.log('datas nih dipake buat entity projek', datas);
         setData(res.data);
         setDatabookDate(res.data);
-        getdata();
+        // getdata();
         getBooked(datas, res.data, '');
         setSpinner(false);
       })
@@ -293,10 +303,10 @@ function BookingFacility({route}) {
       .finally(() => setLoading(false));
   };
 
-  const getdata = async () => {
-    const entity_cd = dataTowerUser.entity_cd;
-    // console.log('next abis tower getdata', dataTowerUser);
-    const project_no = dataTowerUser.project_no;
+  const getdata = async datas => {
+    const entity_cd = datas.entity_cd;
+    console.log('entity dari setentity', entity);
+    const project_no = datas.project_no;
     const obj_data = params;
     //ini bentuknya array, hany ambil yang array 0 aja, krn kayaknya sama semua deh facility_cd nya
     // console.log('obj data', obj_data);
@@ -425,14 +435,21 @@ function BookingFacility({route}) {
               console.log('res3: ', dataBooked3);
               console.log('res4: ', dataBooked4);
 
-              setDataBooked1(dataBooked1);
-              setDataBooked2(dataBooked2);
-              setDataBooked3(dataBooked3);
-              setDataBooked4(dataBooked4);
+              if (dataBooked1) {
+                setDataBooked1(dataBooked1);
+              } else if (dataBooked2) {
+                setDataBooked2(dataBooked2);
+              } else if (dataBooked3) {
+                setDataBooked3(dataBooked3);
+              } else if (dataBooked4) {
+                setDataBooked4(dataBooked4);
+              }
             },
           ),
         )
-        .catch(error => console.error(error.response.data))
+        .catch(error =>
+          console.error('ini error if getbooking', error.response.data),
+        )
         .finally(
           () => setLoading(false),
           // setSpinnerHours(false),
@@ -518,10 +535,15 @@ function BookingFacility({route}) {
               console.log('res3 created: ', dataBooked3);
               console.log('res4 created: ', dataBooked4);
 
-              setDataBooked1(dataBooked1);
-              setDataBooked2(dataBooked2);
-              setDataBooked3(dataBooked3);
-              setDataBooked4(dataBooked4);
+              if (dataBooked1) {
+                setDataBooked1(dataBooked1);
+              } else if (dataBooked2) {
+                setDataBooked2(dataBooked2);
+              } else if (dataBooked3) {
+                setDataBooked3(dataBooked3);
+              } else if (dataBooked4) {
+                setDataBooked4(dataBooked4);
+              }
             },
           ),
         )
@@ -814,27 +836,38 @@ function BookingFacility({route}) {
                               {items.datapartner != ''
                                 ? items.datapartner.map(
                                     (itemdatapartner, keys) => (
-                                      <View key={keys}>
-                                        {console.log(
-                                          'itemdata partner',
-                                          itemdatapartner,
-                                        )}
-                                        <Text>
-                                          Partner :{' '}
-                                          {itemdatapartner.staff_first_name}{' '}
-                                          {itemdatapartner.staff_last_name}
-                                        </Text>
+                                      console.log(
+                                        'itemdata partner untuk status',
+                                        itemdatapartner,
+                                      ),
+                                      (
+                                        <View key={keys}>
+                                          {console.log(
+                                            'itemdata partner',
+                                            itemdatapartner,
+                                          )}
+                                          <Text>
+                                            Partner :{' '}
+                                            {itemdatapartner.staff_first_name}{' '}
+                                            {itemdatapartner.staff_last_name}
+                                          </Text>
 
-                                        <Text>
-                                          Status :{' '}
-                                          {itemdatapartner.confirm_status == 'W'
-                                            ? 'Waiting Confirm'
-                                            : 'Confirm'}
-                                        </Text>
-                                        {/* <Text style={{width: 150}}>
+                                          <Text>
+                                            Status :{' '}
+                                            {itemdatapartner.staff_unconfirmed}
+                                            {itemdatapartner.confirm_status ==
+                                            'W'
+                                              ? 'Waiting Confirm'
+                                              : itemdatapartner.confirm_status ==
+                                                'U'
+                                              ? 'Unconfirm'
+                                              : 'Confirm'}
+                                          </Text>
+                                          {/* <Text style={{width: 150}}>
                                           as a {itemdatapartner.position}
                                         </Text> */}
-                                      </View>
+                                        </View>
+                                      )
                                     ),
                                   )
                                 : null}
@@ -917,7 +950,8 @@ function BookingFacility({route}) {
                         )}
                       </View>
                     ))
-                  : tab.id == 1 && (
+                  : tab.id == 1 &&
+                    dataBooked1.close_status == 'N' && (
                       <View
                         style={{
                           flex: 1,
@@ -1029,27 +1063,38 @@ function BookingFacility({route}) {
                               {items.datapartner != ''
                                 ? items.datapartner.map(
                                     (itemdatapartner, keys) => (
-                                      <View key={keys}>
-                                        {console.log(
-                                          'itemdata partner',
-                                          itemdatapartner,
-                                        )}
-                                        <Text>
-                                          Partner :{' '}
-                                          {itemdatapartner.staff_first_name}{' '}
-                                          {itemdatapartner.staff_last_name}
-                                        </Text>
+                                      console.log(
+                                        'itemdatapartner',
+                                        itemdatapartner,
+                                      ),
+                                      (
+                                        <View key={keys}>
+                                          {console.log(
+                                            'itemdata partner',
+                                            itemdatapartner,
+                                          )}
+                                          <Text>
+                                            Partner :{' '}
+                                            {itemdatapartner.staff_first_name}{' '}
+                                            {itemdatapartner.staff_last_name}
+                                          </Text>
 
-                                        <Text>
-                                          Status :{' '}
-                                          {itemdatapartner.confirm_status == 'W'
-                                            ? 'Waiting Confirm'
-                                            : 'Confirm'}
-                                        </Text>
-                                        {/* <Text style={{width: 150}}>
+                                          <Text>
+                                            Status :{' '}
+                                            {itemdatapartner.staff_unconfirmed}
+                                            {itemdatapartner.confirm_status ==
+                                            'W'
+                                              ? 'Waiting Confirm'
+                                              : itemdatapartner.confirm_status ==
+                                                'U'
+                                              ? 'Unconfirm'
+                                              : 'Confirm'}
+                                          </Text>
+                                          {/* <Text style={{width: 150}}>
                                           as a {itemdatapartner.position}
                                         </Text> */}
-                                      </View>
+                                        </View>
+                                      )
                                     ),
                                   )
                                 : null}
@@ -1240,8 +1285,12 @@ function BookingFacility({route}) {
 
                                         <Text>
                                           Status :{' '}
+                                          {itemdatapartner.staff_unconfirmed}
                                           {itemdatapartner.confirm_status == 'W'
                                             ? 'Waiting Confirm'
+                                            : itemdatapartner.confirm_status ==
+                                              'U'
+                                            ? 'Unconfirm'
                                             : 'Confirm'}
                                         </Text>
                                         {/* <Text style={{width: 150}}>
@@ -1438,8 +1487,12 @@ function BookingFacility({route}) {
 
                                         <Text>
                                           Status :{' '}
+                                          {itemdatapartner.staff_unconfirmed}
                                           {itemdatapartner.confirm_status == 'W'
                                             ? 'Waiting Confirm'
+                                            : itemdatapartner.confirm_status ==
+                                              'U'
+                                            ? 'Unconfirm'
                                             : 'Confirm'}
                                         </Text>
                                         {/* <Text style={{width: 150}}>

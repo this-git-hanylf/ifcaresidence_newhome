@@ -47,7 +47,7 @@ import * as Utils from '@utils';
 export default ChoosePartner = props => {
   const {navigation, route} = props;
   // const {params} = props;
-  //   console.log('routes from bookinglistdetail', route.params);
+  console.log('routes from bookinglistdetail', route.params);
   const {colors} = useTheme();
   const {t} = useTranslation();
   const [loading, setLoading] = useState(true);
@@ -200,6 +200,8 @@ export default ChoosePartner = props => {
   const bookFacility = async () => {
     try {
       const reservation_no = route.params.reservation_no;
+      // console.log('routeparams')
+      const status = route.params.status != 'W' ? route.params.status : 'W';
       const audit_user = users.UserId;
       console.log('audit_user', audit_user);
       const isChecked = true;
@@ -212,8 +214,15 @@ export default ChoosePartner = props => {
           staff_last_name,
           staff_id,
           isChecked,
+          status,
         }) {
-          return {staff_first_name, staff_last_name, staff_id, isChecked};
+          return {
+            staff_first_name,
+            staff_last_name,
+            staff_id,
+            isChecked,
+            status,
+          };
         });
 
       const data = {
@@ -221,6 +230,7 @@ export default ChoosePartner = props => {
         userid: audit_user,
         datapartner: dataselected_partner,
       };
+      console.log('save data partner', data);
       const res = await axios.post(
         'http://34.87.121.155:2121/apiwebpbi/api/facility/book/edit/staff',
         data,
@@ -539,24 +549,26 @@ export default ChoosePartner = props => {
               {/* {renderFlatListPartner(partners)} */}
             </View>
           </ScrollView>
+
+          <View style={{marginBottom: 50}}>
+            <Button
+              small
+              style={{
+                marginTop: 10,
+                marginHorizontal: 5,
+                marginBottom: 20,
+                // flex: 1,
+                // position: 'absolute',
+              }}
+              onPress={() => {
+                bookFacility();
+              }}>
+              <Text style={{textAlign: 'center'}}>{t('Choose Partner')}</Text>
+            </Button>
+          </View>
         </ScrollView>
       </View>
-      <View>
-        <Button
-          small
-          style={{
-            marginTop: 10,
-            marginHorizontal: 5,
-            marginBottom: 20,
-            // flex: 1,
-            // position: 'absolute',
-          }}
-          onPress={() => {
-            bookFacility();
-          }}>
-          <Text style={{textAlign: 'center'}}>{t('Choose Partner')}</Text>
-        </Button>
-      </View>
+
       <ScrollView>
         <ModalProduct
           // colorChoosedInit={colorChoosed}
