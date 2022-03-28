@@ -72,7 +72,7 @@ const AttachmentBilling = props => {
 
   const renderItem = ({item, index}) => {
     return (
-      <Card key={index}>
+      <Card key={index} style={{paddingVertical: 20}}>
         <TouchableOpacity
           onPress={() => {
             openAttach(item);
@@ -105,7 +105,7 @@ const AttachmentBilling = props => {
       style={BaseStyle.safeAreaView}
       edges={['right', 'top', 'left']}>
       <Header
-        title={t('Attachment Billing')}
+        title={t('Attachment Invoice')}
         renderLeft={() => {
           return (
             <Icon
@@ -120,28 +120,49 @@ const AttachmentBilling = props => {
           navigation.goBack();
         }}
       />
-      <View style={{flex: 1}}>
-        <FlatList
-          //   key={key}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingHorizontal: 20,
-          }}
-          //   numColumns={getTotalCol()}
-          refreshControl={
-            <RefreshControl
-              colors={[colors.primary]}
-              tintColor={colors.primary}
-              refreshing={refreshing}
-              onRefresh={() => {}}
-            />
-          }
-          data={attachment}
-          keyExtractor={item => item.rowid}
-          renderItem={renderItem}
-        />
-      </View>
+      {attachment == null ? (
+        <View
+          style={{
+            flex: 1,
+
+            justifyContent: 'center',
+          }}>
+          <Text
+            style={{
+              justifyContent: 'center',
+              alignContent: 'center',
+              alignItems: 'center',
+              alignSelf: 'center',
+              fontSize: 16,
+              marginTop: 10,
+            }}>
+            Not Available Attachment Invoice
+          </Text>
+        </View>
+      ) : (
+        <View style={{flex: 1}}>
+          <FlatList
+            //   key={key}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingHorizontal: 20,
+            }}
+            //   numColumns={getTotalCol()}
+            refreshControl={
+              <RefreshControl
+                colors={[colors.primary]}
+                tintColor={colors.primary}
+                refreshing={refreshing}
+                onRefresh={() => {}}
+              />
+            }
+            data={attachment}
+            keyExtractor={item => item.rowid}
+            renderItem={renderItem}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 };

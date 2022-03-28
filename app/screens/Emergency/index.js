@@ -24,8 +24,8 @@ const Emergency = props => {
       setData(res.data.data);
       console.log('data', data);
     } catch (error) {
-      setErrors(error.ressponse.data);
-      alert(hasError.toString());
+      setErrors(error);
+      // alert(hasError.toString());
     }
   }
 

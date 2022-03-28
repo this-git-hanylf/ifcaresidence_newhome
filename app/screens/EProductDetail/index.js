@@ -535,7 +535,9 @@ const EProductDetail = props => {
             marginBottom: 8,
           }}
           paginationStyle={{bottom: 0}}
-          loop={false}
+          loop={true}
+          autoplayTimeout={5}
+          autoplay={true}
           activeDotColor={colors.primary}
           removeClippedSubviews={false}
           onIndexChanged={index => onSelect(index)}>

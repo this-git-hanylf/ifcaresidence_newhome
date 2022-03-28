@@ -34,7 +34,7 @@ import {
   Dimensions,
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import getUser from '../../selectors/UserSelectors';
 import HeaderCard from './HeaderCard';
 import HeaderHome from './HeaderHome';
@@ -44,6 +44,8 @@ import Categories from './Categories';
 import axios from 'axios';
 import * as Utils from '@utils';
 import numFormat from '../../components/numFormat';
+
+import {notifikasi_nbadge, actionTypes} from '../../actions/NotifActions';
 
 const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -59,19 +61,74 @@ const Home = props => {
   const [list, setList] = useState(HomeListData);
   const [loading, setLoading] = useState(true);
   const user = useSelector(state => getUser(state));
+  const email = user.user;
+  console.log('user di home', user);
   const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
   const scrollY = useRef(new Animated.Value(0)).current;
   const [getDataDue, setDataDue] = useState([]);
   const [hasError, setErrors] = useState(false);
   const [data, setData] = useState([]);
   const {width} = Dimensions.get('window');
+  const [getDataHistory, setDataHistory] = useState([]);
+
+  const [dataTowerUser, setdataTowerUser] = useState([]);
+  const [arrDataTowerUser, setArrDataTowerUser] = useState([]);
+  const [spinner, setSpinner] = useState(true);
+  const [entity_cd, setEntity] = useState('');
+  const [project_no, setProjectNo] = useState('');
 
   const [refreshing, setRefreshing] = useState(false);
+  const dispatch = useDispatch();
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
   }, []);
+
+  const getTower = async () => {
+    const data = {
+      email: user.user,
+      app: 'O',
+    };
+    console.log('params for tower', data);
+    const config = {
+      headers: {
+        accept: 'application/json',
+        'Content-Type': 'application/json',
+        // token: "",
+      },
+    };
+
+    await axios
+      .get(
+        `http://34.87.121.155:2121/apiwebpbi/api/getData/mysql/${data.email}/${data.app}`,
+      )
+      .then(res => {
+        const datas = res.data;
+
+        const arrDataTower = datas.Data;
+        arrDataTower.map(dat => {
+          if (dat) {
+            setdataTowerUser(dat);
+            setEntity(dat.entity_cd);
+            setProjectNo(dat.project_no);
+          }
+        });
+        setArrDataTowerUser(arrDataTower);
+        setSpinner(false);
+
+        // return res.data;
+      })
+      .catch(error => {
+        console.log('error get tower api', error);
+        alert('error get');
+      });
+  };
+
+  const notifUser = useCallback(
+    () => dispatch(notifikasi_nbadge(email, entity_cd, project_no)),
+    [email, entity_cd, project_no, dispatch],
+  );
 
   useEffect(() => {
     axios
@@ -92,6 +149,18 @@ const Home = props => {
       setDataDue(res.data.Data);
       console.log('data get data due', getDataDue);
     } catch (error) {
+      setErrors(error);
+      // alert(hasError.toString());
+    }
+  }
+  async function fetchDataHistory() {
+    try {
+      const res = await axios.get(
+        `http://34.87.121.155:2121/apiwebpbi/api/getSummaryHistory/IFCAPB/${user.user}`,
+      );
+      setDataHistory(res.data.Data);
+      // console.log('data get history', getDataHistory);
+    } catch (error) {
       setErrors(error.ressponse.data);
       alert(hasError.toString());
     }
@@ -109,6 +178,15 @@ const Home = props => {
 
   console.log('sum', sum);
 
+  const sumHistory =
+    getDataHistory == null
+      ? 0
+      : getDataHistory.reduceRight((max, bills) => {
+          return (max += parseInt(bills.mdoc_amt));
+        }, 0);
+
+  console.log('sumHistory', sumHistory);
+
   //LENGTH
   const onSelect = indexSelected => {};
 
@@ -118,6 +196,15 @@ const Home = props => {
 
   const invoice = unique.length;
   console.log('invoice', invoice);
+
+  const uniqueHistory =
+    getDataHistory == null
+      ? 0
+      : [...new Set(getDataHistory.map(item => item.doc_no))];
+  // console.log('uniqueHistory', uniqueHistory);
+
+  const invoiceHistory = uniqueHistory.length;
+  console.log('invoiceHistory', invoiceHistory);
 
   const headerBackgroundColor = scrollY.interpolate({
     inputRange: [0, 140],
@@ -148,9 +235,15 @@ const Home = props => {
     console.log('about', data);
     setTimeout(() => {
       fetchDataDue();
+      fetchDataHistory();
+      getTower();
       // fetchAbout();
       setLoading(false);
     }, 1000);
+  }, []);
+
+  useEffect(() => {
+    notifUser();
   }, []);
 
   const goPostDetail = item => () => {
@@ -280,9 +373,9 @@ const Home = props => {
               <CardReport06
                 style={{backgroundColor: colors.primary, borderRadius: 25}}
                 icon="arrow-up"
-                title="Invoice Due"
-                // price="$0.68"
-                percent={invoice == undefined ? 0 : invoice}
+                title="Invoice Outstanding"
+                price={invoice == undefined ? 0 : invoice}
+                percent={numFormat(sum)}
                 onPress={() => navigation.navigate('Billing')}
               />
             </View>
@@ -290,10 +383,10 @@ const Home = props => {
               <CardReport06
                 style={{backgroundColor: colors.primary, borderRadius: 25}}
                 icon="arrow-up"
-                title="Total"
-                // price="$0.68"
-                percent={numFormat(sum)}
-                onPress={() => navigation.navigate('Billing')}
+                title="Invoice History"
+                price={invoiceHistory == undefined ? 0 : invoiceHistory}
+                percent={numFormat(sumHistory)}
+                onPress={() => navigation.navigate('BillingHistory')}
               />
             </View>
           </View>

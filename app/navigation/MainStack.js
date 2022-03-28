@@ -18,6 +18,8 @@ import FCategory from '@screens/FCategory';
 import {BottomTabNavigatorMazi, tabBarIcon} from './components';
 import Billing from '../screens/Billing';
 import AttachmentBilling from '../screens/Billing/AttachmentBilling';
+import BillingHistory from '../screens/BillingHistory';
+import HistoryBilling from '../screens/BillingHistory/HistoryBilling';
 import PDFAttach from '../screens/Billing/PDFAttach';
 import Facility from '../screens/Facility';
 import Announce from '../screens/Announce';
@@ -68,6 +70,8 @@ import BookingListDetail from '../screens/Facility/BookingListDetail';
 import ChoosePartner from '../screens/Facility/ChoosePartner';
 import ChooseEditPartner from '../screens/Facility/ChooseEditPartner';
 
+import {tabBarIconHaveNoty} from './components';
+
 const Stack = createStackNavigator();
 
 export const WalletTabScreens = {
@@ -83,6 +87,13 @@ export const WalletTabScreens = {
     options: {
       title: 'Emergency',
       tabBarIcon: ({color}) => tabBarIcon({color, name: 'phone'}),
+    },
+  },
+  NotificationScreen: {
+    component: Notification,
+    options: {
+      title: 'Notification',
+      tabBarIcon: ({color}) => tabBarIconHaveNoty({color, name: 'bell'}),
     },
   },
   ProfileScreen: {
@@ -370,6 +381,16 @@ function MainStack() {
       <Stack.Screen
         name="PDFAttach"
         component={PDFAttach}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="BillingHistory"
+        component={BillingHistory}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="HistoryBilling"
+        component={HistoryBilling}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

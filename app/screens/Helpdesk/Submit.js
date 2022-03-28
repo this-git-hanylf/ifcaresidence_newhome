@@ -41,6 +41,7 @@ import moment from 'moment';
 import ImagePicker from 'react-native-image-crop-picker';
 import RNFetchBlob from 'rn-fetch-blob';
 import mime from 'mime';
+import Modal from 'react-native-modal';
 
 export default function SubmitHelpdesk({route, props}) {
   const {t, i18n} = useTranslation();
@@ -76,6 +77,9 @@ export default function SubmitHelpdesk({route, props}) {
   const [dataLocation, setLocation] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [singleFile, setSingleFile] = useState(null);
+
+  const [modalSuccessVisible, showModalSuccess] = useState(false);
+  const [message, setMessage] = useState('');
 
   const styleItem = {
     ...styles.profileItem,
@@ -308,7 +312,7 @@ export default function SubmitHelpdesk({route, props}) {
     bodyData.append('debtoracct', passProp.dataDebtor.debtor_acct);
     bodyData.append('category', passProp.data.category_cd);
     bodyData.append('floor', passProp.floor);
-    bodyData.append('location', '059');
+    bodyData.append('location', textLocationCode);
     bodyData.append('reqtype', passProp.location_type);
     bodyData.append('workreq', textDescs);
     bodyData.append('reqby', passProp.reportName);
@@ -333,7 +337,9 @@ export default function SubmitHelpdesk({route, props}) {
     )
       .then(res => {
         return res.json().then(resJson => {
-          alert(resJson.Pesan);
+          // alert(resJson.Pesan);
+          setMessage(resJson.Pesan);
+          showModalSuccess(true);
         });
       })
       .catch(err => {
@@ -374,6 +380,11 @@ export default function SubmitHelpdesk({route, props}) {
     //     };
     //   }),
     // );
+  };
+
+  const onCloseModal = () => {
+    showModalSuccess(false);
+    navigation.navigate('Helpdesk');
   };
 
   return (
@@ -464,6 +475,54 @@ export default function SubmitHelpdesk({route, props}) {
       <Button onPress={() => submitTicket()}>
         <Text>Submit</Text>
       </Button>
+
+      <View>
+        <Modal
+          isVisible={modalSuccessVisible}
+          style={{height: '100%'}}
+          onBackdropPress={() => showModalSuccess(false)}>
+          <View
+            style={{
+              // flex: 1,
+
+              // alignContent: 'center',
+              padding: 10,
+              backgroundColor: '#fff',
+              // height: ,
+              borderRadius: 8,
+            }}>
+            <View style={{alignItems: 'center'}}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: 'bold',
+                  color: colors.primary,
+                  marginBottom: 10,
+                }}>
+                {'Alert'}
+              </Text>
+              <Text>{message}</Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+              }}>
+              <Button
+                style={{
+                  marginTop: 10,
+                  // marginBottom: 10,
+
+                  width: 70,
+                  height: 40,
+                }}
+                onPress={() => onCloseModal()}>
+                <Text style={{fontSize: 13}}>{t('OK')}</Text>
+              </Button>
+            </View>
+          </View>
+        </Modal>
+      </View>
     </SafeAreaView>
   );
 }

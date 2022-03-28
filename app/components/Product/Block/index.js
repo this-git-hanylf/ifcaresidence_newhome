@@ -68,7 +68,7 @@ const Block = ({
       }}
       onPress={onPress}>
       <ImageBackground
-        source={{uri: `${images}`}}
+        source={{uri: `${images[0].pict}`}}
         style={styles.imageBackground}>
         <Icon
           name="heart"

@@ -35,10 +35,10 @@ const Navigator = props => {
   const {theme, colors} = useTheme();
   const isDarkMode = useDarkMode();
   const language = useSelector(languageSelect);
-  // const {navigation, route} = props;
-  const {route} = props;
+  const {navigation, route} = props;
+  // const {route} = props;
   console.log('navigation from app for notif', props);
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   console.log('route from app for notif', route);
 
   const dispatch = useDispatch();

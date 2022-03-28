@@ -158,11 +158,13 @@ const Rent = props => {
                 data={rent}
                 renderItem={({item, index}) => (
                   <ProductBlock
+                    key={index}
                     loading={loading}
                     description={item.description}
                     subject={item.subject}
                     style={{marginVertical: 8}}
-                    images={item.images[0].pict}
+                    // images={item.images[0].pict}
+                    images={item.images}
                     avatar={item.avatar}
                     email={item.email}
                     bath_room={item.bath_room}
@@ -188,6 +190,7 @@ const Rent = props => {
                 data={data}
                 renderItem={({item, index}) => (
                   <ProductBlock
+                    key={index}
                     loading={loading}
                     description={item.description}
                     subject={item.subject}

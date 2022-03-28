@@ -4,6 +4,7 @@ import user from './UserReducer';
 import status from './StatusReducer';
 import AuthReducer from './auth';
 import ApplicationReducer from './application';
+import notifDataRed from './NotifReducer';
 
 const rootReducer = combineReducers({
   error,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   status,
   auth: AuthReducer,
   application: ApplicationReducer,
+  notifDataRed,
 });
 
 export default rootReducer;

@@ -23,6 +23,7 @@ import {
   View,
   Platform,
   TouchableHighlight,
+  ScrollView,
 } from 'react-native';
 
 import {useSelector} from 'react-redux';
@@ -291,7 +292,7 @@ export default function CategoryHelp({route}) {
               </Placeholder>
             </View>
           ) : (
-            <View style={{marginHorizontal: 10}}>
+            <ScrollView style={{marginHorizontal: 10}}>
               {/* <Text headline style={{fontWeight: 'normal', paddingTop: 20}}>
                 Choose Category
               </Text> */}
@@ -311,7 +312,7 @@ export default function CategoryHelp({route}) {
                   </TouchableOpacity>
                 </View>
               ))}
-            </View>
+            </ScrollView>
           )}
         </View>
       </View>

@@ -6,34 +6,40 @@ import {View} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useTranslation} from 'react-i18next';
 import {BaseColor, BaseStyle, useTheme} from '@config';
+import getNotifRed from '../../selectors/NotifSelectors';
+import {useSelector} from 'react-redux';
 
 export const tabBarIcon = ({color, name}) => (
   <Icon name={name} size={20} solid color={color} />
 );
 
-export const tabBarIconHaveNoty = ({color, name}) => (
-  <View>
-    {tabBarIcon({color, name})}
-    <View
-      style={{
-        borderWidth: 1,
-        borderColor: BaseColor.whiteColor,
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
-        width: 20,
-        height: 20,
-        backgroundColor: 'red',
-        top: -5,
-        right: -12,
-        borderRadius: 10,
-      }}>
-      <Text whiteColor caption2>
-        5
-      </Text>
+export const tabBarIconHaveNoty = ({color, name}) => {
+  const notifData_FromRed = useSelector(state => getNotifRed(state));
+  console.log('buat badge notifg', notifData_FromRed);
+  return (
+    <View>
+      {tabBarIcon({color, name})}
+      <View
+        style={{
+          borderWidth: 1,
+          borderColor: BaseColor.whiteColor,
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'absolute',
+          width: 20,
+          height: 20,
+          backgroundColor: 'red',
+          top: -5,
+          right: -12,
+          borderRadius: 10,
+        }}>
+        <Text whiteColor caption2>
+          5
+        </Text>
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 const BottomTab = createBottomTabNavigator();
 
