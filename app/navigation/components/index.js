@@ -15,7 +15,7 @@ export const tabBarIcon = ({color, name}) => (
 
 export const tabBarIconHaveNoty = ({color, name}) => {
   const notifData_FromRed = useSelector(state => getNotifRed(state));
-  console.log('buat badge notifg', notifData_FromRed);
+  console.log('buat badge notifg', notifData_FromRed.length);
   return (
     <View>
       {tabBarIcon({color, name})}
@@ -34,7 +34,7 @@ export const tabBarIconHaveNoty = ({color, name}) => {
           borderRadius: 10,
         }}>
         <Text whiteColor caption2>
-          5
+          {notifData_FromRed.length}
         </Text>
       </View>
     </View>

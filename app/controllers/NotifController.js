@@ -12,27 +12,13 @@ class NotifController {
     console.log('email for notif di controller', email);
     console.log('entity for notir', entity_cd);
     console.log('project no for notif', project_no);
-    // console.log(
-    //   'url for notif',
-    //   `http://34.87.121.155:8181/apiwebpbi/api/notification?email=${email}&entity_cd=${entity_cd}&project_no=${project_no}`,
-    // );
-    // console.log(
-    //   'htp client apasi',
-    //   httpClient.request({
-    //     url: `/notification?email=${email}&entity_cd=${entity_cd}&project_no=${project_no}`,
-    //   }),
-    // );
+
     try {
       const result = await httpClient.request({
         // url: '/notification',
-        url: 'http://34.87.121.155:2121/apiwebpbi/api/notification?email=haniyya.ulfah@ifca.co.id&entity_cd=01&project_no=01',
+        url: `http://34.87.121.155:2121/apiwebpbi/api/notification?email=${email}&entity_cd=${entity_cd}&project_no=${project_no}`,
         // url: `http://34.87.121.155:8181/apiwebpbi/api/notification?email=${email}&entity_cd=${entity_cd}&project_no=${project_no}`,
         method: 'GET',
-        // data: {
-        //   email,
-        //   entity_cd,
-        //   project_no,
-        // },
       });
       // alert(result.Pesan);
       console.log('vardums result notifikasi -->', result);

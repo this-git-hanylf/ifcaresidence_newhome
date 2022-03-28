@@ -11,6 +11,7 @@ import axios from 'axios';
 import {API_URL} from '@env';
 import styles from './styles';
 import NotifService from '../../NotifService';
+import getNotifRed from '../../selectors/NotifSelectors';
 
 const Notification = props => {
   const {navigation, route, notification} = props;
@@ -28,6 +29,8 @@ const Notification = props => {
   const [spinner, setSpinner] = useState(true);
   const [urlApi, seturlApi] = useState(API_URL);
   const [dataNotif, setDataNotif] = useState([]);
+  const dataNotifBadge = useSelector(state => getNotifRed(state));
+  // const cobanotif = useSelector(state => getNotifRed(state));
 
   // http://34.87.121.155:2121/apiwebpbi/api/notification
 
@@ -109,12 +112,12 @@ const Notification = props => {
     };
 
     console.log(
-      `http://34.87.121.155:8181/apiwebpbi/api/notification?email=${formData.email}&device=${formData.device}&entity_cd=${formData.entity_cd}&project_no=${formData.project_no}`,
+      `http://34.87.121.155:8181/apiwebpbi/api/notification?email=${formData.email}&entity_cd=${formData.entity_cd}&project_no=${formData.project_no}`,
     );
 
     await axios
-      .post(
-        `http://34.87.121.155:8181/apiwebpbi/api/notification?email=${formData.email}&device=${formData.device}&entity_cd=${formData.entity_cd}&project_no=${formData.project_no}`,
+      .get(
+        `http://34.87.121.155:8181/apiwebpbi/api/notification?email=${formData.email}&entity_cd=${formData.entity_cd}&project_no=${formData.project_no}`,
       )
       .then(res => {
         // console.log('res tiket multi', res.data);
@@ -131,6 +134,9 @@ const Notification = props => {
       });
   };
   const goNotifDetail = item => () => {
+    notifDecreament();
+    const minusKlikNotif = dataNotifBadge.length - 1;
+    console.log('minus', minusKlikNotif);
     navigation.navigate('NotificationDetail', {item: item});
   };
 

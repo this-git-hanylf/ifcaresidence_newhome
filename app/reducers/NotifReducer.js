@@ -10,7 +10,7 @@ const notifReducer = (state = initialState, action) => {
       return {
         ...state,
       };
-    case actionTypes.NOTIFIKASI_NBADGE_SUCCESS_:
+    case actionTypes.NOTIFIKASI_NBADGE_SUCCESS:
       return {
         ...state,
         notifDataRed: action.notifDataRed,

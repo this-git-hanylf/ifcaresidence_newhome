@@ -46,6 +46,7 @@ import * as Utils from '@utils';
 import numFormat from '../../components/numFormat';
 
 import {notifikasi_nbadge, actionTypes} from '../../actions/NotifActions';
+import getNotifRed from '../../selectors/NotifSelectors';
 
 const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -61,6 +62,8 @@ const Home = props => {
   const [list, setList] = useState(HomeListData);
   const [loading, setLoading] = useState(true);
   const user = useSelector(state => getUser(state));
+  const cobanotif = useSelector(state => getNotifRed(state));
+  console.log('cobanotif di home', cobanotif);
   const email = user.user;
   console.log('user di home', user);
   const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
