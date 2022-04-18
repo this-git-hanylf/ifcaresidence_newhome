@@ -93,7 +93,7 @@ const NotificationDetail = props => {
         <View style={{marginTop: 10}}>
           <Text
             note
-            numberOfLines={1}
+            // numberOfLines={1}
             footnote
             grayColor
             style={{paddingTop: 5}}>

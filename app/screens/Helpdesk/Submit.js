@@ -306,7 +306,8 @@ export default function SubmitHelpdesk({route, props}) {
     bodyData.append('email', passProp.dataDebtor.email);
     bodyData.append('entity_cd', passProp.entity_cd);
     bodyData.append('project_no', passProp.project_no);
-    bodyData.append('reportdate', '04 Nov 2021 08:47');
+    // bodyData.append('reportdate', '04 Nov 2021 08:47');
+    bodyData.append('reportdate', reportdate);
     bodyData.append('takenby', 'Bagus');
     bodyData.append('lotno', passProp.lot_no.lot_no);
     bodyData.append('debtoracct', passProp.dataDebtor.debtor_acct);
@@ -415,7 +416,15 @@ export default function SubmitHelpdesk({route, props}) {
           onChangeText={val => setTextLocation(val)}
           placeholder="Choose Location"
           editable={false}
-          value={textLocation}></TextInput>
+          value={textLocation}
+          style={{
+            color: '#555',
+            fontSize: 14,
+            borderColor: '#000',
+            borderWidth: 0.5,
+            borderRadius: 10,
+            marginHorizontal: 20,
+          }}></TextInput>
       </TouchableOpacity>
 
       <View style={{marginHorizontal: 20, marginTop: 20}}>

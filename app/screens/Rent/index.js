@@ -177,6 +177,7 @@ const Rent = props => {
                     onPress={() => goProductDetail(item)}
                     isFavorite={item.isFavorite}
                     salePercent={item.salePercent}
+                    currency={item.currency}
                   />
                 )}
               />
@@ -209,6 +210,7 @@ const Rent = props => {
                     onPress={() => goProductDetail(item)}
                     isFavorite={item.isFavorite}
                     salePercent={item.salePercent}
+                    currency={item.currency}
                   />
                 )}
               />

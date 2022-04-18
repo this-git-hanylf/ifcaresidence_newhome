@@ -67,8 +67,10 @@ const AttachmentBilling = props => {
 
   const openAttach = item => {
     console.log('itm', item);
-    navigation.navigate('PDFAttach', item.link_url);
+    navigation.navigate('PDFAttach', item);
   };
+
+
 
   const renderItem = ({item, index}) => {
     return (

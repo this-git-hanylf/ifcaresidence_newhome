@@ -53,6 +53,7 @@ const TransactionExpandHistory = ({
     disabled: true,
     lot_no: lot_no,
     trx_type: trx_type,
+    doc_date: doc_date,
   },
   isExpandInit = false,
 }) => {

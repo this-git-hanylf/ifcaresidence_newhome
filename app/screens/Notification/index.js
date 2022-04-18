@@ -1,22 +1,41 @@
-import {Header, Icon, ListThumbCircleNotif, SafeAreaView} from '@components';
+import {
+  Header,
+  Icon,
+  ListThumbCircleNotif,
+  SafeAreaView,
+  Text,
+  Button,
+} from '@components';
 import {BaseColor, BaseStyle, useTheme} from '@config';
 // Load sample data
 import {NotificationData} from '@data';
-import React, {useState, useEffect} from 'react';
-import {FlatList, RefreshControl, TouchableOpacity} from 'react-native';
+import React, {useState, useEffect, useCallback} from 'react';
+import {
+  FlatList,
+  RefreshControl,
+  TouchableOpacity,
+  ActivityIndicator,
+  View,
+} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import getUser from '../../selectors/UserSelectors';
 import axios from 'axios';
 import {API_URL} from '@env';
 import styles from './styles';
 import NotifService from '../../NotifService';
 import getNotifRed from '../../selectors/NotifSelectors';
+import {notifikasi_nbadge_decrease} from '../../actions/NotifActions';
+import apiCall from '../../config/ApiActionCreator';
+
+import {decrement} from '../../actions/actionsTotal';
+import Modal from 'react-native-modal';
+import moment from 'moment';
 
 const Notification = props => {
   const {navigation, route, notification} = props;
-  console.log('route props', route);
-  console.log('route notification', notification);
+  // console.log('route props', route);
+  // console.log('route notification', notification);
   const {t} = useTranslation();
   const {colors} = useTheme();
   const [refreshing, setRefreshing] = useState(false);
@@ -30,6 +49,42 @@ const Notification = props => {
   const [urlApi, seturlApi] = useState(API_URL);
   const [dataNotif, setDataNotif] = useState([]);
   const dataNotifBadge = useSelector(state => getNotifRed(state));
+  console.log('data notif badge di notif', dataNotifBadge.data);
+  const dispatch = useDispatch();
+  const [minusKlikNotif, setMinusKlikNotif] = useState(0);
+  const [read, setRead] = useState(false);
+  const [color, setColor] = useState('blue');
+  const [indexList, setIndexList] = useState();
+  const [entity_cd, setEntity] = useState('');
+  const [project_no, setProject] = useState('');
+  const data = useSelector(state => state.apiReducer.data);
+  console.log('data notif length', data.length);
+  const [isRead, setisRead] = useState(data.IsRead);
+
+  const [modalSuccessVisible, showModalSuccess] = useState(false);
+  const [messageSuccess, setMessageSuccess] = useState();
+
+  const loadings = useSelector(state => state.apiReducer.loading);
+  const counter = useSelector(state => state.counter);
+
+  useEffect(() => {
+    dispatch(
+      apiCall(
+        `http://34.87.121.155:8181/apiwebpbi/api/notification?email=${email}&entity_cd=01&project_no=01`,
+      ),
+    );
+  }, []);
+
+  const refreshDataNotif = () => {
+    dispatch(
+      apiCall(
+        `http://34.87.121.155:8181/apiwebpbi/api/notification?email=${email}&entity_cd=01&project_no=01`,
+      ),
+    );
+  };
+
+  const goNotif = decrement;
+  console.log('minus', goNotif);
   // const cobanotif = useSelector(state => getNotifRed(state));
 
   // http://34.87.121.155:2121/apiwebpbi/api/notification
@@ -73,6 +128,8 @@ const Notification = props => {
           if (dat) {
             setdataTowerUser(dat);
             getNotification(dat);
+            setEntity(dat.entity_cd);
+            setProject(dat.project_no);
           }
         });
         setArrDataTowerUser(arrDataTower);
@@ -96,10 +153,11 @@ const Notification = props => {
   const getNotification = async data => {
     const formData = {
       email: email,
-      entity_cd: data.entity_cd,
-      project_no: data.project_no,
-      device: 'Mobile',
+      entity_cd: data.entity_cd || entity_cd,
+      project_no: data.project_no || project_no,
     };
+    // setEntity(data.entity_cd);
+    // setProject(data.project_no);
 
     console.log('form data notif', formData);
 
@@ -133,11 +191,50 @@ const Notification = props => {
         // alert('error nih');
       });
   };
-  const goNotifDetail = item => () => {
-    notifDecreament();
-    const minusKlikNotif = dataNotifBadge.length - 1;
-    console.log('minus', minusKlikNotif);
+  const goNotifDetail = (item, index) => () => {
+    console.log('index klik', item);
+    dispatch({type: 'DECREMENT'});
+    // setMessageSuccess({item});
+    // showModalSuccess(true);
+    changesRead(item.NotificationID);
+    // setIndexList(index);
+    // setisRead(1);
     navigation.navigate('NotificationDetail', {item: item});
+    // navigation.navigate('')
+
+    // if (index === true) {
+    //   // setRead(!read);
+    //   setColor('red');
+    // }
+  };
+
+  const changesRead = async notifID => {
+    const params = {
+      id: notifID,
+      entity_cd: entity_cd,
+      project_no: project_no,
+    };
+    console.log('params', params);
+    await axios
+      .post(`http://34.87.121.155:8181/apiwebpbi/api/notification-read`, params)
+      .then(res => {
+        console.log('res change read', res.data);
+        //  const resNotif = res.data;
+        // getNotification(email, entity_cd, project_no);
+        refreshDataNotif();
+        // console.log('resNotif', res);
+        //  setDataNotif(resNotif);
+        //  setSpinner(false);
+        // return res.data;
+      })
+      .catch(error => {
+        console.log('err data notif', error);
+        // alert('error nih');
+      });
+  };
+
+  const onCloseModal = () => {
+    showModalSuccess(false);
   };
 
   return (
@@ -157,33 +254,53 @@ const Notification = props => {
           );
         }}
         onPressLeft={() => {
-          // navigation.goBack();
-          navigation.navigate('MainStack');
+          navigation.goBack();
+          // navigation.navigate('MainStack');
         }}
       />
-      <FlatList
-        contentContainerStyle={{paddingHorizontal: 20}}
-        refreshControl={
-          <RefreshControl
-            colors={[colors.primary]}
-            tintColor={colors.primary}
-            refreshing={refreshing}
-            onRefresh={() => {}}
-          />
-        }
-        data={dataNotif}
-        keyExtractor={(item, index) => item.NotificationID}
-        renderItem={({item, index}) => (
-          <ListThumbCircleNotif
-            // image={item.image}
-            txtLeftTitle1={item.Report_no}
-            txtLeftTitle2={item.NotificationCd}
-            txtContent={item.Remarks}
-            txtRight={item.NotificationDate}
-            onPress={goNotifDetail(item)}
-          />
-        )}
-      />
+      {loadings ? (
+        <ActivityIndicator size="large" color="red" />
+      ) : (
+        <FlatList
+          // contentContainerStyle={{paddingHorizontal: 20}}
+          refreshControl={
+            <RefreshControl
+              colors={[colors.primary]}
+              tintColor={colors.primary}
+              refreshing={refreshing}
+              onRefresh={() => {}}
+            />
+          }
+          // data={dataNotif}
+          data={data}
+          keyExtractor={(item, index) => item.NotificationID}
+          renderItem={({item, index}) => (
+            console.log('index notif', index),
+            (
+              <ListThumbCircleNotif
+                key={index}
+                disabled={item.IsRead == 1 ? true : false}
+                style={{
+                  paddingHorizontal: 20,
+                  backgroundColor: item.IsRead == 0 ? 'white' : 'lightgrey',
+                }}
+                // image={item.image}
+                txtLeftTitle1={item.Report_no}
+                txtLeftTitle2={item.NotificationCd}
+                txtContent={item.Remarks}
+                txtRight={item.NotificationDate}
+                onPress={goNotifDetail(item, index)}
+                // onPress={() => clickNotif()}
+              />
+            )
+          )}
+        />
+      )}
+      {/* {modalSuccessVisible == true ? (
+        <Text>{messageSuccess.item.Device}</Text>
+      ) : (
+        <Text>visible false</Text>
+      )} */}
     </SafeAreaView>
   );
 };

@@ -30,6 +30,7 @@ import Skip from '../screens/Skip';
 import EProductDetail from '../screens/EProductDetail';
 import messaging from '@react-native-firebase/messaging';
 import Home from '../screens/Home';
+import ResetPassword from '../screens/ResetPassword';
 
 const Navigator = props => {
   const {theme, colors} = useTheme();
@@ -122,37 +123,37 @@ const Navigator = props => {
   //   });
   // }, []);
 
-  useEffect(() => {
-    // Assume a message-notification contains a "type" property in the data payload of the screen to open
-    messaging().setBackgroundMessageHandler(async remoteMessage => {
-      console.log('Message handled in the background!', remoteMessage);
-    });
+  // useEffect(() => {
+  //   // Assume a message-notification contains a "type" property in the data payload of the screen to open
+  //   messaging().setBackgroundMessageHandler(async remoteMessage => {
+  //     console.log('Message handled in the background!', remoteMessage);
+  //   });
 
-    messaging().onNotificationOpenedApp(remoteMessage => {
-      console.log(
-        'Notification caused app to open from background state:',
-        remoteMessage.notification,
-      );
-      navigation.navigate('Notification');
-      setNoti(true);
-      setInitialRoute('Notification');
-    });
+  //   messaging().onNotificationOpenedApp(remoteMessage => {
+  //     console.log(
+  //       'Notification caused app to open from background state:',
+  //       remoteMessage.notification,
+  //     );
+  //     navigation.navigate('Notification');
+  //     setNoti(true);
+  //     setInitialRoute('Notification');
+  //   });
 
-    // Check whether an initial notification is available
-    messaging()
-      .getInitialNotification()
-      .then(remoteMessage => {
-        if (remoteMessage) {
-          console.log(
-            'Notification caused app to open from quit state:',
-            remoteMessage.notification,
-          );
-          setNoti(true);
-          setInitialRoute('Notification'); // e.g. "Settings"
-        }
-        setLoading(false);
-      });
-  }, []);
+  //   // Check whether an initial notification is available
+  //   messaging()
+  //     .getInitialNotification()
+  //     .then(remoteMessage => {
+  //       if (remoteMessage) {
+  //         console.log(
+  //           'Notification caused app to open from quit state:',
+  //           remoteMessage.notification,
+  //         );
+  //         setNoti(true);
+  //         setInitialRoute('Notification'); // e.g. "Settings"
+  //       }
+  //       setLoading(false);
+  //     });
+  // }, []);
 
   const goToNotification = () => {
     // navigation.navigate('Notification');
@@ -186,6 +187,7 @@ const Navigator = props => {
             <RootStack.Screen name="Notification" component={Notification} />
             {/* <RootStack.Screen name="Home" component={Home} /> */}
             <RootStack.Screen name="Skip" component={Skip} />
+            <RootStack.Screen name="ResetPassword" component={ResetPassword} />
             <RootStack.Screen
               name="EProductDetail"
               component={EProductDetail}

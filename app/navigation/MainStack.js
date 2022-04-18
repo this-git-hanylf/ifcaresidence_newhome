@@ -393,6 +393,11 @@ function MainStack() {
         component={HistoryBilling}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="ResetPassword"
+        component={ResetScreen}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 }

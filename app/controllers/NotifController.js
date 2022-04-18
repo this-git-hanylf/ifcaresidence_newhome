@@ -16,12 +16,13 @@ class NotifController {
     try {
       const result = await httpClient.request({
         // url: '/notification',
-        url: `http://34.87.121.155:2121/apiwebpbi/api/notification?email=${email}&entity_cd=${entity_cd}&project_no=${project_no}`,
+        // url: `http://34.87.121.155:2121/apiwebpbi/api/notification?email=${email}&entity_cd=${entity_cd}&project_no=${project_no}`,
+        url: `http://34.87.121.155:8181/apiwebpbi/api/notification-badge?email=${email}&entity_cd=${entity_cd}&project_no=${project_no}`,
         // url: `http://34.87.121.155:8181/apiwebpbi/api/notification?email=${email}&entity_cd=${entity_cd}&project_no=${project_no}`,
         method: 'GET',
       });
       // alert(result.Pesan);
-      console.log('vardums result notifikasi -->', result);
+      // console.log('vardums result notifikasi -->', result);
       // ini ada isreset dalemnya, sementara dihilangin, buat biar ga nyangkut insert token firebase
       if (result.Error) {
         return Promise.reject(result.Pesan);

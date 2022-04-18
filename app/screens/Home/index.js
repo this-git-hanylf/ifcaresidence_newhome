@@ -47,13 +47,15 @@ import numFormat from '../../components/numFormat';
 
 import {notifikasi_nbadge, actionTypes} from '../../actions/NotifActions';
 import getNotifRed from '../../selectors/NotifSelectors';
+import messaging from '@react-native-firebase/messaging';
+import apiCall from '../../config/ApiActionCreator';
 
 const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 };
 
 const Home = props => {
-  const {navigation} = props;
+  const {navigation, route} = props;
   const {t} = useTranslation();
   const {colors} = useTheme();
   const [topics, setTopics] = useState(HomeTopicData);
@@ -62,9 +64,10 @@ const Home = props => {
   const [list, setList] = useState(HomeListData);
   const [loading, setLoading] = useState(true);
   const user = useSelector(state => getUser(state));
-  const cobanotif = useSelector(state => getNotifRed(state));
-  console.log('cobanotif di home', cobanotif);
-  const email = user.user;
+  const notif = useSelector(state => getNotifRed(state));
+  console.log('cobanotif di home', notif);
+  // const email = user.user;
+  const [email, setEmail] = useState(user != null ? user.user : '');
   console.log('user di home', user);
   const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -86,6 +89,39 @@ const Home = props => {
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
+  }, []);
+
+  useEffect(() => {
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+      navigation.navigate('Notification', remoteMessage);
+    });
+
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.notification,
+          );
+          navigation.navigate('Notification', remoteMessage);
+        }
+        setLoading(false);
+      });
+  }, []);
+
+  //untuk load badge notif
+  useEffect(() => {
+    dispatch(
+      apiCall(
+        `http://34.87.121.155:8181/apiwebpbi/api/notification?email=${email}&entity_cd=01&project_no=01`,
+      ),
+    );
   }, []);
 
   const getTower = async () => {
@@ -115,6 +151,9 @@ const Home = props => {
             setdataTowerUser(dat);
             setEntity(dat.entity_cd);
             setProjectNo(dat.project_no);
+            console.log('entity dari tower map', dat.entity_cd);
+            console.log('project dari tower map', dat.project_no);
+            notifUser(dat.entity_cd, dat.project_no);
           }
         });
         setArrDataTowerUser(arrDataTower);
@@ -129,28 +168,48 @@ const Home = props => {
   };
 
   const notifUser = useCallback(
-    () => dispatch(notifikasi_nbadge(email, entity_cd, project_no)),
+    (entity_cd, project_no) =>
+      dispatch(notifikasi_nbadge(email, entity_cd, project_no)),
     [email, entity_cd, project_no, dispatch],
   );
+  // const notifUser = () => {
+  //   console.log('entity dari tower', entity_cd);
+  //   console.log('project dari tower', project_no);
+  // };
 
-  useEffect(() => {
-    axios
-      .get('http://34.87.121.155:8000/ifcaprop-api/api/about/01/01')
-      .then(({data}) => {
-        console.log('data', data[0]);
-        setData(data[0].images);
+  // useEffect(() => {
+  //   axios
+  //     .get('http://34.87.121.155:8000/ifcaprop-api/api/about/01/01')
+  //     .then(({data}) => {
+  //       console.log('data images?', data[0]);
+  //       setData(data[0].images);
+  //     })
+  //     .catch(error => console.error(error))
+  //     .finally(() => setLoading(false));
+  // }, []);
+
+  const dataImage = async () => {
+    await axios
+      .get(`http://34.87.121.155:2121/apiwebpbi/api/about/image`)
+      .then(res => {
+        console.log('res image', res.data.data);
+        // console.log('data images', res.data[0].images);
+        setData(res.data.data);
+        // return res.data;
       })
-      .catch(error => console.error(error))
-      .finally(() => setLoading(false));
-  }, []);
+      .catch(error => {
+        console.log('error get about us image', error);
+        // alert('error get');
+      });
+  };
 
   async function fetchDataDue() {
     try {
       const res = await axios.get(
-        `http://34.87.121.155:2121/apiwebpbi/api/getDataDue/IFCAPB/${user.user}`,
+        `http://34.87.121.155:2121/apiwebpbi/api/getDataDueSummary/IFCAPB/${user.user}`,
       );
       setDataDue(res.data.Data);
-      console.log('data get data due', getDataDue);
+      console.log('data get data due', res.data.Data);
     } catch (error) {
       setErrors(error);
       // alert(hasError.toString());
@@ -162,10 +221,10 @@ const Home = props => {
         `http://34.87.121.155:2121/apiwebpbi/api/getSummaryHistory/IFCAPB/${user.user}`,
       );
       setDataHistory(res.data.Data);
-      // console.log('data get history', getDataHistory);
+      console.log('data get history', res.data.Data);
     } catch (error) {
-      setErrors(error.ressponse.data);
-      alert(hasError.toString());
+      setErrors(error);
+      // alert(hasError.toString());
     }
   }
 
@@ -233,21 +292,26 @@ const Home = props => {
 
   useEffect(() => {
     console.log('galery', galery);
-
+    dataImage();
     console.log('datauser', user);
     console.log('about', data);
-    setTimeout(() => {
-      fetchDataDue();
-      fetchDataHistory();
-      getTower();
-      // fetchAbout();
-      setLoading(false);
-    }, 1000);
+    fetchDataDue();
+    fetchDataHistory();
+    getTower();
+    // fetchAbout();
+    setLoading(false);
+    // setTimeout(() => {
+    //   fetchDataDue();
+    //   fetchDataHistory();
+    //   getTower();
+    //   // fetchAbout();
+    //   setLoading(false);
+    // }, 1000);
   }, []);
 
-  useEffect(() => {
-    notifUser();
-  }, []);
+  // useEffect(() => {
+  //   notifUser();
+  // }, []);
 
   const goPostDetail = item => () => {
     navigation.navigate('PostDetail', {item: item});
@@ -295,51 +359,28 @@ const Home = props => {
               {
                 opacity: headerImageOpacity,
                 height: heightViewImg,
-                padding: 0,
-                flex: 1,
+                // flex: 1,
               },
             ]}>
             <Swiper
-              height={240}
-              onMomentumScrollEnd={(e, state, context) =>
-                console.log('index:', state.index)
-              }
-              autoplay={true}
-              autoplayTimeout={5}
-              dot={
-                <View
-                  style={{
-                    backgroundColor: 'rgba(0,0,0,.2)',
-                    width: 5,
-                    height: 5,
-                    borderRadius: 4,
-                    marginLeft: 3,
-                    marginRight: 3,
-                    marginTop: 3,
-                    marginBottom: 3,
-                  }}
-                />
-              }
-              activeDot={
-                <View
-                  style={{
-                    backgroundColor: colors.primary,
-                    width: 8,
-                    height: 8,
-                    borderRadius: 4,
-                    marginLeft: 3,
-                    marginRight: 3,
-                    marginTop: 3,
-                    marginBottom: 3,
-                  }}
-                />
-              }
+              dotStyle={{
+                backgroundColor: BaseColor.dividerColor,
+                marginBottom: 8,
+              }}
+              activeDotStyle={{
+                marginBottom: 8,
+              }}
               paginationStyle={{
                 bottom: -18,
                 // left: null,
                 // right: 10,
               }}
-              loop>
+              loop={true}
+              autoplayTimeout={5}
+              autoplay={true}
+              activeDotColor={colors.primary}
+              removeClippedSubviews={false}
+              onIndexChanged={index => onSelect(index)}>
               {data.map((item, key) => {
                 return (
                   <View
@@ -347,7 +388,8 @@ const Home = props => {
                       flex: 1,
                       justifyContent: 'center',
                       backgroundColor: 'transparent',
-                    }}>
+                    }}
+                    key={key}>
                     <Image
                       key={key}
                       // key={'fast-' + `${item.id}`}
@@ -357,9 +399,23 @@ const Home = props => {
                         width,
                         // borderRadius: 10,
                       }}
-                      source={{uri: item.pict}}
+                      source={{uri: `${item.pict}`}}
                     />
                   </View>
+                  // <TouchableOpacity
+                  //   key={key}
+                  //   style={{flex: 1}}
+                  //   activeOpacity={1}
+                  //   onPress={() =>
+                  //     navigation.navigate('PreviewImages', {images: data})
+                  //   }>
+                  //   <Image
+                  //     key={key}
+                  //     style={{flex: 1, width: '100%'}}
+                  //     // source={{uri: `${item.pict}`}}
+                  //     source={{uri: item.pict}}
+                  //   />
+                  // </TouchableOpacity>
                 );
               })}
             </Swiper>

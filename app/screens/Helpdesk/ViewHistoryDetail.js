@@ -177,7 +177,7 @@ export default function ViewHistoryDetail({route}) {
       email: email,
     };
 
-    // console.log('form data multi', formData);
+    console.log('form data multi', formData);
 
     const config = {
       headers: {
@@ -194,7 +194,7 @@ export default function ViewHistoryDetail({route}) {
         {config},
       )
       .then(res => {
-        // console.log('res tiket multi', res.data);
+        console.log('res tiket multi', res.data);
         const resTiketMulti = res.data.Data[0];
         const resImageMulti = res.data.DataImage; //
         const resDataAction = res.data.DataAction; //diisi oleh engineer,
@@ -210,14 +210,14 @@ export default function ViewHistoryDetail({route}) {
       })
       .catch(error => {
         console.log('err data multi', error);
-        alert('error nih');
+        // alert('error nih');
       });
   };
 
   const getSolvedPicture = async data => {
     const formData = {
-      report_no: 'EX21090021', //hardcode dulu
-      // report_no: data.report_no,
+      // report_no: 'EX21090021', //hardcode dulu
+      report_no: data.report_no,
     };
 
     // console.log('form data multi', formData);
@@ -248,7 +248,7 @@ export default function ViewHistoryDetail({route}) {
       })
       .catch(error => {
         console.log('err data multi', error);
-        alert('error nih');
+        // alert('error nih');
       });
   };
 

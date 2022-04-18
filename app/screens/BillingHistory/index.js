@@ -136,8 +136,9 @@ const BillingHistory = ({
           <Text>tidak ada data current (kasih no data available)</Text>
         ) : (
           <View style={{flex: 1, paddingHorizontal: 20}}>
-            {dataCurrent.map(item => (
+            {dataCurrent.map((item, key) => (
               <TransactionExpandHistory
+                key={key}
                 onPress={() => navigation.navigate('FHistoryDetail')}
                 tower={item.tower}
                 name={item.name}

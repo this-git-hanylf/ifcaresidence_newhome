@@ -111,7 +111,7 @@ export default function ViewHistoryStatus({route}) {
       })
       .catch(error => {
         console.log('error get tower api', error);
-        alert('error get');
+        // alert('error get');
       });
   };
 

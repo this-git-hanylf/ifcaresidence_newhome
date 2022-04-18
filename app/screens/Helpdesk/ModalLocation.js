@@ -107,10 +107,12 @@ export default function ModalLocation(props) {
     console.log('text', text);
     // console.log('arrayholder', arrayholder);
     const newData = arrayholder.filter(item => {
-      const itemData = `${item.descs}`;
+      const itemData = `${item.descs.toUpperCase()}`;
+      console.log('itemdata', itemData);
       const textData = text;
-      return itemData;
+      return itemData.indexOf(textData) > -1;
     });
+    console.log('new data', newData);
     setLocationFilter(newData);
   };
 
@@ -159,9 +161,16 @@ export default function ModalLocation(props) {
       />
       <TextInput
         placeholder="Search"
-        style={{color: '#fff', fontSize: 14}}
+        style={{
+          color: '#555',
+          fontSize: 14,
+          borderColor: '#000',
+          borderWidth: 0.5,
+          borderRadius: 10,
+          marginHorizontal: 20,
+        }}
         // onChangeText={this.handleSearch}
-        onChangeText={text => searchFilterFunction(text)}
+        onChangeText={text => searchFilterFunction(text.toUpperCase())}
         autoCorrect={false}
       />
 
@@ -187,16 +196,31 @@ export default function ModalLocation(props) {
           }
           data={getLocationFilter}
           keyExtractor={(item, index) => index}
+          // keyExtractor={(item, index) => item.descs}
           renderItem={({item, index, separators}) => (
-            <TouchableHighlight
-              key={item.location_cd}
-              onPress={() => selectedItem(item)}
-              onShowUnderlay={separators.highlight}
-              onHideUnderlay={separators.unhighlight}>
-              <View style={{backgroundColor: 'white'}}>
-                <Text>{item.descs}</Text>
-              </View>
-            </TouchableHighlight>
+            <View key={index} style={{marginHorizontal: 10, flex: 1}}>
+              <TouchableOpacity
+                // style={styleItem}
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  borderBottomColor: colors.border,
+                  borderBottomWidth: 2,
+                  paddingBottom: 20,
+                  paddingTop: 20,
+                }}
+                onPress={() => selectedItem(item)}>
+                <Text body1>{item.descs}</Text>
+                <Icon
+                  name="angle-right"
+                  size={18}
+                  color={colors.primary}
+                  style={{marginLeft: 5}}
+                  enableRTL={true}
+                />
+              </TouchableOpacity>
+            </View>
           )}
         />
       )}

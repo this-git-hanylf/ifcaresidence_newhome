@@ -14,8 +14,14 @@ export const tabBarIcon = ({color, name}) => (
 );
 
 export const tabBarIconHaveNoty = ({color, name}) => {
-  const notifData_FromRed = useSelector(state => getNotifRed(state));
-  console.log('buat badge notifg', notifData_FromRed.length);
+  // const notifData_FromRed = useSelector(state => getNotifRed(state));
+  // console.log('buat badge notifg', notifData_FromRed);
+
+  const data = useSelector(state => state.apiReducer.data);
+  console.log('total badge di tabbar', data.length);
+  const counter = useSelector(state => state.counter);
+  console.log('counter badge di tabbar', counter);
+  const total = data.length + counter;
   return (
     <View>
       {tabBarIcon({color, name})}
@@ -34,7 +40,8 @@ export const tabBarIconHaveNoty = ({color, name}) => {
           borderRadius: 10,
         }}>
         <Text whiteColor caption2>
-          {notifData_FromRed.length}
+          {/* {notifData_FromRed} */}
+          {total < 0 ? 0 : total}
         </Text>
       </View>
     </View>

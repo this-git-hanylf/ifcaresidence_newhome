@@ -88,6 +88,7 @@ const EProductDetail = props => {
     avatar,
     images,
     market_type,
+    currency,
   } = productData;
 
   useEffect(() => {
@@ -168,7 +169,7 @@ const EProductDetail = props => {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: 'http://pakubuwonoview.com/',
+        message: 'www.pakubuwono-residence.com',
       });
 
       if (result.action === Share.sharedAction) {
@@ -235,7 +236,9 @@ const EProductDetail = props => {
               alignItems: 'center',
               marginBottom: 4,
             }}>
-            <Text title3>Rp. {price_descs}</Text>
+            <Text title3>
+              {currency} {price_descs}
+            </Text>
           </View>
         </View>
         <View style={{flexDirection: 'row', marginTop: 10}}>
@@ -295,7 +298,7 @@ const EProductDetail = props => {
           <Text headline style={{marginTop: 20}}>
             {t('Type Market')}
           </Text>
-          <Text subhead style={{marginTop: 20, colors: BaseColor.grayColor}}>
+          <Text subhead style={{marginTop: 20, color: BaseColor.grayColor}}>
             {market_type}
           </Text>
         </View>
@@ -313,7 +316,7 @@ const EProductDetail = props => {
           <ProductSpecGrid
             style={{flex: 1}}
             description={'Price'}
-            title={'Rp ' + `${price}`}
+            title={`${currency} ` + `${price}`}
           />
         </View>
         <View style={styles.specifications}>

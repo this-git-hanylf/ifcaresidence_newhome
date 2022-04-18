@@ -5,6 +5,8 @@ export const actionTypes = {
   NOTIFIKASI_NBADGE_REQUEST: 'NOTIFIKASI_NBADGE_REQUEST',
   NOTIFIKASI_NBADGE_ERROR: 'NOTIFIKASI_NBADGE_ERROR',
   NOTIFIKASI_NBADGE_SUCCESS: 'NOTIFIKASI_NBADGE_SUCCESS',
+  NOTIFIKASI_NBADGE_DECREASE: 'NOTIFIKASI_NBADGE_DECREASE',
+  NOTIFIKASI_NBADGE_COUNT_DECREASE: 'NOTIFIKASI_NBADGE_COUNT_DECREASE',
 };
 
 const notification_nbadgerequest = () => ({
@@ -16,6 +18,12 @@ const notifikasi_nbadge_success = notifDataRed => ({
   type: actionTypes.NOTIFIKASI_NBADGE_SUCCESS,
   //   user,'
   notifDataRed,
+});
+
+const notifikasi_nbadge_count_decrease = notifDataRedCount => ({
+  type: actionTypes.NOTIFIKASI_NBADGE_DECREASE,
+  //   user,'
+  notifDataRedCount,
 });
 
 // export const notifikasi_nbadge =
@@ -46,6 +54,12 @@ export const notifikasi_nbadge =
       project_no,
     );
     dispatch(notifikasi_nbadge_success(notifnbadge));
-    console.log('notifikasi nbadge', notifnbadge);
+    // console.log('notifikasi nbadge', notifnbadge);
     //   dispatch(editRequest());
   };
+
+// export const notifikasi_nbadge_decrease = data => async dispatch => {
+//   dispatch(notifikasi_nbadge_success(notifnbadge));
+//   console.log('notifikasi nbadge DECREASE', data);
+//   //   dispatch(editRequest());
+// };

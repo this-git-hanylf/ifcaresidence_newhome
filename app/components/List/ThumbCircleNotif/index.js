@@ -16,9 +16,11 @@ export default function ListThumbCircleNotif(props) {
     txtContent,
     txtRight,
     onPress,
+    disabled,
   } = props;
   return (
     <TouchableOpacity
+      disabled={disabled}
       style={[
         styles.contain,
         {borderBottomWidth: 1, borderBottomColor: colors.border},
@@ -57,6 +59,7 @@ ListThumbCircleNotif.propTypes = {
   txtContent: PropTypes.string,
   txtRight: PropTypes.string,
   onPress: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 ListThumbCircleNotif.defaultProps = {
@@ -68,4 +71,5 @@ ListThumbCircleNotif.defaultProps = {
   txtContent: '',
   txtRight: '',
   onPress: () => {},
+  disabled: false,
 };

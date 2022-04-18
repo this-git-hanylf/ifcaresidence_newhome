@@ -164,7 +164,7 @@ const Detail = dataTiketPassProp => {
       })
       .catch(error => {
         console.log('err data multi', error);
-        alert('error nih');
+        // alert('error nih');
       });
   };
 

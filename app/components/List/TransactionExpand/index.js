@@ -66,6 +66,7 @@ const TransactionExpand = ({
   const [hasError, setErrors] = useState(false);
   const {t} = useTranslation();
   const [datadetailDateDue, setDetailDateDue] = useState([]);
+  const [datadetailNotDue, setDetailNotDue] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const detailDateDue = async () => {
@@ -75,6 +76,20 @@ const TransactionExpand = ({
       );
       setDetailDateDue(res.data.Data);
       console.log('detail date due -->', res.data.Data);
+      setLoading(false);
+    } catch (error) {
+      setErrors(error);
+      // alert(hasError.toString());
+    }
+  };
+
+  const detailNotDue = async () => {
+    try {
+      const res = await axios.get(
+        `http://34.87.121.155:2121/apiwebpbi/api/getDataCurrent/IFCAPB/${email}/${entity_cd}/${project_no}/${debtor_acct}/${doc_no}`,
+      );
+      setDetailNotDue(res.data.Data);
+      console.log('detail not due -->', res.data.Data);
       setLoading(false);
     } catch (error) {
       setErrors(error);
