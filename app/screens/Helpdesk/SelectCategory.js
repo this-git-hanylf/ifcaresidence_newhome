@@ -139,7 +139,7 @@ export default function SelectCategory({route}) {
       //   category_group: 'CS',
       //   location_type: 'U', //ini nanti pake radiobutton
       // category_group: passProp.category_group_cd,
-      group_cd: passProp.category_group_cd, //hanya beda kolom sajaa, tetapi isi sama
+      // group_cd: passProp.category_group_cd, //hanya beda kolom sajaa, tetapi isi sama
       location_type: passProp.location_type, //ini nanti pake radiobutton
     };
     // console.log('params', params);

@@ -239,10 +239,11 @@ const Billing = ({
         </View>
         <View style={{flex: 1, paddingHorizontal: 20}}>
           {tab.id == 1 && dataCurrent != 0
-            ? dataCurrent.map(item => (
+            ? dataCurrent.map((item, key) => (
                 <ListTransactionExpand
                   onPress={() => navigation.navigate('FHistoryDetail')}
-                  key={item.id}
+                  // key={item.id}
+                  key={key}
                   tower={item.tower}
                   name={item.name}
                   trx_type={item.trx_type}
@@ -256,6 +257,7 @@ const Billing = ({
                   entity_cd={entity}
                   project_no={project_no}
                   email={user.user}
+                  tab_id={1}
                 />
               ))
             : tab.id == 1 && (
@@ -295,10 +297,11 @@ const Billing = ({
         </View>
         <View style={{flex: 1, paddingHorizontal: 20}}>
           {tab.id == 2 && data != null
-            ? data.map(item => (
+            ? data.map((item, key) => (
                 <ListTransactionExpand
                   onPress={() => navigation.navigate('FHistoryDetail')}
-                  key={item.id}
+                  // key={item.id}
+                  key={key}
                   tower={item.tower}
                   name={item.name}
                   trx_type={item.trx_type}
@@ -312,6 +315,7 @@ const Billing = ({
                   entity_cd={entity}
                   project_no={project_no}
                   email={user.user}
+                  tab_id={2}
                 />
               ))
             : tab.id == 2 && (

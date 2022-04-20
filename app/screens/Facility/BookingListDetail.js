@@ -415,7 +415,8 @@ export default BookingListDetail = props => {
 
   const onCloseModal = () => {
     showModalSuccess(false);
-    navigation.navigate('Home');
+    // navigation.navigate('Home');
+    navigation.navigate('Facility');
   };
 
   const onKlikNo = () => {

@@ -65,9 +65,16 @@ const PostDetail = props => {
   };
 
   const onShare = async () => {
+    console.log('options', options);
+    const htmlnews = item.news_descs.replace(/<\/?[^>]+(>|$;)/gi, '');
+
+    const htmlnewsnbsp = htmlnews.replace(/&nbsp;/g, ' ');
+
+    const htmlnewsquot = htmlnewsnbsp.replace(/&quot;/g, '');
+
     try {
       const result = await Share.share({
-        message: item.news_descs,
+        message: htmlnewsquot,
         title: item.news_title,
         url: item.source,
       });

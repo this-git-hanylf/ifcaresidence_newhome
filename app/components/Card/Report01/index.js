@@ -43,7 +43,7 @@ const CardReport01 = ({
             ]}>
             <Icon name={icon} size={15} style={{color: colors.primary}} solid />
           </View>
-          <Text headline style={{marginLeft: 5}}>
+          <Text headline style={{marginLeft: 5, width: '85%'}}>
             {title}
           </Text>
         </View>

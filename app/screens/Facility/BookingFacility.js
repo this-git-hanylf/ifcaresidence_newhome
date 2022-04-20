@@ -729,7 +729,7 @@ function BookingFacility({route}) {
                           whiteColor={tab.id == item.id}
                           style={{textAlign: 'center'}}>
                           {moment(item.title)
-                            .format('DD MMM')
+                            .format('ddd DD')
                             .replace(' ', '\n')}
                         </Text>
                       </View>

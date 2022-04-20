@@ -41,6 +41,7 @@ const TransactionExpand = ({
   entity_cd = '',
   project_no = '',
   email = '',
+  tab_id = '',
   ListTransactionProps = {
     icon: 'exchange-alt',
     name: name,
@@ -55,6 +56,7 @@ const TransactionExpand = ({
     entity_cd: entity_cd,
     project_no: project_no,
     email: email,
+    tab_id: tab_id,
   },
   isExpandInit = false,
 }) => {
@@ -67,6 +69,7 @@ const TransactionExpand = ({
   const {t} = useTranslation();
   const [datadetailDateDue, setDetailDateDue] = useState([]);
   const [datadetailNotDue, setDetailNotDue] = useState([]);
+
   const [loading, setLoading] = useState(true);
 
   const detailDateDue = async () => {
@@ -85,6 +88,10 @@ const TransactionExpand = ({
 
   const detailNotDue = async () => {
     try {
+      console.log(
+        'api not due detail',
+        `http://34.87.121.155:2121/apiwebpbi/api/getDataCurrent/IFCAPB/${email}/${entity_cd}/${project_no}/${debtor_acct}/${doc_no}`,
+      );
       const res = await axios.get(
         `http://34.87.121.155:2121/apiwebpbi/api/getDataCurrent/IFCAPB/${email}/${entity_cd}/${project_no}/${debtor_acct}/${doc_no}`,
       );
@@ -110,6 +117,19 @@ const TransactionExpand = ({
   console.log('sum detail mbal mont', sumTotal);
   console.log('replace total', replaceTotal);
 
+  const sumTotalNotDue =
+    datadetailNotDue != null || datadetailNotDue != 0
+      ? datadetailNotDue.reduceRight((max, bills) => {
+          return (max += parseInt(bills.mbal_amt));
+        }, 0)
+      : null;
+  const math_total_notdue = Math.floor(sumTotalNotDue);
+  const replaceTotal_notdue = math_total_notdue
+    .toFixed()
+    .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+  console.log('sum detail mbal mont due date', math_total_notdue);
+  console.log('replace total due date', replaceTotal_notdue);
+
   // useEffect(() => {
   //   detailDateDue();
   // }, []);
@@ -117,6 +137,7 @@ const TransactionExpand = ({
   const clickExpand = () => {
     setIsExpand(!isExpand);
     detailDateDue();
+    detailNotDue();
   };
 
   const clickAttachment = () => {
@@ -172,9 +193,9 @@ const TransactionExpand = ({
               marginTop: 15,
             },
           ])}>
-          {loading ? (
+          {tab_id == 1 && loading ? (
             <ActivityIndicator color={colors.primary} style={{marginTop: 20}} />
-          ) : (
+          ) : datadetailDateDue != 0 ? (
             <View>
               {datadetailDateDue.map((item, key) => (
                 <View key={key}>
@@ -247,6 +268,95 @@ const TransactionExpand = ({
                 </View>
               </View>
             </View>
+          ) : (
+            tab_id == 1 && (
+              <View style={{alignSelf: 'center'}}>
+                <Text>Not have data detail </Text>
+              </View>
+            )
+          )}
+          {tab_id == 2 && loading ? (
+            <ActivityIndicator color={colors.primary} style={{marginTop: 20}} />
+          ) : datadetailNotDue != null ? (
+            <View>
+              {datadetailNotDue.map((item, key) => (
+                <View key={key}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                      // paddingHorizontal: 10,
+                      paddingVertical: 5,
+                    }}>
+                    <View style={{width: '50%', paddingLeft: 10}}>
+                      <Text subhead>{item.descs}</Text>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+
+                        width: '35%',
+                      }}>
+                      <Text>Rp. </Text>
+                      <Text subhead>
+                        {item.mbal_amt.replace(
+                          /(\d)(?=(\d{3})+(?!\d))/g,
+                          '$1.',
+                        )}
+                        {/* 100.000.000.00 */}
+                      </Text>
+                      {/* <Text subhead>{numFormat(item.mbal_amt)}</Text> */}
+                    </View>
+                  </View>
+                </View>
+              ))}
+              <View
+                style={{
+                  borderTopWidth: 0.5,
+                  borderStyle: 'dashed',
+                  borderColor: colors.primary,
+                  marginLeft: 9,
+                }}></View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                  // paddingHorizontal: 10,
+                  paddingVertical: 5,
+                }}>
+                <View style={{width: '50%', paddingLeft: 10}}>
+                  <Text subhead bold style={{fontSize: 16}}>
+                    Total
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+
+                    width: '35%',
+                  }}>
+                  <Text subhead bold style={{fontSize: 16}}>
+                    Rp.{' '}
+                  </Text>
+                  <Text subhead bold style={{fontSize: 16}}>
+                    {replaceTotal_notdue}.00
+                    {/* 100.000.000.00 */}
+                  </Text>
+                  {/* <Text subhead>{numFormat(item.mbal_amt)}</Text> */}
+                </View>
+              </View>
+            </View>
+          ) : (
+            tab_id == 2 &&
+            datadetailNotDue == null && (
+              <View style={{alignSelf: 'center'}}>
+                <Text>Not have data detail </Text>
+              </View>
+            )
           )}
         </View>
       )}

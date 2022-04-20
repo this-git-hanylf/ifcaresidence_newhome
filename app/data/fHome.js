@@ -12,9 +12,9 @@ export const FCategories = [
   },
   {
     id: 2,
-    title: 'Billing',
+    title: 'Store',
     icon: 'credit-card',
-    screen: 'Billing',
+    screen: 'Store',
     user_facility: 'N',
     user_menu: 'Y',
     icon_url: require('../assets/images/icon_at_home/icon-3.jpeg'),

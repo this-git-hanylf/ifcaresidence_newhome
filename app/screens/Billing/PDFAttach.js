@@ -40,31 +40,40 @@ const PDFAttach = props => {
   //   const [dataNotif, setDataNotif] = useState([]);
   const downloadFile = () => {
     const url = paramsItem.link_url;
+    console.log('url', url);
     const android = RNFetchBlob.android;
+    let dirs = RNFetchBlob.fs.dirs;
+    console.log('dirs', dirs);
+    const title = paramsItem.doc_no + '_' + paramsItem.remark + '.pdf';
     RNFetchBlob.config({
+      // response data will be saved to this path if it has access right.
+
       fileCache: true,
       addAndroidDownloads: {
         path:
-          RNFetchBlob.fs.dirs.SDCardDir +
+          dirs.DownloadDir +
           '/downloads/' +
           paramsItem.doc_no +
           '_' +
           paramsItem.remark +
           '.pdf',
         useDownloadManager: true,
+        // Show notification when response data transmitted
         notification: true,
-        overwrite: true,
+        // Title of download notification
+        title: title,
+        // File description (not notification description)
         description: 'downloading content...',
         mime: 'application/pdf',
+        // Make the file scannable  by media scanner
         mediaScannable: true,
       },
     })
       .fetch('GET', url)
       .then(res => {
+        // the path should be dirs.DocumentDir + 'path-to-file.anything'
         console.log('The file saved to ', res.path());
         alert('Saved at : ' + res.path());
-        // android.actionViewIntent(res.path(), 'application/pdf')
-        // android.actionViewIntent(RNFetchBlob.fs.dirs.SDCardDir +'/Download/laporan.pdf','application/pdf')
       });
   };
 

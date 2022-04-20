@@ -72,6 +72,11 @@ export default function ViewHistoryDetail({route}) {
   const [image_solved, setImageSolved] = useState();
   //   const [images, setImage] = useState(url_image);
   const [images, setImage] = useState(imagesDummy); //sementara aja
+
+  const [link_url, setLinkUrl] = useState('');
+  const [name_approval, setNameApproval] = useState('');
+  const [modalImage, setModalImage] = useState(false);
+
   const selectedPayment = {
     type: 'C',
     descs: 'Cash',
@@ -302,6 +307,12 @@ export default function ViewHistoryDetail({route}) {
   //     //     console.log(error);
   //     //   });
   //   };
+  const showModalImage = ({link_url, name_approval}) => {
+    console.log('link url image', link_url);
+    setLinkUrl(link_url);
+    setNameApproval(name_approval);
+    setModalImage(true);
+  };
 
   return (
     <SafeAreaView
@@ -550,6 +561,60 @@ export default function ViewHistoryDetail({route}) {
                     </View>
                   </View>
 
+                  {
+                    dataTiketMulti.status == 'R' ? null : (
+                      // {/* jika status approval di sv_entry hd = N, maka muncul tombol need approve. kalo status approval = Y berarti sudah diapprove */}
+                      <View style={{marginTop: 10}}>
+                        {dataTiketMulti.status_approval != 'Y' ? (
+                          <Button
+                            style={{
+                              height: 40,
+                              width: 200,
+                              alignSelf: 'center',
+                            }}
+                            onPress={() =>
+                              navigation.navigate(
+                                'ScreenSignature',
+                                dataTiketMulti,
+                              )
+                            }>
+                            <Text
+                              style={{
+                                color: BaseColor.whiteColor,
+                                fontSize: 14,
+                              }}>
+                              Need Approve
+                            </Text>
+                          </Button>
+                        ) : (
+                          <Button
+                            style={{
+                              height: 40,
+                              width: 200,
+
+                              alignSelf: 'center',
+                            }}
+                            onPress={() =>
+                              showModalImage({
+                                link_url: dataTiketMulti.link_url,
+                                name_approval: dataTiketMulti.name_approval,
+                              })
+                            }>
+                            <Text
+                              style={{
+                                color: BaseColor.whiteColor,
+                                fontSize: 14,
+                              }}>
+                              Signature Approved
+                            </Text>
+                          </Button>
+                        )}
+                      </View>
+                    )
+                    // {/* klik need approve munculin tempat tanda tangan, lalu save. save ke table apa? api nya sudah ada belum ya? save dalam bentuk apa ya? image? */}
+                    //   {/* set save data ke table sv entry hd, ubah status_approval, name_approval = nama user login, date_approval = tanggal dia tanda tangan, link_url = url image tanda tangan */}
+                  }
+
                   <View style={{marginTop: 20}}>
                     <Text style={{fontWeight: 'bold', fontSize: 14}}>
                       Gallery of Request
@@ -788,6 +853,71 @@ export default function ViewHistoryDetail({route}) {
             )}
           </View>
         )}
+
+        <View>
+          <Modal
+            isVisible={modalImage}
+            style={{height: '100%'}}
+            onBackdropPress={() => setModalImage(false)}>
+            <View
+              style={{
+                backgroundColor: BaseColor.whiteColor,
+                height: '60%',
+                borderRadius: 30,
+                // justifyContent: 'center',
+              }}>
+              <View style={{flexDirection: 'row', width: '100%'}}>
+                <View
+                  style={{
+                    marginTop: 20,
+                    justifyContent: 'space-between',
+                    flex: 1,
+                  }}></View>
+                <View
+                  style={{
+                    marginTop: 20,
+                    justifyContent: 'space-between',
+                    marginRight: 10,
+                  }}>
+                  <TouchableOpacity onPress={() => setModalImage(false)}>
+                    <View style={{width: 30, height: 20}}>
+                      <Icon name={'times'} size={20}></Icon>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  alignSelf: 'center',
+
+                  // flex: 1,
+                  // margin: 10,
+                  marginTop: '20%',
+                  margin: 10,
+                  borderColor: BaseColor.grayColor,
+                  borderRadius: 15,
+                  borderWidth: 1,
+                  width: '90%',
+                  // height: 300,
+                }}>
+                <Image
+                  source={{uri: link_url}}
+                  style={{
+                    width: 200,
+                    height: 200,
+                  }}></Image>
+              </View>
+              <View>
+                <Text style={{textAlign: 'center'}}>
+                  Signature Name : {name_approval}
+                </Text>
+              </View>
+            </View>
+          </Modal>
+        </View>
       </View>
     </SafeAreaView>
   );

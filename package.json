@@ -75,6 +75,7 @@
     "react-native-segment-control": "^1.0.5",
     "react-native-segmented-control-tab": "^4.0.0",
     "react-native-select-dropdown": "^1.4.0",
+    "react-native-signature-canvas": "^4.3.0",
     "react-native-splash-screen": "^3.2.0",
     "react-native-star-rating": "^1.1.0",
     "react-native-svg": "^12.1.1",

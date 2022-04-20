@@ -14,7 +14,7 @@ import {
 import {BaseColor, BaseStyle, useTheme} from '@config';
 import {CheckBox, Badge} from 'react-native-elements';
 import {Image} from 'react-native';
-
+import {parseHexTransparency} from '@utils';
 import {useNavigation} from '@react-navigation/native';
 
 import React, {useEffect, useState} from 'react';
@@ -297,14 +297,39 @@ export default function StatusHelp({route}) {
                     flexDirection: 'row',
                     alignContent: 'center',
                     alignItems: 'center',
+
                     // alignSelf: 'center',
                   }}>
                   {/* <CategoryIconSoft
                     isRound
                     size={25}
-                    icon={'tasks'}
+                    name="angle-left"
                     // style={{marginTop: 10}}
                   /> */}
+                  <View
+                    style={{
+                      borderRadius: 20,
+                      // width: 50,
+                      // height: 50,
+                      width: 60,
+                      height: 60,
+                      // borderRadius: 8,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginBottom: 10,
+                      backgroundColor: parseHexTransparency(
+                        colors.primary,
+                        100,
+                      ),
+                    }}>
+                    <Icon
+                      name={'tasks'}
+                      size={25}
+                      color={BaseColor.whiteColor}
+                      solid
+                    />
+                  </View>
+
                   {/* <Image
                     source={require('@assets/images/icon-helpdesk/newtiket.png')}
                     style={styles.img}></Image> */}
@@ -366,6 +391,30 @@ export default function StatusHelp({route}) {
                     icon={'hourglass-half'}
                     style={{marginTop: 10}}
                   /> */}
+                  <View
+                    style={{
+                      borderRadius: 20,
+                      // width: 50,
+                      // height: 50,
+                      width: 60,
+                      height: 60,
+                      // borderRadius: 8,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginTop: 10,
+                      marginBottom: 10,
+                      backgroundColor: parseHexTransparency(
+                        colors.primary,
+                        100,
+                      ),
+                    }}>
+                    <Icon
+                      name={'tasks'}
+                      size={25}
+                      color={BaseColor.whiteColor}
+                      solid
+                    />
+                  </View>
                   {/* <Image
                     source={require('@assets/images/icon-helpdesk/newtiket.png')}
                     style={styles.img}></Image> */}
@@ -419,6 +468,13 @@ export default function StatusHelp({route}) {
                     alignItems: 'center',
                     // alignSelf: 'center',
                   }}>
+                  {/* <CategoryIconSoft
+                    isRound
+                    size={25}
+                    icon={'times'}
+                    style={{marginTop: 10}}
+                  /> */}
+
                   <View
                     style={{
                       borderRadius: 20,
@@ -429,6 +485,7 @@ export default function StatusHelp({route}) {
                       // borderRadius: 8,
                       alignItems: 'center',
                       justifyContent: 'center',
+                      marginTop: 10,
                       marginBottom: 10,
                       backgroundColor: parseHexTransparency(
                         colors.primary,
@@ -442,6 +499,7 @@ export default function StatusHelp({route}) {
                       solid
                     />
                   </View>
+
                   {/* <Image
                     source={require('@assets/images/icon-helpdesk/newtiket.png')}
                     style={styles.img}></Image> */}
@@ -511,6 +569,7 @@ export default function StatusHelp({route}) {
                       // borderRadius: 8,
                       alignItems: 'center',
                       justifyContent: 'center',
+                      marginTop: 10,
                       marginBottom: 10,
                       backgroundColor: parseHexTransparency(
                         colors.primary,
