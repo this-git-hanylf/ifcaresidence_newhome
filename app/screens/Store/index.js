@@ -66,13 +66,17 @@ const Store = props => {
           }}
         />
         {/* <NotFound /> */}
-        <View>
-          <LottieView
-            source={require('@data/notfound.json')}
-            autoPlay
-            style={{width: 300, height: 300}}
-          />
+        <View style={styles.container}>
+          <View>
+            <LottieView
+              source={require('@data/notfound.json')}
+              autoPlay
+              style={{width: 300, height: 300}}
+            />
+          </View>
+          <Text style={{fontSize: 16}}>Coming Soon</Text>
         </View>
+
         {/* <ScrollView contentContainerStyle={styles.paddingSrollView}>
           {data.length > 0 ? (
             <FlatList
