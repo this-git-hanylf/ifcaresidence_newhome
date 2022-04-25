@@ -80,6 +80,26 @@ class UserController {
       return Promise.reject(error);
     }
   };
+
+  saveProfile = async data => {
+    console.log('save profile daata controler', data);
+    try {
+      const result = await httpClient.request({
+        url: `http://34.87.121.155:2121/apiwebpbi/api/changeprofile_mobile`,
+
+        method: 'POST',
+        data: {
+          email: data.emails,
+          name: data.name,
+          hp: data.phone,
+          gender: data.genders,
+        },
+      });
+      return result;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  };
 }
 
 export default new UserController();

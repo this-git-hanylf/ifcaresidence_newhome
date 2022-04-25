@@ -39,6 +39,7 @@ import axios from 'axios';
 import numFormat from '../../components/numFormat';
 import CurrencyFormatter from '../../components/CurrencyFormatter';
 import ModalDropdown_debtor from '@components/ModalDropdown_debtor';
+import {ActivityIndicator} from 'react-native-paper';
 
 const Billing = ({
   isCenter = false,
@@ -105,8 +106,8 @@ const Billing = ({
 
     await axios
       .get(
-        // `http://103.111.204.131/apisysadmin/api/getProject/${data.email}`,
-        `http://103.111.204.131/apiwebpbi/api/getData/mysql/${data.email}/${data.app}`,
+        // `http://34.87.121.155:2121/apisysadmin/api/getProject/${data.email}`,
+        `http://34.87.121.155:2121/apiwebpbi/api/getData/mysql/${data.email}/${data.app}`,
         {
           config,
         },
@@ -158,6 +159,7 @@ const Billing = ({
       );
       setDataCurrent(res.data.Data);
       console.log('DATA DUE DATE -->', res.data.Data);
+      setLoading(false);
     } catch (error) {
       setErrors(error.ressponse.data);
       // alert(hasError.toString());
@@ -180,6 +182,7 @@ const Billing = ({
       );
       setData(res.data.Data);
       console.log('data current', data);
+      setLoading(false);
     } catch (error) {
       setErrors(error.ressponse.data);
       // alert(hasError.toString());
@@ -237,41 +240,45 @@ const Billing = ({
             </View>
           ))}
         </View>
-        <View style={{flex: 1, paddingHorizontal: 20}}>
-          {tab.id == 1 && dataCurrent != 0
-            ? dataCurrent.map((item, key) => (
-                <ListTransactionExpand
-                  onPress={() => navigation.navigate('FHistoryDetail')}
-                  // key={item.id}
-                  key={key}
-                  tower={item.tower}
-                  name={item.name}
-                  trx_type={item.trx_type}
-                  doc_no={item.doc_no}
-                  doc_date={moment(item.doc_date).format('DD MMMM YYYY')}
-                  descs={item.descs}
-                  due_date={moment(item.due_date).format('DD MMMM YYYY')}
-                  mbal_amt={`${numFormat(`${item.mbal_amt}`)}`}
-                  lot_no={item.lot_no}
-                  debtor_acct={item.debtor_acct}
-                  entity_cd={entity}
-                  project_no={project_no}
-                  email={user.user}
-                  tab_id={1}
-                />
-              ))
-            : tab.id == 1 && (
-                <View
-                  style={{
-                    flex: 1,
-                    // height: '100%',
-                    marginTop: '70%',
-                    // justifyContent: 'center',
-                    // alignContent: 'center',
-                    // alignItems: 'center',
-                    // alignSelf: 'center',
-                  }}>
-                  {/* <IconFontisto
+        {loading ? (
+          <ActivityIndicator />
+        ) : (
+          <View style={{flex: 1, paddingHorizontal: 20}}>
+            {tab.id == 1 && dataCurrent != 0
+              ? dataCurrent.map((item, key) => (
+                  <ListTransactionExpand
+                    onPress={() => navigation.navigate('FHistoryDetail')}
+                    // key={item.id}
+                    key={key}
+                    tower={item.tower}
+                    name={item.name}
+                    trx_type={item.trx_type}
+                    doc_no={item.doc_no}
+                    doc_date={moment(item.doc_date).format('DD MMMM YYYY')}
+                    descs={item.descs}
+                    due_date={moment(item.due_date).format('DD MMMM YYYY')}
+                    mbal_amt={`${numFormat(`${item.mbal_amt}`)}`}
+                    lot_no={item.lot_no}
+                    debtor_acct={item.debtor_acct}
+                    entity_cd={entity}
+                    project_no={project_no}
+                    email={user.user}
+                    tab_id={1}
+                  />
+                ))
+              : tab.id == 1 &&
+                dataCurrent == 0 && (
+                  <View
+                    style={{
+                      flex: 1,
+                      // height: '100%',
+                      marginTop: '70%',
+                      // justifyContent: 'center',
+                      // alignContent: 'center',
+                      // alignItems: 'center',
+                      // alignSelf: 'center',
+                    }}>
+                    {/* <IconFontisto
                     name="holiday-village"
                     size={40}
                     color={colors.primary}
@@ -281,20 +288,22 @@ const Billing = ({
                       alignItems: 'center',
                       alignSelf: 'center',
                     }}></IconFontisto> */}
-                  <Text
-                    style={{
-                      justifyContent: 'center',
-                      alignContent: 'center',
-                      alignItems: 'center',
-                      alignSelf: 'center',
-                      fontSize: 16,
-                      marginTop: 10,
-                    }}>
-                    Sorry! Data not available.
-                  </Text>
-                </View>
-              )}
-        </View>
+                    <Text
+                      style={{
+                        justifyContent: 'center',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        alignSelf: 'center',
+                        fontSize: 16,
+                        marginTop: 10,
+                      }}>
+                      Sorry! Data not available.
+                    </Text>
+                  </View>
+                )}
+          </View>
+        )}
+
         <View style={{flex: 1, paddingHorizontal: 20}}>
           {tab.id == 2 && data != null
             ? data.map((item, key) => (

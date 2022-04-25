@@ -307,7 +307,10 @@ export default function SubmitHelpdesk({route, props}) {
     bodyData.append('entity_cd', passProp.entity_cd);
     bodyData.append('project_no', passProp.project_no);
     // bodyData.append('reportdate', '04 Nov 2021 08:47');
-    bodyData.append('reportdate', reportdate);
+    bodyData.append(
+      'reportdate',
+      moment(new Date()).format('DD MMMM YYYY h:mm'),
+    );
     bodyData.append('takenby', 'Bagus');
     bodyData.append('lotno', passProp.lot_no.lot_no);
     bodyData.append('debtoracct', passProp.dataDebtor.debtor_acct);
@@ -319,7 +322,10 @@ export default function SubmitHelpdesk({route, props}) {
     bodyData.append('reqby', passProp.reportName);
     bodyData.append('contactno', passProp.contactNo);
     bodyData.append('audit_user', passProp.data.audit_user);
-    bodyData.append('responddate', '04 Nov 2021 08:47');
+    bodyData.append(
+      'responddate',
+      moment(new Date()).format('DD MMMM YYYY h:mm'),
+    );
     bodyData.append('userfile', {
       uri: image[0].uri,
       name: 'image.jpg',
@@ -337,8 +343,10 @@ export default function SubmitHelpdesk({route, props}) {
       },
     )
       .then(res => {
+        console.log('res', res);
         return res.json().then(resJson => {
           // alert(resJson.Pesan);
+          console.log('resKsspn', resJson);
           setMessage(resJson.Pesan);
           showModalSuccess(true);
         });

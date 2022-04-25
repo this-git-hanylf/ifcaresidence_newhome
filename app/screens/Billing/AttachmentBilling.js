@@ -51,7 +51,7 @@ const AttachmentBilling = props => {
     const debtor_acct = route.params.debtor_acct;
     const doc_no = route.params.doc_no;
 
-    // console.log('params api attach', 'http://103.111.204.131/apiwebpbi/api/getDataAttach/IFCAPB/${entity_cd}/${project_no}/${debtor_acct}')
+    // console.log('params api attach', 'http://34.87.121.155:2121/apiwebpbi/api/getDataAttach/IFCAPB/${entity_cd}/${project_no}/${debtor_acct}')
     try {
       const res = await axios.get(
         `http://34.87.121.155:2121/apiwebpbi/api/getDataAttach/IFCAPB/${entity_cd}/${project_no}/${debtor_acct}/${doc_no}`,
@@ -69,8 +69,6 @@ const AttachmentBilling = props => {
     console.log('itm', item);
     navigation.navigate('PDFAttach', item);
   };
-
-
 
   const renderItem = ({item, index}) => {
     return (

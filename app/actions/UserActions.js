@@ -66,6 +66,7 @@ const changePassSuccess = user => ({
 
 const editRequest = () => ({
   type: actionTypes.EDIT,
+  // user,
 });
 
 const logoutRequest = () => ({
@@ -114,9 +115,11 @@ export const logout = () => async dispatch => {
 };
 
 export const saveProfile = data => async dispatch => {
+  console.log('user action save profile', data);
   const res = await UserController.saveProfile(data);
+  console.log('res save profil', res);
   alert(res.Pesan);
-  dispatch(editRequest());
+  dispatch(editRequest(res.Data));
 };
 
 export const changePass = (email, pass, conpass) => async dispatch => {

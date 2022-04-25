@@ -48,6 +48,10 @@ const Profile = props => {
     }
   });
 
+  useEffect(() => {
+    user;
+  });
+
   const onLogOut = useCallback(() => {
     Alert.alert(
       'Are you sure ?',

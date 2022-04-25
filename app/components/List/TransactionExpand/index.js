@@ -96,7 +96,7 @@ const TransactionExpand = ({
         `http://34.87.121.155:2121/apiwebpbi/api/getDataCurrent/IFCAPB/${email}/${entity_cd}/${project_no}/${debtor_acct}/${doc_no}`,
       );
       setDetailNotDue(res.data.Data);
-      console.log('detail not due -->', res.data.Data);
+      console.log('detail not due -->', res);
       setLoading(false);
     } catch (error) {
       setErrors(error);
@@ -117,8 +117,10 @@ const TransactionExpand = ({
   console.log('sum detail mbal mont', sumTotal);
   console.log('replace total', replaceTotal);
 
+  const datadetailNotDue_null = datadetailNotDue == null ? 0 : datadetailNotDue;
+
   const sumTotalNotDue =
-    datadetailNotDue != null || datadetailNotDue != 0
+    datadetailNotDue_null != 0
       ? datadetailNotDue.reduceRight((max, bills) => {
           return (max += parseInt(bills.mbal_amt));
         }, 0)

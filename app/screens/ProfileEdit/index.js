@@ -10,12 +10,13 @@ import {
 import {BaseColor, BaseStyle, useTheme} from '@config';
 // Load sample data
 import {UserData} from '@data';
-import React, {useState, useEffect} from 'react';
-import {ScrollView, View} from 'react-native';
+import React, {useState, useEffect, useCallback} from 'react';
+import {ScrollView, View, Alert} from 'react-native';
 import styles from './styles';
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from 'react-redux';
 import getUser from '../../selectors/UserSelectors';
+import {saveProfile, actionTypes} from '../../actions/UserActions';
 
 const ProfileEdit = props => {
   const {navigation} = props;
@@ -28,6 +29,11 @@ const ProfileEdit = props => {
   const user = useSelector(state => getUser(state));
   const [name, setName] = useState(user.name);
   const [phone, setPhone] = useState(user.handphone);
+  const [datas, setData] = useState();
+  const saveProfilerResult = useCallback(
+    () => dispatch(saveProfile()),
+    [dispatch],
+  );
 
   useEffect(() => {
     if (user === null) {
@@ -35,15 +41,49 @@ const ProfileEdit = props => {
     }
   });
 
-  const saveProfiles = () => {
-    const data = {
-      email: user.user,
-      name: name,
-      phone: phone,
-      gender: 'Male',
-    };
-    dispatch(saveProfile(data));
-  };
+  // console.log('editRequest', saveProfilerResult());
+
+  // const saveProfiles = useCallback(() => {
+  //   const data = {
+  //     email: user.user,
+  //     name: name,
+  //     phone: phone,
+  //     gender: 'Male',
+  //   };
+  //   dispatch(saveProfile(data));
+  // });
+
+  // const saveProfiles = useCallback(() => {
+  //   const data = {
+  //     emails: user.user,
+  //     names: name,
+  //     phones: phone,
+  //     genders: 'Male',
+  //   };
+  //   console.log('data save profil', data);
+  //   dispatch(saveProfile(data));
+  // }, []);
+
+  const saveProfiles = useCallback(
+    () =>
+      // {
+      dispatch(saveProfile({emails: user.user, name, phone, genders: 'Male'})),
+    // Alert.alert(
+    //   'Are you sure ?',
+    //   'Press OK if you want to logging out !',
+    //   [
+    //     {
+    //       text: 'Cancel',
+    //       style: 'cancel',
+    //     },
+    //     {text: 'OK', onPress: () => alert('klik')},
+    //   ],
+    //   {cancelable: false},
+    // );
+    // },
+
+    [{emails: user.user, name, phone, genders: 'Male'}, dispatch],
+  );
 
   return (
     <SafeAreaView
@@ -135,13 +175,14 @@ const ProfileEdit = props => {
         <Button
           loading={loading}
           full
-          onPress={() => {
-            setLoading(true);
-            setTimeout(() => {
-              // navigation.goBack();
-              onPress = {saveProfiles};
-            }, 500);
-          }}>
+          // onPress={() => {
+          //   setLoading(true);
+          //   setTimeout(() => {
+          //     // navigation.goBack();
+          //     saveProfiles();
+          //   }, 500);
+          // }}
+          onPress={() => saveProfiles()}>
           {t('confirm')}
         </Button>
       </View>
