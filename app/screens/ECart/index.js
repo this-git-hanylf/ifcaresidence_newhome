@@ -7,47 +7,47 @@ import {
   ProductCard1,
   SafeAreaView,
   TextInput,
-} from "@components";
-import { BaseColor, BaseStyle, useTheme } from "@config";
-import { ProductsData } from "@data";
-import React, { Fragment, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { FlatList, RefreshControl, View } from "react-native";
+} from '@components';
+import {BaseColor, BaseStyle, useTheme} from '@config';
+import {ProductsData} from '@data';
+import React, {Fragment, useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {FlatList, RefreshControl, View} from 'react-native';
 
 const sortOptionInit = [
   {
-    value: "remove",
-    icon: "sort-amount-up",
-    text: "remove",
+    value: 'remove',
+    icon: 'sort-amount-up',
+    text: 'remove',
   },
   {
-    value: "share_this_article",
-    icon: "sort-amount-down",
-    text: "share_this_article",
+    value: 'share_this_article',
+    icon: 'sort-amount-down',
+    text: 'share_this_article',
   },
   {
-    value: "view_detail",
-    icon: "sort-amount-up",
-    text: "view_detail",
+    value: 'view_detail',
+    icon: 'sort-amount-up',
+    text: 'view_detail',
   },
   {
-    value: "reset_all",
-    icon: "sort-amount-up",
-    text: "reset_all",
+    value: 'reset_all',
+    icon: 'sort-amount-up',
+    text: 'reset_all',
   },
 ];
 
-const Favourite = (props) => {
-  const { navigation } = props;
-  const { t } = useTranslation();
-  const { colors } = useTheme();
+const Favourite = props => {
+  const {navigation} = props;
+  const {t} = useTranslation();
+  const {colors} = useTheme();
   const [refreshing, setRefreshing] = useState(false);
   const [products, setProducts] = useState(ProductsData);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [sortOption, setSortOption] = useState(sortOptionInit);
 
-  const [promotionCode, setPromotionCode] = useState("");
+  const [promotionCode, setPromotionCode] = useState('');
 
   useEffect(() => {
     setTimeout(() => {
@@ -55,14 +55,14 @@ const Favourite = (props) => {
     }, 1000);
   }, []);
 
-  const onSelectFilter = (selected) => {
+  const onSelectFilter = selected => {
     setSortOption(
-      sortOption.map((item) => {
+      sortOption.map(item => {
         return {
           ...item,
           checked: item.value == selected.value,
         };
-      })
+      }),
     );
   };
 
@@ -81,9 +81,9 @@ const Favourite = (props) => {
 
   const renderContent = () => {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{flex: 1}}>
         <Header
-          title={t("checkout")}
+          title={t('checkout')}
           renderLeft={() => {
             return (
               <Icon
@@ -98,13 +98,13 @@ const Favourite = (props) => {
             navigation.goBack();
           }}
         />
-        <View style={[{ flex: 1, paddingHorizontal: 20, paddingBottom: 10 }]}>
-          <View style={{ flexDirection: "row", marginBottom: 20 }}>
+        <View style={[{flex: 1, paddingHorizontal: 20, paddingBottom: 10}]}>
+          <View style={{flexDirection: 'row', marginBottom: 20}}>
             <TextInput
-              style={{ flex: 1 }}
-              onChangeText={(text) => setPromotionCode(text)}
+              style={{flex: 1}}
+              onChangeText={text => setPromotionCode(text)}
               autoCorrect={false}
-              placeholder={t("promotion_code")}
+              placeholder={t('promotion_code')}
               placeholderTextColor={BaseColor.grayColor}
               value={promotionCode}
               selectionColor={colors.primary}
@@ -112,8 +112,8 @@ const Favourite = (props) => {
                 navigation.goBack();
               }}
             />
-            <Button small style={{ height: 45, marginLeft: 8 }}>
-              {t("check")}
+            <Button small style={{height: 45, marginLeft: 8}}>
+              {t('check')}
             </Button>
           </View>
 
@@ -131,21 +131,19 @@ const Favourite = (props) => {
             }
             data={products}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item, index }) => (
+            renderItem={({item, index}) => (
               <ProductCard1
                 loading={loading}
-                style={{ marginTop: 10 }}
+                style={{marginTop: 10}}
                 title={item.title}
                 image={item.image}
                 salePrice={item.salePrice}
                 description={item.description}
                 secondDescription={item.secondDescription}
                 onDelete={() =>
-                  setProducts(
-                    products.filter((product) => product.id != item.id)
-                  )
+                  setProducts(products.filter(product => product.id != item.id))
                 }
-                onChange={(total) => console.log("total", total)}
+                onChange={total => console.log('total', total)}
               />
             )}
           />
@@ -163,18 +161,20 @@ const Favourite = (props) => {
         </View>
         <CardBooking
           loading={loading}
-          description={t("total_price")}
-          price={"$156.00"}
-          secondDescription={"Tax included"}
-          textButton={t("checkout")}
-          onPress={() => navigation.navigate("EShipping")}
+          description={t('total_price')}
+          price={'Rp.11.000'}
+          secondDescription={'Tax included'}
+          textButton={t('checkout')}
+          onPress={() => navigation.navigate('EShipping')}
         />
       </View>
     );
   };
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} edges={['right', 'top', 'left']}>
+    <SafeAreaView
+      style={BaseStyle.safeAreaView}
+      edges={['right', 'top', 'left']}>
       {renderContent()}
     </SafeAreaView>
   );

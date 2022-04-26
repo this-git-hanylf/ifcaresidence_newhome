@@ -42,6 +42,7 @@ const Notification = props => {
   // const [notification, setNotification] = useState(NotificationData);
   const users = useSelector(state => getUser(state));
   const [email, setEmail] = useState(users.user);
+  console.log('users di notif', users.user);
   const [loading, setLoading] = useState(true);
   const [dataTowerUser, setdataTowerUser] = useState([]);
   const [arrDataTowerUser, setArrDataTowerUser] = useState([]);

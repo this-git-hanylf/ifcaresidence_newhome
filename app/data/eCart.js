@@ -1,34 +1,25 @@
-import { Images } from "@config";
+import {Images} from '@config';
 
 export const ProductsData = [
   {
     id: 1,
-    description: "Delivery on 29, July 2020 ",
-    secondDescription: "Tax included",
-    title: "Black T-Shirt with simple logo",
+    description: 'Stamp Duty - 3.000',
+    title: 'Stamp Duty - 3.000',
     image: Images.productView,
-    salePrice: "$78",
+    salePrice: '4.000',
     isFavorite: false,
-    price: 78,
+    salePercent: '-10%',
+    price: 4000,
   },
   {
     id: 2,
-    description: "Delivery on 28, July 2020  ",
-    secondDescription: "Tax included",
-    title: "Adidas Originals Supercourt",
-    image: Images.productGrid01,
-    salePrice: "$59",
-    isFavorite: true,
-    price: 59,
-  },
-  {
-    id: 3,
-    description: "Delivery on 27, July 2020  ",
-    secondDescription: "Tax included",
-    title: "Converse Chuck Taylor",
-    image: Images.productGrid02,
-    salePrice: "$69",
+    description: 'Stamp Duty - 6.000',
+    title: 'Stamp Duty - 6.000',
+    image: Images.productView,
+    salePrice: '7.000',
     isFavorite: false,
-    price: 69,
+    salePercent: '-10%',
+    price: 7000,
+    isBestMatch: true,
   },
 ];

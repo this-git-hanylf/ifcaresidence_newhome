@@ -73,6 +73,14 @@ import ChooseEditPartner from '../screens/Facility/ChooseEditPartner';
 import {tabBarIconHaveNoty} from './components';
 import ScreenSignature from '../screens/Helpdesk/ScreenSignature';
 import Store from '../screens/Store';
+import EProduct from '../screens/EProduct';
+import ECart from '../screens/ECart';
+import EShipping from '../screens/EShipping';
+import EPayment from '../screens/EPayment';
+import EConfirmed from '../screens/EConfirmed';
+import EMyOrder from '../screens/EMyOrder';
+
+import EProductDetailStore from '../screens/EProductDetailStore';
 
 const Stack = createStackNavigator();
 
@@ -408,6 +416,43 @@ function MainStack() {
       <Stack.Screen
         name="Store"
         component={Store}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="EProduct"
+        component={EProduct}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ECart"
+        component={ECart}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="EMyOrder"
+        component={EMyOrder}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="EShipping"
+        component={EShipping}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="EPayment"
+        component={EPayment}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="EConfirmed"
+        component={EConfirmed}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="EProductDetailStore"
+        component={EProductDetailStore}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

@@ -24,7 +24,7 @@ import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {FlatList, ScrollView, View, ActivityIndicator} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {NewsList, NotFound} from '../../components';
+import {NewsList, NotFound, ProductGrid1} from '../../components';
 import List from '../../components/Product/List';
 import styles from './styles';
 import LottieView from 'lottie-react-native';
@@ -37,11 +37,26 @@ const Store = props => {
   const [loading, setLoading] = useState(true);
   const [hasError, setErrors] = useState(false);
 
+  const getdata = () => {
+    axios
+      .get(
+        `http://34.87.121.155:2121/apiwebpbi/api/pos/factype/user?entity_cd=01&project_no=01&userid=ANDI`,
+      )
+      .then(res => {
+        console.log('ress :', res.data.data);
+        setData(res.data.data);
+      });
+  };
+
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 1000);
   }, []);
+
+  useEffect(() => {
+    getdata();
+  });
 
   const renderContent = () => {
     const mainNews = PostListData[0];
@@ -66,15 +81,35 @@ const Store = props => {
           }}
         />
         {/* <NotFound /> */}
-        <View style={styles.container}>
-          <View>
-            <LottieView
-              source={require('@data/notfound.json')}
-              autoPlay
-              style={{width: 300, height: 300}}
-            />
+        <View style={{flex: 1, padding: 15, paddingTop: 10}}>
+          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+            {/* <View>
+                <Text>{data.title}</Text>
+              </View> */}
+            {data.map((item, index) => {
+              return (
+                <View key={index} style={{width: '50%', height: 50}}>
+                  <ProductGrid1
+                    key={index}
+                    style={{
+                      width: '100%',
+                      paddingRight: index % 2 == 0 ? 10 : 0,
+                      paddingLeft: index % 2 != 0 ? 10 : 0,
+                    }}
+                    // description={item.available}
+                    title={item.descs}
+                    // image={item.image}
+                    // image={item.image}
+                    image={require('@assets/images/logo.png')}
+                    // costPrice={item.costPrice}
+                    // salePrice={item.salePrice}
+                    // isFavorite={item.isFavorite}
+                    onPress={() => navigation.navigate('EProduct', item)}
+                  />
+                </View>
+              );
+            })}
           </View>
-          <Text style={{fontSize: 16}}>Coming Soon</Text>
         </View>
 
         {/* <ScrollView contentContainerStyle={styles.paddingSrollView}>

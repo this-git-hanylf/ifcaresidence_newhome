@@ -1,11 +1,11 @@
-import Icon from "@components/Icon";
-import Text from "@components/Text";
-import { BaseColor, Images, useTheme } from "@config";
-import PropTypes from "prop-types";
-import React from "react";
-import { ImageBackground, TouchableOpacity, View } from "react-native";
-import styles from "./styles";
-import Loading from "./Loading";
+import Icon from '@components/Icon';
+import Text from '@components/Text';
+import {BaseColor, Images, useTheme} from '@config';
+import PropTypes from 'prop-types';
+import React from 'react';
+import {ImageBackground, TouchableOpacity, View} from 'react-native';
+import styles from './styles';
+import Loading from './Loading';
 
 const Grid1 = ({
   description,
@@ -16,12 +16,12 @@ const Grid1 = ({
   salePrice,
   onPress,
   isFavorite,
-  loading = false
+  loading = false,
 }) => {
-  const { colors } = useTheme();
+  const {colors} = useTheme();
 
   if (loading) {
-    return <Loading style={style}/>;
+    return <Loading style={style} />;
   }
 
   return (
@@ -29,25 +29,23 @@ const Grid1 = ({
       <ImageBackground
         source={image}
         style={styles.imageBackgroundGrid1}
-        imageStyle={{ borderRadius: 8 }}
-      >
+        imageStyle={{borderRadius: 8}}>
         <Icon
           name="heart"
           solid={isFavorite}
           size={16}
           color={isFavorite ? colors.primary : BaseColor.whiteColor}
-          style={{ position: "absolute", top: 8, right: 8 }}
-        ></Icon>
+          style={{position: 'absolute', top: 8, right: 8}}></Icon>
       </ImageBackground>
 
       <View>
-        <Text subhead bold numberOfLines={2} style={{ marginTop: 10 }}>
+        <Text subhead bold numberOfLines={2} style={{marginTop: 10}}>
           {title}
         </Text>
-        <Text footnote grayColor style={{ marginTop: 10 }}>
+        <Text footnote grayColor style={{marginTop: 10}}>
           {description}
         </Text>
-        <View style={{ flexDirection: "row", marginTop: 6 }}>
+        <View style={{flexDirection: 'row', marginTop: 6}}>
           <Text subhead bold>
             {salePrice}
           </Text>
@@ -72,12 +70,13 @@ Grid1.propTypes = {
 };
 
 Grid1.defaultProps = {
-  description: "",
-  title: "",
+  description: '',
+  title: '',
   style: {},
-  image: Images.eProduct,
-  costPrice: "",
-  salePrice: "",
+  // image: Images.eProduct,
+  image: '',
+  costPrice: '',
+  salePrice: '',
   onPress: () => {},
   isFavorite: false,
 };
