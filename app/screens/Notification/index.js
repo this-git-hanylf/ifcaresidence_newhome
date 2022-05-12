@@ -41,7 +41,7 @@ const Notification = props => {
   const [refreshing, setRefreshing] = useState(false);
   // const [notification, setNotification] = useState(NotificationData);
   const users = useSelector(state => getUser(state));
-  const [email, setEmail] = useState(users.user);
+  const [email, setEmail] = useState(user != null ? user.user : '');
   console.log('users di notif', users.user);
   const [loading, setLoading] = useState(true);
   const [dataTowerUser, setdataTowerUser] = useState([]);
@@ -238,6 +238,13 @@ const Notification = props => {
     showModalSuccess(false);
   };
 
+  //untuk refresh screen, load data notif dan badge notif
+  const refreshPull = () => {
+    // alert('refresh  pull');
+    refreshDataNotif(); //badge notif
+    getNotification(data); //data notif
+  };
+
   return (
     <SafeAreaView
       style={BaseStyle.safeAreaView}
@@ -269,7 +276,7 @@ const Notification = props => {
               colors={[colors.primary]}
               tintColor={colors.primary}
               refreshing={refreshing}
-              onRefresh={() => {}}
+              onRefresh={() => refreshPull()}
             />
           }
           // data={dataNotif}

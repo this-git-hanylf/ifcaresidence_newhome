@@ -98,9 +98,28 @@ export default BookingDetail = props => {
   const [coachFilter, setcoachFilter] = useState('');
 
   const getLotNo = async () => {
+    const entity_cd = route?.params.items.entity_cd;
+    const project_no = route?.params.items.project_no;
     try {
+      console.log(
+        'url api lotno',
+        'http://34.87.121.155:2121/apiwebpbi/api/facility/book/unit?entity=' +
+          entity_cd +
+          '&' +
+          'project=' +
+          project_no +
+          '&' +
+          'email=' +
+          email,
+      );
       const res = await axios.get(
-        'http://34.87.121.155:2121/apiwebpbi/api/facility/book/unit?email=' +
+        'http://34.87.121.155:2121/apiwebpbi/api/facility/book/unit?entity=' +
+          entity_cd +
+          '&' +
+          'project=' +
+          project_no +
+          '&' +
+          'email=' +
           email,
       );
       if (res) {

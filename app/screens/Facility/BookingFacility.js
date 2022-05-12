@@ -1286,15 +1286,27 @@ function BookingFacility({route}) {
                     dataBooked3.slot_hours.map((items, indexs) => (
                       <View
                         key={indexs}
-                        style={{
-                          paddingVertical: 15,
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                          alignContent: 'space-between',
-                          borderRadius: 15,
-                          borderColor: '#dbdbdb',
-                          borderBottomWidth: 1,
-                        }}>
+                        style={StyleSheet.flatten([
+                          {
+                            paddingVertical: 15,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignContent: 'space-between',
+                            borderRadius: 15,
+                            borderColor: '#dbdbdb',
+                            borderBottomWidth: 1,
+                          },
+                          !isExpand && {
+                            borderBottomWidth: 1,
+
+                            borderBottomColor: colors.border,
+                          },
+                          !isExpandReason && {
+                            borderBottomWidth: 1,
+
+                            borderBottomColor: colors.border,
+                          },
+                        ])}>
                         <Text key={items.id} bold>
                           {items.jam}
                         </Text>
@@ -1511,15 +1523,27 @@ function BookingFacility({route}) {
                     dataBooked4.slot_hours.map((items, indexs) => (
                       <View
                         key={indexs}
-                        style={{
-                          paddingVertical: 15,
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                          alignContent: 'space-between',
-                          borderRadius: 15,
-                          borderColor: '#dbdbdb',
-                          borderBottomWidth: 1,
-                        }}>
+                        style={StyleSheet.flatten([
+                          {
+                            paddingVertical: 15,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignContent: 'space-between',
+                            borderRadius: 15,
+                            borderColor: '#dbdbdb',
+                            borderBottomWidth: 1,
+                          },
+                          !isExpand && {
+                            borderBottomWidth: 1,
+
+                            borderBottomColor: colors.border,
+                          },
+                          !isExpandReason && {
+                            borderBottomWidth: 1,
+
+                            borderBottomColor: colors.border,
+                          },
+                        ])}>
                         <Text key={items.id} bold>
                           {items.jam}
                         </Text>

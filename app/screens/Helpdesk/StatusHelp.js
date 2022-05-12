@@ -622,7 +622,7 @@ export default function StatusHelp({route}) {
               </TouchableOpacity>
             </View>
           ) : (
-            <Text>Choose Prooject First</Text>
+            <Text>Choose Project First</Text>
           )}
         </View>
       </View>

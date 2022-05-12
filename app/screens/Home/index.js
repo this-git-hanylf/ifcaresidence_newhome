@@ -72,6 +72,7 @@ const Home = props => {
   const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
   const scrollY = useRef(new Animated.Value(0)).current;
   const [getDataDue, setDataDue] = useState([]);
+  const [getDataNotDue, setDataNotDue] = useState([]);
   const [hasError, setErrors] = useState(false);
   const [data, setData] = useState([]);
   const {width} = Dimensions.get('window');
@@ -215,6 +216,20 @@ const Home = props => {
       // alert(hasError.toString());
     }
   }
+
+  async function fetchDataNotDue() {
+    try {
+      const res = await axios.get(
+        `http://34.87.121.155:2121/apiwebpbi/api/getDataCurrentSummary/IFCAPB/${user.user}`,
+      );
+      setDataNotDue(res.data.Data);
+      console.log('data get data not due', res.data.Data);
+    } catch (error) {
+      setErrors(error);
+      // alert(hasError.toString());
+    }
+  }
+
   async function fetchDataHistory() {
     try {
       const res = await axios.get(
@@ -230,7 +245,7 @@ const Home = props => {
 
   const galery = [...data];
 
-  //TOTAL
+  //TOTAL DATE DUE
   const sum =
     getDataDue == 0
       ? 0
@@ -239,6 +254,19 @@ const Home = props => {
         }, 0);
 
   console.log('sum', sum);
+
+  //TOTAL DATE NOT DUE
+  const sumNotDue =
+    getDataNotDue == 0 || getDataNotDue == null
+      ? 0
+      : getDataNotDue.reduceRight((max, bills) => {
+          return (max += parseInt(bills.mbal_amt));
+        }, 0);
+
+  console.log('sumNotDue', sumNotDue);
+
+  const math_total = Math.floor(sumNotDue) + Math.floor(sum);
+  console.log('math total', math_total);
 
   const sumHistory =
     getDataHistory == null
@@ -256,8 +284,20 @@ const Home = props => {
     getDataDue == 0 ? 0 : [...new Set(getDataDue.map(item => item.doc_no))];
   console.log('unique', unique);
 
-  const invoice = unique.length;
+  const uniqueNotDue =
+    getDataNotDue == 0 || getDataNotDue == null
+      ? 0
+      : [...new Set(getDataNotDue.map(item => item.doc_no))];
+  console.log('uniqueNotDue', uniqueNotDue);
+
+  const invoice = unique == 0 ? 0 : unique.length;
   console.log('invoice', invoice);
+
+  const invoiceNotDue = uniqueNotDue == 0 ? 0 : uniqueNotDue.length;
+  console.log('invoiceNotDue', invoiceNotDue);
+
+  const total_outstanding = Math.floor(invoice) + Math.floor(invoiceNotDue);
+  console.log('total_outstanding', total_outstanding);
 
   const uniqueHistory =
     getDataHistory == null
@@ -296,6 +336,7 @@ const Home = props => {
     console.log('datauser', user);
     console.log('about', data);
     fetchDataDue();
+    fetchDataNotDue();
     fetchDataHistory();
     getTower();
     // fetchAbout();
@@ -433,8 +474,10 @@ const Home = props => {
                 style={{backgroundColor: colors.primary, borderRadius: 25}}
                 icon="arrow-up"
                 title="Invoice Outstanding"
-                price={invoice == undefined ? 0 : invoice}
-                percent={numFormat(sum)}
+                // price={invoice == undefined ? 0 : invoice}
+                price={total_outstanding == undefined ? 0 : total_outstanding}
+                // percent={numFormat(sum)}
+                percent={numFormat(math_total)}
                 onPress={() => navigation.navigate('Billing')}
               />
             </View>

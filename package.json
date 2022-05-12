@@ -44,6 +44,7 @@
     "react-native-camera": "^3.43.8",
     "react-native-chart-kit": "^6.11.0",
     "react-native-dark-mode": "^0.2.2",
+    "react-native-device-info": "^8.7.1",
     "react-native-dotenv": "^3.2.0",
     "react-native-draggable": "^3.3.0",
     "react-native-dynamic-tab-view": "^1.0.7-0",
