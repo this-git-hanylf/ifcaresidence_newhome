@@ -102,4 +102,15 @@ export default StyleSheet.create({
   paddingContent: {
     paddingHorizontal: 20,
   },
+  input: {
+    height: 40,
+    backgroundColor: '#f5f5f5',
+    color: 'black',
+    paddingHorizontal: 10,
+    marginBottom: 16,
+    width: null,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

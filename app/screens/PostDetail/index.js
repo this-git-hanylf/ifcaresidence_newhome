@@ -78,7 +78,7 @@ const PostDetail = props => {
 
     try {
       const result = await Share.share({
-        message: htmlnewsquot,
+        message: item.source != null ? item.source : htmlnewsquot,
         title: item.news_title,
         url: item.source,
       });

@@ -8,8 +8,8 @@ export default StyleSheet.create({
     // minWidth: 100,
   },
   iconContent: {
-    width: 60,
-    height: 60,
+    width: 67,
+    height: 67,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',

@@ -49,6 +49,8 @@ import getUser from '../../selectors/UserSelectors';
 
 import ListTransaction from '@components/List/Transaction';
 
+import {ProgressBar} from 'react-native-paper';
+
 function BookingFacility({route}) {
   // console.log('route in booking facility', route.params);
   const [data, setData] = useState([]);
@@ -89,6 +91,7 @@ function BookingFacility({route}) {
   const [isIconUp, setIconUp] = useState(false);
   const [entity, setEntity] = useState('');
   const [project_no, setProjectNo] = useState('');
+  const [loadingTab, setLoadingTab] = useState(true);
 
   useEffect(() => {
     axios
@@ -569,6 +572,13 @@ function BookingFacility({route}) {
     }, 5000);
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => {
+      // setSpinnerHours(false);
+      setLoadingTab(false);
+    }, 8000);
+  }, []);
+
   const onChangeOption = option => {
     console.log('option klik', option.venue_cd);
     const venue_klik = option.venue_cd;
@@ -702,15 +712,28 @@ function BookingFacility({route}) {
           <Text headline style={{fontWeight: 'normal'}}>
             Book Screen
           </Text> */}
-            {spinner ? (
+            {loadingTab ? (
               <View>
                 {/* <Spinner visible={this.state.spinner} /> */}
-                <Placeholder style={{marginVertical: 4, paddingHorizontal: 10}}>
+                {/* <Placeholder style={{marginVertical: 4, paddingHorizontal: 10}}>
                   <PlaceholderLine width={100} noMargin style={{height: 40}} />
-                </Placeholder>
+                </Placeholder> */}
+                <ProgressBar
+                  progress={1}
+                  color={colors.primary}
+                  indeterminate={true}
+                />
               </View>
             ) : (
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                  alignContent: 'center',
+                  flex: 1,
+                  width: '100%',
+                }}>
                 {TABS.map((item, index) => (
                   <View key={index} style={{flex: 1, paddingHorizontal: 5}}>
                     <Tag
@@ -740,7 +763,7 @@ function BookingFacility({route}) {
                           body1={tab.id != item.id}
                           light={tab.id != item.id}
                           whiteColor={tab.id == item.id}
-                          style={{textAlign: 'center'}}>
+                          style={{textAlign: 'center', fontSize: 14}}>
                           {moment(item.title)
                             .format('ddd DD')
                             .replace(' ', '\n')}
@@ -756,9 +779,9 @@ function BookingFacility({route}) {
             {spinnerHour ? (
               <View>
                 {/* <Spinner visible={this.state.spinner} /> */}
-                <Placeholder style={{marginVertical: 4, paddingHorizontal: 10}}>
+                {/* <Placeholder style={{marginVertical: 4, paddingHorizontal: 10}}>
                   <PlaceholderLine width={100} noMargin style={{height: 40}} />
-                </Placeholder>
+                </Placeholder> */}
               </View>
             ) : (
               <View
@@ -792,12 +815,12 @@ function BookingFacility({route}) {
 
                             borderBottomColor: colors.border,
                           },
-                          !isExpandReason && {
-                            borderBottomWidth: 1,
-
-                            borderBottomColor: colors.text,
-                            // borderColor: '#dbdbdb',
-                          },
+                          !isExpandReason &&
+                            {
+                              // borderBottomWidth: 1,
+                              // borderBottomColor: colors.text,
+                              // borderColor: '#dbdbdb',
+                            },
                         ])}>
                         <Text key={items.id} bold>
                           {items.jam}
@@ -1026,9 +1049,9 @@ function BookingFacility({route}) {
             {spinnerHour ? (
               <View>
                 {/* <Spinner visible={this.state.spinner} /> */}
-                <Placeholder style={{marginVertical: 4, paddingHorizontal: 10}}>
+                {/* <Placeholder style={{marginVertical: 4, paddingHorizontal: 10}}>
                   <PlaceholderLine width={100} noMargin style={{height: 40}} />
-                </Placeholder>
+                </Placeholder> */}
               </View>
             ) : (
               <View style={{flex: 1, paddingHorizontal: 5}}>
@@ -1058,11 +1081,11 @@ function BookingFacility({route}) {
 
                             borderBottomColor: colors.border,
                           },
-                          !isExpandReason && {
-                            borderBottomWidth: 1,
-
-                            borderBottomColor: colors.border,
-                          },
+                          !isExpandReason &&
+                            {
+                              // borderBottomWidth: 1,
+                              // borderBottomColor: colors.border,
+                            },
                         ])}>
                         <Text key={items.id} bold>
                           {items.jam}
@@ -1269,9 +1292,9 @@ function BookingFacility({route}) {
             {spinnerHour ? (
               <View>
                 {/* <Spinner visible={this.state.spinner} /> */}
-                <Placeholder style={{marginVertical: 4, paddingHorizontal: 10}}>
+                {/* <Placeholder style={{marginVertical: 4, paddingHorizontal: 10}}>
                   <PlaceholderLine width={100} noMargin style={{height: 40}} />
-                </Placeholder>
+                </Placeholder> */}
               </View>
             ) : (
               <View style={{flex: 1, paddingHorizontal: 5}}>
@@ -1301,11 +1324,11 @@ function BookingFacility({route}) {
 
                             borderBottomColor: colors.border,
                           },
-                          !isExpandReason && {
-                            borderBottomWidth: 1,
-
-                            borderBottomColor: colors.border,
-                          },
+                          !isExpandReason &&
+                            {
+                              // borderBottomWidth: 1,
+                              // borderBottomColor: colors.border,
+                            },
                         ])}>
                         <Text key={items.id} bold>
                           {items.jam}
@@ -1506,9 +1529,9 @@ function BookingFacility({route}) {
             {spinnerHour ? (
               <View>
                 {/* <Spinner visible={this.state.spinner} /> */}
-                <Placeholder style={{marginVertical: 4, paddingHorizontal: 10}}>
+                {/* <Placeholder style={{marginVertical: 4, paddingHorizontal: 10}}>
                   <PlaceholderLine width={100} noMargin style={{height: 40}} />
-                </Placeholder>
+                </Placeholder> */}
               </View>
             ) : (
               <View style={{flex: 1, paddingHorizontal: 5}}>
@@ -1538,11 +1561,11 @@ function BookingFacility({route}) {
 
                             borderBottomColor: colors.border,
                           },
-                          !isExpandReason && {
-                            borderBottomWidth: 1,
-
-                            borderBottomColor: colors.border,
-                          },
+                          !isExpandReason &&
+                            {
+                              // borderBottomWidth: 1,
+                              // borderBottomColor: colors.border,
+                            },
                         ])}>
                         <Text key={items.id} bold>
                           {items.jam}

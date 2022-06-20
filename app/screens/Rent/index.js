@@ -156,6 +156,7 @@ const Rent = props => {
                 scrollEnabled={false}
                 contentContainerStyle={styles.paddingFlatList}
                 data={rent}
+                keyExtractor={(item, index) => item.rowID}
                 renderItem={({item, index}) => (
                   <ProductBlock
                     key={index}
@@ -189,6 +190,7 @@ const Rent = props => {
                 scrollEnabled={false}
                 contentContainerStyle={styles.paddingFlatList}
                 data={data}
+                keyExtractor={(item, index) => item.rowID}
                 renderItem={({item, index}) => (
                   <ProductBlock
                     key={index}

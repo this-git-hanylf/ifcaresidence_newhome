@@ -157,14 +157,14 @@ const AnnouceDetail = props => {
               );
             })}
           </View>
-          <View
+          {/* <View
             style={{
               marginVertical: 10,
             }}>
             <Text subhead light style={{marginTop: 15}}>
               {moment(item.date).startOf('hour').fromNow()}
             </Text>
-          </View>
+          </View> */}
           <View
             style={{
               marginVertical: 10,

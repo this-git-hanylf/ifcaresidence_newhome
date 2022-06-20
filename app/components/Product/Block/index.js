@@ -42,6 +42,7 @@ const Block = ({
   hp_wa,
   loading = false,
   currency,
+  price,
 }) => {
   const {colors} = useTheme();
 
@@ -88,7 +89,7 @@ const Block = ({
           {subject}
         </Text>
         <Text title3 style={{marginTop: 10}}>
-          {currency} {price_descs}
+          {currency} {price}
         </Text>
         <View style={{flexDirection: 'row', marginTop: 10}}>
           <Icon
@@ -115,7 +116,7 @@ const Block = ({
             style={{flexDirection: 'row', marginRight: 10}}>
             {build_area}
           </Icon>
-          <Icon
+          {/* <Icon
             name="clock"
             size={14}
             style={{
@@ -124,7 +125,7 @@ const Block = ({
               color: BaseColor.grayColor,
             }}>
             {publish_date}
-          </Icon>
+          </Icon> */}
         </View>
         <Text
           footnote
@@ -208,6 +209,7 @@ Block.propTypes = {
   description: PropTypes.string,
   title: PropTypes.string,
   currency: PropTypes.string,
+  price: PropTypes.string,
   style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   image: PropTypes.node.isRequired,
   pict: PropTypes.node.isRequired,
@@ -225,6 +227,7 @@ Block.defaultProps = {
   style: {},
   pict: '',
   currency: '',
+  price: '',
   avatar: '',
   user: {},
   publish_date: '',

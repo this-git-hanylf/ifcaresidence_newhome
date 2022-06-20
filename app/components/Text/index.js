@@ -59,6 +59,35 @@ const ProximaNova = {
   bold: 'Bold',
 };
 
+const DMSerifDisplay = {
+  100: 'Thin',
+  200: 'Thin',
+  300: 'Thin',
+  400: 'Regular',
+  500: 'Regular',
+  600: 'Bold',
+  700: 'Bold',
+  800: 'Bold',
+  900: 'Black',
+  normal: 'Regular',
+  bold: 'Bold',
+};
+
+const KaiseiHarunoUmi = {
+  100: 'Regular',
+  200: 'Regular',
+  300: 'Regular',
+  400: 'Medium',
+  500: 'Medium',
+  600: 'Medium',
+  700: 'Bold',
+  800: 'Bold',
+  900: 'Bold',
+  normal: 'Regular',
+  bold: 'Bold',
+  medium: 'Medium',
+};
+
 export default function Index(props) {
   const {
     //props style
@@ -168,6 +197,22 @@ export default function Index(props) {
           Merriweather[fontWeight] == 'Regular'
             ? Merriweather[fontWeight]
             : Merriweather[fontWeight] + fontStyle
+        }`;
+        break;
+      case 'DMSerifDisplay':
+        // console.log('DMSerifDisplay[fontWeight]', DMSerifDisplay[fontWeight]);
+        textStyle.fontFamily = `${textStyle.fontFamily}-${
+          DMSerifDisplay[fontWeight] == 'Regular'
+            ? DMSerifDisplay[fontWeight]
+            : DMSerifDisplay[fontWeight] + fontStyle
+        }`;
+        break;
+      case 'KaiseiHarunoUmi':
+        console.log('KaiseiHarunoUmi[fontWeight]', KaiseiHarunoUmi[fontWeight]);
+        textStyle.fontFamily = `${textStyle.fontFamily}-${
+          KaiseiHarunoUmi[fontWeight] == 'Regular'
+            ? KaiseiHarunoUmi[fontWeight]
+            : KaiseiHarunoUmi[fontWeight] + fontStyle
         }`;
         break;
       case 'ProximaNova':

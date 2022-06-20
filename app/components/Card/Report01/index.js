@@ -50,9 +50,9 @@ const CardReport01 = ({
         <Text subhead light style={{marginTop: 8}}>
           {subtitle}
         </Text>
-        <Text subhead light style={{marginTop: 8}}>
+        {/* <Text subhead light style={{marginTop: 8}}>
           {date}
-        </Text>
+        </Text> */}
       </View>
     </TouchableOpacity>
   );

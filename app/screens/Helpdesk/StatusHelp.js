@@ -57,6 +57,9 @@ export default function StatusHelp({route}) {
   const [show, setShow] = useState(false);
   const [isDisabled, setDisabled] = useState(false);
 
+  const [defaulTower, setDefaultTower] = useState(false);
+  const [defaultStatus, setDefaultStatus] = useState(false);
+
   //   console.log('passprop kategori help', passProp);
   const styleItem = {
     ...styles.profileItem,
@@ -88,6 +91,24 @@ export default function StatusHelp({route}) {
         const datas = res.data;
 
         const arrDataTower = datas.Data;
+        if (arrDataTower.length > 1) {
+          setDefaultTower(false);
+        } else {
+          setDefaultTower(true);
+          setCheckedEntity(true);
+          setEntity(arrDataTower[0].entity_cd);
+          setProjectNo(arrDataTower[0].project_no);
+          setDb_Profile(arrDataTower[0].db_profile);
+          const params = {
+            entity_cd: arrDataTower[0].entity_cd,
+            project_no: arrDataTower[0].project_no,
+            db_profile: arrDataTower[0].db_profile,
+          };
+          console.log('params for debtor tower default', params);
+          // getDebtor(params);
+          getTicketStatus(params);
+          setShow(true);
+        }
         arrDataTower.map(dat => {
           if (dat) {
             setdataTowerUser(dat);
@@ -100,7 +121,7 @@ export default function StatusHelp({route}) {
       })
       .catch(error => {
         console.log('error get tower api', error);
-        alert('error get');
+        // alert('error get');
       });
   };
 
@@ -157,6 +178,15 @@ export default function StatusHelp({route}) {
         console.log('data kategori', datas.Error);
         if (datas.Error === false) {
           const datastatus = datas.Data;
+          console.log('datastatus', datastatus);
+
+          if (datastatus.length > 1) {
+            setDefaultStatus(false);
+          } else {
+            setDefaultStatus(true);
+            setSpinner(false);
+          }
+
           setDataStatus(datastatus);
         } else {
           setDisabled(false);
@@ -167,7 +197,7 @@ export default function StatusHelp({route}) {
       })
       .catch(error => {
         console.log('error get status api', error.response);
-        alert('error get');
+        // alert('error get');
       });
   };
 
@@ -267,6 +297,11 @@ export default function StatusHelp({route}) {
                   <PlaceholderLine width={100} noMargin style={{height: 40}} />
                 </Placeholder>
               </View>
+            ) : defaulTower ? (
+              <CheckBox
+                checked={checkedEntity}
+                title={arrDataTowerUser[0].project_descs}
+                onPress={() => setCheckedEntity(!checkedEntity)}></CheckBox>
             ) : (
               arrDataTowerUser.map((data, index) => (
                 <CheckBox
@@ -281,7 +316,7 @@ export default function StatusHelp({route}) {
             )}
           </View>
 
-          {show ? (
+          {show && checkedEntity === true ? (
             <View style={{marginTop: 30, marginHorizontal: 10}}>
               <TouchableOpacity
                 onPress={() => handleNavigation(dataTowerUser, "'R'")}
@@ -621,9 +656,8 @@ export default function StatusHelp({route}) {
                 </View>
               </TouchableOpacity>
             </View>
-          ) : (
-            <Text>Choose Project First</Text>
-          )}
+          ) : // <Text>Choose Project First</Text>
+          null}
         </View>
       </View>
     </SafeAreaView>

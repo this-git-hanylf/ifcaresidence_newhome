@@ -270,7 +270,7 @@ const EProductDetail = props => {
             {' '}
             {build_area}
           </Icon>
-          <Icon
+          {/* <Icon
             name="clock"
             size={14}
             style={{
@@ -280,7 +280,7 @@ const EProductDetail = props => {
             }}>
             {' '}
             {moment(publish_date).format('H:mm:ss')}
-          </Icon>
+          </Icon> */}
         </View>
         <View>
           <Text headline style={{marginTop: 20}}>

@@ -21,6 +21,7 @@ export const BaseColor = {
   accentColor: '#4A90A4',
   redColor: 'red',
   blackColor: '#000',
+  goldColor: '#CDB04A',
 };
 
 /**
@@ -119,7 +120,8 @@ export const ThemeSupport = [
     light: {
       dark: false,
       colors: {
-        primary: '#068444',
+        // primary: '#068444',
+        primary: '#315447',
         primaryDark: '#388E3C',
         primaryLight: '#C8E6C9',
         accent: '#607D8B',
@@ -132,7 +134,8 @@ export const ThemeSupport = [
     dark: {
       dark: true,
       colors: {
-        primary: '#068444',
+        // primary: '#068444',
+        primary: '#315447',
         primaryDark: '#388E3C',
         primaryLight: '#C8E6C9',
         accent: '#607D8B',
@@ -182,10 +185,11 @@ export const DefaultTheme = {
   light: {
     dark: false,
     colors: {
-      primary: '#068444',
-      primaryDark: '#F90030',
-      primaryLight: '#FF5E80',
-      accent: '#4A90A4',
+      // primary: '#068444',
+      primary: '#315447',
+      primaryDark: '#388E3C',
+      primaryLight: '#C8E6C9',
+      accent: '#607D8B',
       background: 'white',
       card: '#F5F5F5',
       text: '#212121',
@@ -195,14 +199,15 @@ export const DefaultTheme = {
   dark: {
     dark: true,
     colors: {
-      primary: '#FF2D55',
-      primaryDark: '#F90030',
-      primaryLight: '#FF5E80',
-      accent: '#4A90A4',
-      background: '#010101',
-      card: '#121212',
-      text: '#e5e5e7',
-      border: '#272729',
+      // primary: '#068444',
+      primary: '#315447',
+      primaryDark: '#388E3C',
+      primaryLight: '#C8E6C9',
+      accent: '#607D8B',
+      background: 'white',
+      card: '#F5F5F5',
+      text: '#212121',
+      border: '#c7c7cc',
     },
   },
 };
@@ -210,7 +215,14 @@ export const DefaultTheme = {
 /**
  * Define list font use for whole application
  */
-export const FontSupport = ['ProximaNova', 'Raleway', 'Roboto', 'Merriweather'];
+export const FontSupport = [
+  'ProximaNova',
+  'Raleway',
+  'Roboto',
+  'Merriweather',
+  'DMSerifDisplay',
+  'KaiseiHarunoUmi',
+];
 
 /**
  * Define font default use for whole application

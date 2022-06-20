@@ -50,7 +50,7 @@ export default function CategoryIconSoft({
         style={StyleSheet.flatten([
           styles.iconContent,
           isNormal && {
-            backgroundColor: parseHexTransparency(colors.primary, 100),
+            backgroundColor: parseHexTransparency(colors.primary, 30),
           },
           isWhite && {
             backgroundColor: parseHexTransparency(colors.whiteColor, 30),
@@ -62,7 +62,7 @@ export default function CategoryIconSoft({
         ])}>
         <Image
           source={icon_url}
-          style={{borderRadius: 20, width: 60, height: 60}}></Image>
+          style={{borderRadius: 12, width: 75, height: 75}}></Image>
         {/* <Icon
           name={icon}
           size={isRound ? 24 : 32}
@@ -70,7 +70,7 @@ export default function CategoryIconSoft({
           solid
         /> */}
       </View>
-      <View style={{marginTop: 8, maxWidth: maxWidth}}>
+      <View style={{marginTop: 15, maxWidth: maxWidth}}>
         <Text footnote numberOfLines={1} style={{textAlign: 'center'}}>
           {title}
         </Text>

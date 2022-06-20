@@ -82,6 +82,8 @@ export default ChoosePartner = props => {
 
   const [list, setList] = useState(EPostListData);
 
+  const [showButton, setShowButton] = useState(false);
+
   const getPartners = async () => {
     try {
       const reservation_no = route.params.reservation_no;
@@ -96,6 +98,7 @@ export default ChoosePartner = props => {
         setPartner(resPartner); //akan ditambah ischecklis
         setPartnerItems(resPartner);
         setSpinner(false);
+        setShowButton(true);
       }
       return res;
     } catch (err) {
@@ -525,7 +528,7 @@ export default ChoosePartner = props => {
           navigation.goBack();
         }}
       />
-      <View style={{}}>
+      <View style={{paddingBottom: 50}}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
@@ -550,22 +553,24 @@ export default ChoosePartner = props => {
             </View>
           </ScrollView>
 
-          <View style={{marginBottom: 50}}>
-            <Button
-              small
-              style={{
-                marginTop: 10,
-                marginHorizontal: 5,
-                marginBottom: 20,
-                // flex: 1,
-                // position: 'absolute',
-              }}
-              onPress={() => {
-                bookFacility();
-              }}>
-              <Text style={{textAlign: 'center'}}>{t('Choose Partner')}</Text>
-            </Button>
-          </View>
+          {showButton ? (
+            <View style={{marginBottom: 50}}>
+              <Button
+                small
+                style={{
+                  marginTop: 10,
+                  marginHorizontal: 5,
+                  marginBottom: 20,
+                  // flex: 1,
+                  // position: 'absolute',
+                }}
+                onPress={() => {
+                  bookFacility();
+                }}>
+                <Text style={{textAlign: 'center'}}>{t('Choose Partner')}</Text>
+              </Button>
+            </View>
+          ) : null}
         </ScrollView>
       </View>
 

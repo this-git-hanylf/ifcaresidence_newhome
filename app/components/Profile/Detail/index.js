@@ -22,6 +22,7 @@ export default function ProfileDetail(props) {
     textThird,
     icon,
   } = props;
+  console.log('image di profil detil', image);
   return (
     <TouchableOpacity
       style={[styles.contain, style]}
@@ -29,7 +30,7 @@ export default function ProfileDetail(props) {
       activeOpacity={0.9}>
       <View style={[styles.contentLeft, styleLeft]}>
         <View>
-          <Image source={image} style={[styles.thumb, styleThumb]} />
+          <Image source={{uri: image}} style={[styles.thumb, styleThumb]} />
           <View style={[styles.point, {backgroundColor: colors.primaryLight}]}>
             <Text overline whiteColor semibold>
               {point}
