@@ -20,6 +20,8 @@ export const actionTypes = {
   EDIT: 'EDIT',
 
   REMOVE_USER: 'REMOVE_USER',
+
+  // LOAD_LOTNO: 'LOAD_LOTNO'
 };
 
 const loginRequest = () => ({
@@ -78,6 +80,11 @@ const removeUser = user => ({
   user: null,
 });
 
+// const loadLotno = user => ({
+//   type: actionTypes.LOAD_LOTNO,
+//   user,
+// });
+
 export const login = (email, password, token_firebase) => async dispatch => {
   dispatch(loginRequest());
   try {
@@ -132,3 +139,16 @@ export const changePass = (email, pass, conpass) => async dispatch => {
     dispatch(changePassError(error));
   }
 };
+
+// export const loadLotno = () => async dispatch => {
+//   dispatch(loginRequest());
+//   try {
+//     const user = await UserController.login(email, password, token_firebase);
+//     dispatch(loginSuccess(user.Data));
+//     console.log('userrrrr', user);
+//     // alert("JSON.stringify(user)");
+//   } catch (error) {
+//     alert(error);
+//     dispatch(loginError(error));
+//   }
+// };

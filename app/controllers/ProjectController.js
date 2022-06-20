@@ -2,27 +2,26 @@ import axios from 'axios';
 import {setAuthStorage} from '../config/Storage';
 import httpClient from './HttpClient';
 
-class NotifController {
+class ProjectController {
   constructor() {
     // this.basePath = '/login_mobile';
     this.basePath = 'http://34.87.121.155:8181/apiwebpbi/api';
   }
 
-  notifikasi_nbadge = async (email, entity_cd, project_no) => {
-    console.log('email for notif di controller', email);
-    console.log('entity for notir', entity_cd);
-    console.log('project no for notif', project_no);
+  data_project = async email => {
+    console.log('email for project di controller', email);
+    const data_app = 'O';
 
     try {
       const result = await httpClient.request({
         // url: '/notification',
         // url: `http://34.87.121.155:2121/apiwebpbi/api/notification?email=${email}&entity_cd=${entity_cd}&project_no=${project_no}`,
-        url: `http://34.87.121.155:8181/apiwebpbi/api/notification-badge?email=${email}&entity_cd=${entity_cd}&project_no=${project_no}`,
+        url: `http://34.87.121.155:2121/apiwebpbi/api/getData/mysql/${email.emails}/${data_app}`,
         // url: `http://34.87.121.155:8181/apiwebpbi/api/notification?email=${email}&entity_cd=${entity_cd}&project_no=${project_no}`,
         method: 'GET',
       });
       // alert(result.Pesan);
-      console.log('vardums result notifikasi -->', result);
+      console.log('vardums result project -->', result);
       // ini ada isreset dalemnya, sementara dihilangin, buat biar ga nyangkut insert token firebase
       if (result.Error) {
         return Promise.reject(result.Pesan);
@@ -35,4 +34,4 @@ class NotifController {
   };
 }
 
-export default new NotifController();
+export default new ProjectController();

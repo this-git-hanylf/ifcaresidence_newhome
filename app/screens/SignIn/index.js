@@ -21,6 +21,7 @@ import getUser from '../../selectors/UserSelectors';
 import errorsSelector from '../../selectors/ErrorSelectors';
 import {isLoadingSelector} from '../../selectors/StatusSelectors';
 import {login, actionTypes} from '../../actions/UserActions';
+import {data_project} from '../../actions/ProjectActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 
@@ -49,12 +50,18 @@ const SignIn = props => {
     [email, password, token_firebase, dispatch],
   );
 
+  // const loadProject = useCallback(
+  //   () => dispatch(data_project({emails: email})),
+  //   [{emails: email}, dispatch],
+  // );
+
   const passwordChanged = useCallback(value => setPassword(value), []);
   const emailChanged = useCallback(value => setEmail(value), []);
 
   useEffect(() => {
     console.log('user for reset? ', user);
     if (user !== null) {
+      // loadProject();
       props.navigation.navigate('MainStack');
       // navigation.navigate('MainStack');
     }

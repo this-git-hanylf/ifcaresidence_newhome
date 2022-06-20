@@ -98,7 +98,7 @@ const PostDetail = props => {
   //For header background color from transparent to header color
   const headerBackgroundColor = scrollY.interpolate({
     inputRange: [0, 140],
-    outputRange: [BaseColor.whiteColor, colors.primary],
+    outputRange: [colors.primary, colors.primary],
     extrapolate: 'clamp',
     useNativeDriver: true,
   });

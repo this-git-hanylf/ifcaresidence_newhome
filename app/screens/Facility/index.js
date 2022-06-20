@@ -32,6 +32,7 @@ import {Button} from '../../components';
 
 import {useSelector} from 'react-redux';
 import getUser from '../../selectors/UserSelectors';
+import getProject from '../../selectors/ProjectSelector';
 import * as Utils from '@utils';
 
 import {
@@ -56,6 +57,9 @@ const Facility = props => {
   const [dataTowerUser, setdataTowerUser] = useState([]);
   const [arrDataTowerUser, setArrDataTowerUser] = useState([]);
   const [spinner, setSpinner] = useState(true);
+
+  const project = useSelector(state => getProject(state));
+  console.log('project selector', project);
 
   useEffect(() => {
     // const getData = async () => {

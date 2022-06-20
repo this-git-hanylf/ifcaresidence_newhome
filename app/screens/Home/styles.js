@@ -113,4 +113,17 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  shadow: {
+    ...Platform.select({
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
 });

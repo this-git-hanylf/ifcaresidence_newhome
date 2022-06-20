@@ -7,6 +7,7 @@ import ApplicationReducer from './application';
 import notifDataRed from './NotifReducer';
 import counter from './reduceNotif';
 import apiReducer from '../config/ApiReducer';
+import Dataproject from './ProjectReducer';
 
 const rootReducer = combineReducers({
   error,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   notifDataRed,
   counter,
   apiReducer,
+  Dataproject,
 });
 
 export default rootReducer;
