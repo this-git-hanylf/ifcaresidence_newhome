@@ -177,8 +177,8 @@ const Home = props => {
   const [dataTowerUser, setdataTowerUser] = useState([]);
   const [arrDataTowerUser, setArrDataTowerUser] = useState([]);
   const [spinner, setSpinner] = useState(true);
-  // const [entity_cd, setEntity] = useState('');
-  // const [project_no, setProjectNo] = useState('');
+  // const [entity_cd, setEntity] = useState('01');
+  // const [project_no, setProjectNo] = useState('01');
   const [entity_cd, setEntity] = useState(project.Data[0].entity_cd);
   const [project_no, setProjectNo] = useState(project.Data[0].project_no);
   const [lotno, setLotno] = useState([]);
@@ -188,6 +188,7 @@ const Home = props => {
   const [keyword, setKeyword] = useState('');
 
   const [newsannounce, setNewsAnnounce] = useState([]);
+  const [newsannounceslice, setNewsAnnounceSlice] = useState([]);
 
   const [refreshing, setRefreshing] = useState(false);
   const dispatch = useDispatch();
@@ -196,11 +197,6 @@ const Home = props => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
   }, []);
-
-  const loadProject = useCallback(
-    () => dispatch(data_project({emails: email})),
-    [{emails: email}, dispatch],
-  );
 
   useEffect(() => {
     messaging().onNotificationOpenedApp(remoteMessage => {
@@ -334,18 +330,24 @@ const Home = props => {
     }
   }
 
-  async function getNewsAnnounce() {
-    try {
-      const res = await axios.get(
-        `http://34.87.121.155:2121/ifcaprop-api/api/news-announce`,
-      );
-      setNewsAnnounce(res.data.Data);
-      // console.log('data get history', res.data.Data);
-    } catch (error) {
-      setErrors(error);
-      // alert(hasError.toString());
-    }
-  }
+  const getNewsAnnounce = async () => {
+    // console.log('kok ini gada');
+    await axios
+      .get(`http://34.87.121.155:8000/ifcaprop-api/api/news-announce`)
+      .then(res => {
+        console.log('res news', res.data.data);
+        const datanews = res.data.data;
+        const slicedatanews = datanews.slice(0, 6);
+        console.log('slice data', slicedatanews);
+        setNewsAnnounceSlice(slicedatanews);
+        setNewsAnnounce(datanews);
+        // return res.data;
+      })
+      .catch(error => {
+        console.log('error get news announce home', error);
+        // alert('error get');
+      });
+  };
 
   const galery = [...data];
 
@@ -437,22 +439,21 @@ const Home = props => {
   useEffect(() => {
     console.log('galery', galery);
     dataImage();
+
     console.log('datauser', user);
     console.log('about', data);
     fetchDataDue();
     fetchDataNotDue();
     fetchDataHistory();
-    getNewsAnnounce();
 
-    loadProject();
     getLotNo();
     notifUser();
     setLoading(false);
   }, []);
 
-  // useEffect(() => {
-  //   notifUser();
-  // }, []);
+  useEffect(() => {
+    getNewsAnnounce();
+  }, []);
 
   const goPostDetail = item => () => {
     navigation.navigate('PostDetail', {item: item});
@@ -751,9 +752,9 @@ const Home = props => {
               </Text>
               <Text>News and Announcement</Text>
             </View>
-            <View style={{left: 15}}>
+            <View style={{marginVertical: 15}}>
               <SliderNews
-                data={newsannounce}
+                data={newsannounceslice}
                 local={true}
                 // onPress={console.log('klik')}
               />

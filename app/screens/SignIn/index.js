@@ -22,6 +22,7 @@ import errorsSelector from '../../selectors/ErrorSelectors';
 import {isLoadingSelector} from '../../selectors/StatusSelectors';
 import {login, actionTypes} from '../../actions/UserActions';
 import {data_project} from '../../actions/ProjectActions';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 
@@ -38,16 +39,25 @@ const SignIn = props => {
   const [token, setTokenBasic] = useState('');
 
   const user = useSelector(state => getUser(state));
+
   const isLoading = useSelector(state =>
     isLoadingSelector([actionTypes.LOGIN], state),
   );
   const errors = useSelector(state =>
     errorsSelector([actionTypes.LOGIN], state),
   );
-
+  const loginklik = () => {
+    loginUser();
+    loadProject();
+  };
   const loginUser = useCallback(
     () => dispatch(login(email, password, token_firebase)),
     [email, password, token_firebase, dispatch],
+  );
+
+  const loadProject = useCallback(
+    () => dispatch(data_project({emails: email})),
+    [{emails: email}, dispatch],
   );
 
   // const loadProject = useCallback(
@@ -148,7 +158,8 @@ const SignIn = props => {
               full
               loading={loading}
               style={{marginTop: 20}}
-              onPress={loginUser}>
+              // onPress={loginUser}
+              onPress={loginklik}>
               {t('sign_in')}
             </Button>
           </View>

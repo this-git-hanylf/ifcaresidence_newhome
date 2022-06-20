@@ -23,6 +23,7 @@ import {
 import {Header, SafeAreaView, Icon} from '@components';
 import {BaseStyle, useTheme} from '@config';
 import {useTranslation} from 'react-i18next';
+import axios from 'axios';
 
 const SliderNews = ({
   style = {},
@@ -75,23 +76,40 @@ const SliderNews = ({
 
   const goPostDetail = item => {
     console.log('for news', item);
-    // const itemDummy = {
-    //   news_descs: 'Window Cleaning Ironwood 01 s/d 04 Maret 2022',
-    //   news_title: 'Window Cleaning',
-    //   audit_date: '2022-03-05 22:55:42',
-    //   audit_user: 'MGR',
-    //   date_created: '2022-03-05 22:53:45',
-    //   entity_cd: '01',
-    //   url_image:
-    //     'http://103.111.204.131/webpbi/storage/file_announce/Window_Cleaning_periode_01_sd_04_Mar_2022_Ironjpg_Page1.jpg',
 
-    //   project_no: '01',
-    //   ref_no: 'RSD/03/002',
-    //   rowID: 25,
-    //   status: 'Active',
-    // };
-    // console.log('item dummy for news', itemDummy);
-    // navigation.navigate('PostDetail', {item: itemDummy});
+    item.category == 'N' ? getNewsDetail(item) : getAnnounceDetail(item);
+  };
+
+  const getNewsDetail = async item => {
+    console.log('rowid for detail', item.rowID);
+    await axios
+      .get(`http://34.87.121.155:8000/ifcaprop-api/api/news/id/${item.rowID}`)
+      .then(res => {
+        console.log('res news detail', res.data.data);
+
+        navigation.navigate('PostDetail', {item: res.data.data});
+      })
+      .catch(error => {
+        console.log('error get news announce detail', error);
+        // alert('error get');
+      });
+  };
+
+  const getAnnounceDetail = async item => {
+    console.log('rowid for detail', item.rowID);
+    await axios
+      .get(
+        `http://34.87.121.155:8000/ifcaprop-api/api/announce/id/${item.rowID}`,
+      )
+      .then(res => {
+        console.log('res announce detail', res.data.data);
+
+        navigation.navigate('AnnouceDetail', {item: res.data.data});
+      })
+      .catch(error => {
+        console.log('error get news announce detail', error);
+        // alert('error get');
+      });
   };
 
   return (
@@ -132,8 +150,8 @@ const SliderNews = ({
                 // marginHorizontal: 10,
                 borderRadius: 10,
               }}
-              //   source={{ uri: item.image }}
-              source={item.url_image}
+              source={{uri: item.url_image}}
+              // source={item.url_image}
               //   source={local ? item.image : {uri: item.image}}
             />
             {/* <Text>{item.image}</Text> */}
