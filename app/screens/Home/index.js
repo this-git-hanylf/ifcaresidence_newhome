@@ -63,6 +63,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import ModalSelector from 'react-native-modal-selector';
 
 import MasonryList from '@react-native-seoul/masonry-list';
+import {ActivityIndicator} from 'react-native-paper';
 
 const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -189,6 +190,7 @@ const Home = props => {
 
   const [newsannounce, setNewsAnnounce] = useState([]);
   const [newsannounceslice, setNewsAnnounceSlice] = useState([]);
+  const [loadNewsAnnounce, setLoadNews] = useState(true);
 
   const [refreshing, setRefreshing] = useState(false);
   const dispatch = useDispatch();
@@ -330,10 +332,10 @@ const Home = props => {
     }
   }
 
-  const getNewsAnnounce = async () => {
+  const dataNewsAnnounce = async () => {
     // console.log('kok ini gada');
     await axios
-      .get(`http://34.87.121.155:8000/ifcaprop-api/api/news-announce`)
+      .get(`http://34.87.121.155:8000/apiwebpbi/api/news-announce`)
       .then(res => {
         console.log('res news', res.data.data);
         const datanews = res.data.data;
@@ -341,6 +343,7 @@ const Home = props => {
         console.log('slice data', slicedatanews);
         setNewsAnnounceSlice(slicedatanews);
         setNewsAnnounce(datanews);
+        setLoadNews(false);
         // return res.data;
       })
       .catch(error => {
@@ -439,7 +442,7 @@ const Home = props => {
   useEffect(() => {
     console.log('galery', galery);
     dataImage();
-
+    dataNewsAnnounce();
     console.log('datauser', user);
     console.log('about', data);
     fetchDataDue();
@@ -452,7 +455,7 @@ const Home = props => {
   }, []);
 
   useEffect(() => {
-    getNewsAnnounce();
+    // getNewsAnnounce();
   }, []);
 
   const goPostDetail = item => () => {
@@ -752,12 +755,16 @@ const Home = props => {
               </Text>
               <Text>News and Announcement</Text>
             </View>
-            <View style={{marginVertical: 15}}>
-              <SliderNews
-                data={newsannounceslice}
-                local={true}
-                // onPress={console.log('klik')}
-              />
+            <View style={{marginVertical: 10, marginLeft: 20}}>
+              {loadNewsAnnounce ? (
+                <ActivityIndicator />
+              ) : (
+                <SliderNews
+                  data={newsannounceslice}
+                  local={true}
+                  // onPress={console.log('klik')}
+                />
+              )}
             </View>
           </View>
 
@@ -776,7 +783,7 @@ const Home = props => {
             <View style={{marginVertical: 10, marginHorizontal: 10}}>
               <ScrollView horizontal>
                 <MasonryList
-                  data={eventdummy}
+                  data={sliceArrEvent}
                   style={{alignSelf: 'stretch'}}
                   showsHorizontalScrollIndicator={false}
                   showsVerticalScrollIndicator={false}
@@ -812,7 +819,7 @@ const Home = props => {
                   pagingEnabled={true}
                   decelerationRate="fast"
                   bounces={false}
-                  data={eventdummy}
+                  data={sliceArrEvent}
                   numColumns={3}
                   contentContainerStyle={{
                     paddingHorizontal: 10,
@@ -823,7 +830,7 @@ const Home = props => {
                     <TouchableOpacity
                       onPress={() =>
                         navigation.navigate('PreviewImages', {
-                          images: eventdummy,
+                          images: sliceArrEvent,
                         })
                       }>
                       <View key={item.id} style={{}}>

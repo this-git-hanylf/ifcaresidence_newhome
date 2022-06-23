@@ -39,12 +39,13 @@ const AnnouceDetail = props => {
   const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
   const scrollY = useRef(new Animated.Value(0)).current;
   const productData = {...item};
-  console.log('from home', productData);
+  // console.log('from home', productData);
+  console.log('from home', item);
 
   const {
     style,
     onPress,
-    images,
+    // images,
     news_descs,
     facility_descs,
     title,
@@ -54,10 +55,12 @@ const AnnouceDetail = props => {
     announce_descs,
     announce_file,
     date,
-  } = productData;
+  } = item[0];
+
+  console.log('announce_file', announce_file);
 
   useEffect(() => {
-    console.log('liattt', annoe);
+    // console.log('liattt', annoe);
 
     setTimeout(() => {
       setLoading(false);
@@ -73,9 +76,9 @@ const AnnouceDetail = props => {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: item.announce_descs,
+        message: announce_descs,
         // title: item.news_title,
-        url: item.images,
+        url: announce_file,
       });
 
       if (result.action === Share.sharedAction) {
@@ -135,7 +138,26 @@ const AnnouceDetail = props => {
       <Fragment>
         <View style={styles.contentDescription}>
           <View>
-            {annoe.map((item, key) => {
+            <TouchableOpacity
+              // key={key}
+              // style={{flex: 1}}
+              activeOpacity={1}
+              onPress={() =>
+                navigation.navigate('PreviewImages', {images: announce_file})
+              }>
+              <Image
+                // key={key}
+                style={{
+                  // flex: 1,
+                  // width: '100%',
+                  height: 500,
+                  marginTop: 20,
+                }}
+                resizeMode="contain"
+                source={{uri: `${announce_file}`}}
+              />
+            </TouchableOpacity>
+            {/* {annoe.map((item, key) => {
               return (
                 <TouchableOpacity
                   key={key}
@@ -157,7 +179,7 @@ const AnnouceDetail = props => {
                   />
                 </TouchableOpacity>
               );
-            })}
+            })} */}
           </View>
           {/* <View
             style={{

@@ -23,6 +23,8 @@ export default function PreviewImages({navigation, route}) {
 
   const [images, setImages] = useState(imagesParam);
   console.log('image set', images);
+  const [imagesArray, setImagesArray] = useState([{imagesParam}]);
+  console.log('image array', imagesArray);
   const [indexSelected, setIndexSelected] = useState(0);
   console.log('indexx', indexSelected);
 
@@ -34,7 +36,7 @@ export default function PreviewImages({navigation, route}) {
   const onSelect = indexSelected => {
     setIndexSelected(indexSelected);
     setImages(
-      images.map((item, index) => {
+      imagesArray.map((item, index) => {
         if (index == indexSelected) {
           return {
             ...item,
@@ -93,7 +95,7 @@ export default function PreviewImages({navigation, route}) {
         activeDotColor={colors.primary}
         removeClippedSubviews={false}
         onIndexChanged={index => onSelect(index)}>
-        {images.map((item, key) => {
+        {/* {images.map((item, key) => {
           return (
             <Image
               key={key}
@@ -102,7 +104,13 @@ export default function PreviewImages({navigation, route}) {
               source={{uri: item.pict}}
             />
           );
-        })}
+        })} */}
+        <Image
+          key={key}
+          style={{width: '100%', height: '100%'}}
+          resizeMode="contain"
+          source={{uri: images}}
+        />
       </Swiper>
       <View
         style={{
@@ -113,7 +121,7 @@ export default function PreviewImages({navigation, route}) {
             Image Gallery
           </Text>
           <Text body2 whiteColor>
-            {indexSelected + 1}/{images.length}
+            {indexSelected + 1}/{imagesArray.length}
           </Text>
         </View>
         <FlatList
@@ -142,7 +150,7 @@ export default function PreviewImages({navigation, route}) {
                       : BaseColor.grayColor,
                   borderWidth: 1,
                 }}
-                source={{uri: item.pict}}
+                source={{uri: item.imagesParam}}
               />
               {/* <Text>{item.pict}</Text> */}
             </TouchableOpacity>
