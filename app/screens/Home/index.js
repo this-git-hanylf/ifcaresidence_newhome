@@ -335,7 +335,7 @@ const Home = props => {
   const dataNewsAnnounce = async () => {
     // console.log('kok ini gada');
     await axios
-      .get(`http://34.87.121.155:8000/apiwebpbi/api/news-announce`)
+      .get(`http://34.87.121.155:2121/apiwebpbi/api/news-announce`)
       .then(res => {
         console.log('res news', res.data.data);
         const datanews = res.data.data;
@@ -343,6 +343,23 @@ const Home = props => {
         console.log('slice data', slicedatanews);
         setNewsAnnounceSlice(slicedatanews);
         setNewsAnnounce(datanews);
+        setLoadNews(false);
+        // return res.data;
+      })
+      .catch(error => {
+        console.log('error get news announce home', error);
+        // alert('error get');
+      });
+  };
+
+  const dataPromoClubFacilities = async () => {
+    await axios
+      .get(`http://34.87.121.155:2121/apiwebpbi/api/promoclubfacilities`)
+      .then(res => {
+        console.log('res promoclubfacilities', res.data.data);
+        const datapromoclub = res.data.data;
+        const slicedatapromo = datapromoclub.slice(0, 6);
+        console.log('slice data promo', slicedatapromo);
         setLoadNews(false);
         // return res.data;
       })
@@ -443,6 +460,7 @@ const Home = props => {
     console.log('galery', galery);
     dataImage();
     dataNewsAnnounce();
+    dataPromoClubFacilities();
     console.log('datauser', user);
     console.log('about', data);
     fetchDataDue();
@@ -475,6 +493,11 @@ const Home = props => {
     setDefaultLotno(false);
     console.log('lot', lot);
     setTextLotno(lot);
+  };
+
+  const goToMoreNewsAnnounce = item => {
+    console.log('item go to', item.length);
+    navigation.navigate('NewsAnnounce', {items: item});
   };
 
   const CardItem = ({item}) => {
@@ -753,7 +776,33 @@ const Home = props => {
                 }}>
                 Our Bulletin
               </Text>
-              <Text>News and Announcement</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginRight: 20,
+                }}>
+                <Text>News and Announcement</Text>
+                {
+                  newsannounce.length >= 6 ? (
+                    <TouchableOpacity
+                      onPress={() => goToMoreNewsAnnounce(newsannounce)}>
+                      <View style={{alignSelf: 'center', flexDirection: 'row'}}>
+                        <Text style={{marginHorizontal: 5, fontSize: 14}}>
+                          More
+                        </Text>
+                        <Icon
+                          name="arrow-right"
+                          solid
+                          size={16}
+                          color={colors.primary}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  ) : null
+                  // <Text>kurang dari 6</Text>
+                }
+              </View>
             </View>
             <View style={{marginVertical: 10, marginLeft: 20}}>
               {loadNewsAnnounce ? (

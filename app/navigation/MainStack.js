@@ -32,6 +32,7 @@ import PostDetail from '../screens/PostDetail';
 import MeterInfo from '../screens/MeterInfo';
 import Search from '../screens/Search';
 import PreviewImage from '../screens/PreviewImage';
+import NewsAnnounce from '../screens/NewsAnnouncement';
 
 import SelectDarkOption from '../screens/SelectDarkOption';
 import EProductPageNotFound from '../screens/EProductPageNotFound';
@@ -428,7 +429,6 @@ function MainStack() {
         component={ECart}
         options={{headerShown: false}}
       />
-
       <Stack.Screen
         name="EMyOrder"
         component={EMyOrder}
@@ -444,7 +444,6 @@ function MainStack() {
         component={EPayment}
         options={{headerShown: false}}
       />
-
       <Stack.Screen
         name="EConfirmed"
         component={EConfirmed}
@@ -453,6 +452,11 @@ function MainStack() {
       <Stack.Screen
         name="EProductDetailStore"
         component={EProductDetailStore}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="NewsAnnounce"
+        component={NewsAnnounce}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
