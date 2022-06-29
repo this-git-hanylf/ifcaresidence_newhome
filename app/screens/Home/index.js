@@ -64,6 +64,7 @@ import ModalSelector from 'react-native-modal-selector';
 
 import MasonryList from '@react-native-seoul/masonry-list';
 import {ActivityIndicator} from 'react-native-paper';
+import {Platform} from 'react-native';
 
 const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -99,42 +100,42 @@ const imagesdummy = [
 
 const eventdummy = [
   {
-    id: '1',
+    rowID: '1',
     pict: 'https://ii1.pepperfry.com/media/catalog/product/m/o/568x625/modern-chaise-lounger-in-grey-colour-by-dreamzz-furniture-modern-chaise-lounger-in-grey-colour-by-dr-tmnirx.jpg',
     text: 'Pioneer LHS Chaise Lounger in Grey Colour',
   },
   {
-    id: '2',
+    rowID: '2',
     pict: 'https://www.precedent-furniture.com/sites/precedent-furniture.com/files/styles/header_slideshow/public/3360_SL%20CR.jpg?itok=3Ltk6red',
     text: 'Precedant Furniture',
   },
   {
-    id: '3',
+    rowID: '3',
     pict: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/leverette-fabric-queen-upholstered-platform-bed-1594829293.jpg',
     text: 'Leverette Upholstered Platform Bed',
   },
   {
-    id: '4',
+    rowID: '4',
     pict: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/briget-side-table-1582143245.jpg?crop=1.00xw:0.770xh;0,0.129xh&resize=768:*',
     text: 'Briget Accent Table',
   },
   {
-    id: '5',
+    rowID: '5',
     pict: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/rivet-emerly-media-console-1610578756.jpg?crop=1xw:1xh;center,top&resize=768:*',
     text: 'Rivet Emerly Media Console',
   },
   {
-    id: '6',
+    rowID: '6',
     pict: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/drew-barrymore-flower-home-petal-chair-1594829759.jpeg?crop=1xw:1xh;center,top&resize=768:*',
     text: 'Drew Barrymore Flower Home Accent Chair',
   },
   {
-    id: '7',
+    rowID: '7',
     pict: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/drew-barrymore-flower-home-petal-chair-1594829759.jpeg?crop=1xw:1xh;center,top&resize=768:*',
     text: 'Drew Barrymore Flower Home Accent Chair',
   },
   {
-    id: '8',
+    rowID: '8',
     pict: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/drew-barrymore-flower-home-petal-chair-1594829759.jpeg?crop=1xw:1xh;center,top&resize=768:*',
     text: 'Drew Barrymore Flower Home Accent Chair',
   },
@@ -191,6 +192,16 @@ const Home = props => {
   const [newsannounce, setNewsAnnounce] = useState([]);
   const [newsannounceslice, setNewsAnnounceSlice] = useState([]);
   const [loadNewsAnnounce, setLoadNews] = useState(true);
+
+  const [promoclubfac, setPromoClubFac] = useState([]);
+  const [promoclubfacslice, setPromoClubFacSlice] = useState([]);
+  const [loadpromoclubAnnounce, setLoadPromoClub] = useState(true);
+  const [imagePromoClubFac, setImagePromoClubFac] = useState([]);
+
+  const [eventresto, setEventRestaurant] = useState([]);
+  const [eventrestoslice, setEventRestaurantSlice] = useState([]);
+  const [loadeventresto, setLoadEventResto] = useState(true);
+  const [imageEventResto, setImageEventResto] = useState([]);
 
   const [refreshing, setRefreshing] = useState(false);
   const dispatch = useDispatch();
@@ -358,8 +369,79 @@ const Home = props => {
       .then(res => {
         console.log('res promoclubfacilities', res.data.data);
         const datapromoclub = res.data.data;
-        const slicedatapromo = datapromoclub.slice(0, 6);
-        console.log('slice data promo', slicedatapromo);
+
+        // filter by category
+
+        const filterForPromo = datapromoclub
+          .filter(item => item.category === 'P')
+          .map(items => items);
+
+        const filterForClubFacilities = datapromoclub
+          .filter(item => item.category === 'CF')
+          .map(items => items);
+
+        const filterForEvent = datapromoclub
+          .filter(item => item.category == 'E')
+          .map(items => items);
+
+        const filterForRestaurant = datapromoclub
+          .filter(item => item.category == 'R')
+          .map(items => items);
+
+        // join data atau data gabungan all per 2 category
+
+        const joinFilterDataPromoClubFac = [
+          ...filterForPromo,
+          ...filterForClubFacilities,
+        ];
+
+        const joinFilterDataEventRestaurant = [
+          ...filterForEvent,
+          ...filterForRestaurant,
+        ];
+
+        // slice data for image
+
+        const slicedatapromoclubfac = joinFilterDataPromoClubFac.slice(0, 6);
+        const slicedataeventresto = joinFilterDataEventRestaurant.slice(0, 6);
+
+        // pecah array images from data slice
+
+        const arrayImagePromoClubFac = slicedatapromoclubfac.map(
+          (item, key) => {
+            return {
+              ...item.images[0],
+            };
+          },
+        );
+
+        const arrayImageEventResto = slicedataeventresto.map((item, key) => {
+          return {
+            ...item.images[0],
+          };
+        });
+
+        // const slicedatapromo = datapromoclub.slice(0, 6);
+        // console.log('slice data promo', slicedatapromo);
+        // console.log('image promo club', datapromoclub.image);
+
+        // const tes = slicedatapromo.map((item, key) => {
+        //   return {
+        //     ...item.images[0],
+        //   };
+        // });
+        // console.log('tes gambar map', tes);
+
+        console.log('image club fac', arrayImagePromoClubFac);
+
+        setImagePromoClubFac(arrayImagePromoClubFac);
+        setPromoClubFacSlice(slicedatapromoclubfac);
+        setPromoClubFac(joinFilterDataPromoClubFac);
+
+        setImageEventResto(arrayImageEventResto);
+        setEventRestaurantSlice(slicedatapromoclubfac);
+        setEventRestaurant(joinFilterDataEventRestaurant);
+
         setLoadNews(false);
         // return res.data;
       })
@@ -500,23 +582,30 @@ const Home = props => {
     navigation.navigate('NewsAnnounce', {items: item});
   };
 
-  const CardItem = ({item}) => {
+  const CardItem = ({i, item}) => {
+    console.log('key card item', i);
+    console.log('item card', item);
     return (
-      <View key={item.id} style={([styles.shadow], {})}>
-        <Image
-          source={{uri: item.pict}}
-          style={
-            ([styles.shadow],
-            {
-              height: item.id % 2 ? 300 : 200,
-              width: 200,
-              margin: 5,
-              borderRadius: 10,
-              alignSelf: 'stretch',
-            })
-          }
-          resizeMode={'cover'}></Image>
-      </View>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('PreviewImageHome', {images: item.pict})
+        }>
+        <View key={i} style={([styles.shadow], {})}>
+          <Image
+            source={{uri: item.pict}}
+            style={
+              ([styles.shadow],
+              {
+                height: i % 2 ? 300 : 200,
+                width: 200,
+                margin: 5,
+                borderRadius: 10,
+                alignSelf: 'stretch',
+              })
+            }
+            resizeMode={'cover'}></Image>
+        </View>
+      </TouchableOpacity>
     );
   };
 
@@ -829,10 +918,12 @@ const Home = props => {
               </Text>
               <Text>Event And Restaurant</Text>
             </View>
+
             <View style={{marginVertical: 10, marginHorizontal: 10}}>
               <ScrollView horizontal>
                 <MasonryList
-                  data={sliceArrEvent}
+                  data={imageEventResto}
+                  // data={sliceArrEvent}
                   style={{alignSelf: 'stretch'}}
                   showsHorizontalScrollIndicator={false}
                   showsVerticalScrollIndicator={false}
@@ -842,7 +933,7 @@ const Home = props => {
                     alignSelf: 'stretch',
                     // alignSelf: 'flex-start',
                   }}
-                  keyExtractor={item => item.id}
+                  keyExtractor={(item, index) => index}
                   numColumns={3}
                   renderItem={CardItem}
                 />
@@ -868,7 +959,7 @@ const Home = props => {
                   pagingEnabled={true}
                   decelerationRate="fast"
                   bounces={false}
-                  data={sliceArrEvent}
+                  data={imagePromoClubFac}
                   numColumns={3}
                   contentContainerStyle={{
                     paddingHorizontal: 10,
@@ -878,11 +969,12 @@ const Home = props => {
                   renderItem={({item, index}) => (
                     <TouchableOpacity
                       onPress={() =>
-                        navigation.navigate('PreviewImages', {
-                          images: sliceArrEvent,
+                        navigation.navigate('PreviewImageHome', {
+                          images: item.pict,
                         })
                       }>
-                      <View key={item.id} style={{}}>
+                      <View key={item.rowID} style={{}}>
+                        {/* <Text></Text> */}
                         <Image
                           source={{uri: item.pict}}
                           style={
@@ -898,7 +990,8 @@ const Home = props => {
                       </View>
                     </TouchableOpacity>
                   )}
-                  keyExtractor={(item, index) => item.toString() + index}
+                  // keyExtractor={(item, index) => item.toString() + index}
+                  keyExtractor={(item, index) => index}
                 />
               </ScrollView>
             </View>

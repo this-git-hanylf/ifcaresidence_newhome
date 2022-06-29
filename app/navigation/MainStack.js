@@ -82,6 +82,7 @@ import EConfirmed from '../screens/EConfirmed';
 import EMyOrder from '../screens/EMyOrder';
 
 import EProductDetailStore from '../screens/EProductDetailStore';
+import PreviewImageHome from '../screens/Home/PreviewImageHome';
 
 const Stack = createStackNavigator();
 
@@ -457,6 +458,11 @@ function MainStack() {
       <Stack.Screen
         name="NewsAnnounce"
         component={NewsAnnounce}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="PreviewImageHome"
+        component={PreviewImageHome}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
