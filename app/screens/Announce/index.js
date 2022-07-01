@@ -59,6 +59,7 @@ const Announce = props => {
   };
 
   const goAnnouceDetail = item => () => {
+    console.log('announce detail', item);
     navigation.navigate('AnnouceDetail', {item: item});
   };
 

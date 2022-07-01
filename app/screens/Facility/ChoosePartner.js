@@ -195,10 +195,13 @@ export default ChoosePartner = props => {
 
   //tambah kolom isChecked (true, false) di table saat gue submit partner awal di facility booking
 
-  let selectedpartner = partners.filter(
-    partners => partners.isChecked,
-    partners.staff_first_name,
-  );
+  let selectedpartner =
+    partners != null
+      ? partners.filter(
+          partners => partners.isChecked,
+          partners.staff_first_name,
+        )
+      : null;
 
   const bookFacility = async () => {
     try {

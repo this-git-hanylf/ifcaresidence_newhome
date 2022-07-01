@@ -18,6 +18,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import styles from './styles';
 import {useTranslation} from 'react-i18next';
 import getUser from '../../selectors/UserSelectors';
+import getProject from '../../selectors/ProjectSelector';
 import errorsSelector from '../../selectors/ErrorSelectors';
 import {isLoadingSelector} from '../../selectors/StatusSelectors';
 import {login, actionTypes} from '../../actions/UserActions';
@@ -39,6 +40,7 @@ const SignIn = props => {
   const [token, setTokenBasic] = useState('');
 
   const user = useSelector(state => getUser(state));
+  const project = useSelector(state => getProject(state));
 
   const isLoading = useSelector(state =>
     isLoadingSelector([actionTypes.LOGIN], state),

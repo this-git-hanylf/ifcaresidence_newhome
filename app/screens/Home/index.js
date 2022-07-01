@@ -726,7 +726,7 @@ const Home = props => {
                     <Image
                       style={{
                         height: 70,
-                        width: '50%',
+                        width: '60%',
                       }}
                       source={require('../../assets/images/image-home/vector-logo-pbi.png')}></Image>
                   </View>

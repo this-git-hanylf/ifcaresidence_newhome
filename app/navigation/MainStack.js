@@ -83,6 +83,8 @@ import EMyOrder from '../screens/EMyOrder';
 
 import EProductDetailStore from '../screens/EProductDetailStore';
 import PreviewImageHome from '../screens/Home/PreviewImageHome';
+import AnnounceDetailHome from '../screens/AnnouceDetailHome';
+import PreviewImagesAnnounceHome from '../screens/AnnouceDetailHome/PreviewImagesAnnounceHome';
 
 const Stack = createStackNavigator();
 
@@ -463,6 +465,16 @@ function MainStack() {
       <Stack.Screen
         name="PreviewImageHome"
         component={PreviewImageHome}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AnnounceDetailHome"
+        component={AnnounceDetailHome}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="PreviewImagesAnnounceHome"
+        component={PreviewImagesAnnounceHome}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
