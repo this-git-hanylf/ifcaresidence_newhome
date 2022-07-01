@@ -273,7 +273,7 @@ const Home = props => {
       setLotno(resLotno);
 
       if (default_text_lotno == true) {
-        setTextLotno(resLotno[0].lot_no);
+        setTextLotno(resLotno[0]);
       }
 
       setSpinner(false);
@@ -814,7 +814,7 @@ const Home = props => {
                     selectedItemTextStyle={{color: '#3C85F1'}}
                     accessible={true}
                     keyExtractor={item => item.lot_no}
-                    initValue={'ahlo'}
+                    // initValue={'ahlo'}
                     labelExtractor={item => item.lot_no} //khusus untuk lotno
                     cancelButtonAccessibilityLabel={'Cancel Button'}
                     onChange={option => {
@@ -831,7 +831,7 @@ const Home = props => {
                         fontWeight: '800',
                         fontFamily: 'KaiseiHarunoUmi',
                       }}>
-                      {text_lotno}
+                      {text_lotno.lot_no}
                     </Text>
                   </ModalSelector>
                   <Icon

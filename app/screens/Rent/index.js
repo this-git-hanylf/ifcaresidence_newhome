@@ -179,6 +179,7 @@ const Rent = props => {
                     isFavorite={item.isFavorite}
                     salePercent={item.salePercent}
                     currency={item.currency}
+                    price={item.price}
                   />
                 )}
               />
@@ -214,6 +215,7 @@ const Rent = props => {
                     isFavorite={item.isFavorite}
                     salePercent={item.salePercent}
                     currency={item.currency}
+                    price={item.price}
                   />
                 )}
               />
