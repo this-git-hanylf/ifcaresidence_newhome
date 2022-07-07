@@ -166,6 +166,7 @@ export {default as TextInputMoney} from './TextInput/Money';
 
 export {default as NotFound} from './NotFound';
 export {default as ListThumbCircleNotif} from './List/ThumbCircleNotif';
+export {default as ComingSoon} from './ComingSoon';
 
 //SearchInput
 export {default as SearchInput} from './SearchInput';
