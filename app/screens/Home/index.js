@@ -582,6 +582,16 @@ const Home = props => {
     navigation.navigate('NewsAnnounce', {items: item});
   };
 
+  const goToEventResto = item => {
+    // console.log('item go to', item.length);
+    navigation.navigate('EventResto', {items: item});
+  };
+
+  const goToPromoClubFac = item => {
+    console.log('item go to', item.length);
+    navigation.navigate('ClubFacilities', {items: item});
+  };
+
   const CardItem = ({i, item}) => {
     console.log('key card item', i);
     console.log('item card', item);
@@ -916,7 +926,33 @@ const Home = props => {
                 }}>
                 This Weekend
               </Text>
-              <Text>Event And Restaurant</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginRight: 20,
+                }}>
+                <Text>Event And Restaurant</Text>
+                {
+                  eventresto.length >= 6 ? (
+                    <TouchableOpacity
+                      onPress={() => goToEventResto(eventresto)}>
+                      <View style={{alignSelf: 'center', flexDirection: 'row'}}>
+                        <Text style={{marginHorizontal: 5, fontSize: 14}}>
+                          More
+                        </Text>
+                        <Icon
+                          name="arrow-right"
+                          solid
+                          size={16}
+                          color={colors.primary}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  ) : null
+                  // <Text>kurang dari 6</Text>
+                }
+              </View>
             </View>
 
             <View style={{marginVertical: 10, marginHorizontal: 10}}>
@@ -951,7 +987,48 @@ const Home = props => {
                 }}>
                 Club And Facilities
               </Text>
-              <Text>Check Our Promo Here</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginRight: 20,
+                }}>
+                <Text>Check Our Promo Here</Text>
+                {
+                  promoclubfac.length >= 6 ? (
+                    <TouchableOpacity
+                      onPress={() => goToPromoClubFac(promoclubfac)}>
+                      <View style={{alignSelf: 'center', flexDirection: 'row'}}>
+                        <Text style={{marginHorizontal: 5, fontSize: 14}}>
+                          More
+                        </Text>
+                        <Icon
+                          name="arrow-right"
+                          solid
+                          size={16}
+                          color={colors.primary}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => goToPromoClubFac(promoclubfac)}>
+                      <View style={{alignSelf: 'center', flexDirection: 'row'}}>
+                        <Text style={{marginHorizontal: 5, fontSize: 14}}>
+                          More
+                        </Text>
+                        <Icon
+                          name="arrow-right"
+                          solid
+                          size={16}
+                          color={colors.primary}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  )
+                  // <Text>kurang dari 6</Text>
+                }
+              </View>
             </View>
             <View style={{marginVertical: 10, marginHorizontal: 10}}>
               <ScrollView horizontal>

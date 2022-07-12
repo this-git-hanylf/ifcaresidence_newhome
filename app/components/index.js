@@ -170,3 +170,5 @@ export {default as ComingSoon} from './ComingSoon';
 
 //SearchInput
 export {default as SearchInput} from './SearchInput';
+
+export {default as ComingSoon} from './ComingSoon';

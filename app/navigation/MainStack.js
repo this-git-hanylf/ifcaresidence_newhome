@@ -86,6 +86,10 @@ import PreviewImageHome from '../screens/Home/PreviewImageHome';
 import AnnounceDetailHome from '../screens/AnnouceDetailHome';
 import PreviewImagesAnnounceHome from '../screens/AnnouceDetailHome/PreviewImagesAnnounceHome';
 
+import ComingSoon from '../screens/ComingSoon';
+import EventResto from '../screens/EventResto';
+import ClubFacilities from '../screens/ClubFacilities';
+
 const Stack = createStackNavigator();
 
 export const WalletTabScreens = {
@@ -475,6 +479,22 @@ function MainStack() {
       <Stack.Screen
         name="PreviewImagesAnnounceHome"
         component={PreviewImagesAnnounceHome}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="ComingSoon"
+        component={ComingSoon}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="EventResto"
+        component={EventResto}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ClubFacilities"
+        component={ClubFacilities}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
