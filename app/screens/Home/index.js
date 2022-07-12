@@ -1010,22 +1010,7 @@ const Home = props => {
                         />
                       </View>
                     </TouchableOpacity>
-                  ) : (
-                    <TouchableOpacity
-                      onPress={() => goToPromoClubFac(promoclubfac)}>
-                      <View style={{alignSelf: 'center', flexDirection: 'row'}}>
-                        <Text style={{marginHorizontal: 5, fontSize: 14}}>
-                          More
-                        </Text>
-                        <Icon
-                          name="arrow-right"
-                          solid
-                          size={16}
-                          color={colors.primary}
-                        />
-                      </View>
-                    </TouchableOpacity>
-                  )
+                  ) : null
                   // <Text>kurang dari 6</Text>
                 }
               </View>

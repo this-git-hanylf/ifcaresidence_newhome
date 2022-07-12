@@ -81,7 +81,7 @@ const NewsAnnounce = props => {
       .then(res => {
         console.log('res announce detail', res.data.data);
 
-        navigation.navigate('AnnouceDetail', {item: res.data.data});
+        navigation.navigate('AnnounceDetailHome', {item: res.data.data});
       })
       .catch(error => {
         console.log('error get news announce detail', error);

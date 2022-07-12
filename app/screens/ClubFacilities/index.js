@@ -89,11 +89,11 @@ const ClubFacilities = props => {
           }}
         />
         {/* <ScrollView contentContainerStyle={styles.paddingSrollView}> */}
-        {arrayImageEventResto.length > 0 ? (
+        {arrayImagePromoClubFac.length > 0 ? (
           <FlatList
             scrollEnabled={false}
             contentContainerStyle={styles.paddingFlatList}
-            data={arrayImageEventResto}
+            data={arrayImagePromoClubFac}
             numColumns={2}
             key={2}
             showsHorizontalScrollIndicator={false}
