@@ -37,6 +37,7 @@ import {
   ImageBackground,
   RefreshControl,
   Dimensions,
+  Pressable,
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useSelector, useDispatch} from 'react-redux';
@@ -66,83 +67,11 @@ import MasonryList from '@react-native-seoul/masonry-list';
 import {ActivityIndicator} from 'react-native-paper';
 import {Platform} from 'react-native';
 
+import Modal from 'react-native-modal';
+
 const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 };
-
-const imagesdummy = [
-  {
-    rowID: '1',
-    image: require('@assets/images/image-home/news/image1.jpeg'),
-    news_id: 'N',
-  },
-  {
-    rowID: '2',
-    image: require('@assets/images/image-home/news/image1.jpeg'),
-    announce_id: 'A',
-  },
-  // {
-  //   image:
-  //     'https://images.unsplash.com/photo-1567226475328-9d6baaf565cf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60',
-  //   desc: 'Silent Waters in the mountains in midst of Himilayas',
-  // },
-  // {
-  //   image:
-  //     'https://images.unsplash.com/photo-1455620611406-966ca6889d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1130&q=80',
-  //   desc: 'Red fort in India New Delhi is a magnificient masterpeiece of humans',
-  // },
-  // {
-  //   image:
-  //     'https://images.unsplash.com/photo-1477587458883-47145ed94245?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80',
-  //   desc: 'Sample Description below the image for representation purpose only',
-  // },
-];
-
-const eventdummy = [
-  {
-    rowID: '1',
-    pict: 'https://ii1.pepperfry.com/media/catalog/product/m/o/568x625/modern-chaise-lounger-in-grey-colour-by-dreamzz-furniture-modern-chaise-lounger-in-grey-colour-by-dr-tmnirx.jpg',
-    text: 'Pioneer LHS Chaise Lounger in Grey Colour',
-  },
-  {
-    rowID: '2',
-    pict: 'https://www.precedent-furniture.com/sites/precedent-furniture.com/files/styles/header_slideshow/public/3360_SL%20CR.jpg?itok=3Ltk6red',
-    text: 'Precedant Furniture',
-  },
-  {
-    rowID: '3',
-    pict: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/leverette-fabric-queen-upholstered-platform-bed-1594829293.jpg',
-    text: 'Leverette Upholstered Platform Bed',
-  },
-  {
-    rowID: '4',
-    pict: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/briget-side-table-1582143245.jpg?crop=1.00xw:0.770xh;0,0.129xh&resize=768:*',
-    text: 'Briget Accent Table',
-  },
-  {
-    rowID: '5',
-    pict: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/rivet-emerly-media-console-1610578756.jpg?crop=1xw:1xh;center,top&resize=768:*',
-    text: 'Rivet Emerly Media Console',
-  },
-  {
-    rowID: '6',
-    pict: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/drew-barrymore-flower-home-petal-chair-1594829759.jpeg?crop=1xw:1xh;center,top&resize=768:*',
-    text: 'Drew Barrymore Flower Home Accent Chair',
-  },
-  {
-    rowID: '7',
-    pict: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/drew-barrymore-flower-home-petal-chair-1594829759.jpeg?crop=1xw:1xh;center,top&resize=768:*',
-    text: 'Drew Barrymore Flower Home Accent Chair',
-  },
-  {
-    rowID: '8',
-    pict: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/drew-barrymore-flower-home-petal-chair-1594829759.jpeg?crop=1xw:1xh;center,top&resize=768:*',
-    text: 'Drew Barrymore Flower Home Accent Chair',
-  },
-];
-
-const sliceArrEvent = eventdummy.slice(0, 6); //ini membatasi load data dari mobile, bukan dari api
-// console.log('slice array event', sliceArrEvent);
 
 const Home = props => {
   const {navigation, route} = props;
@@ -203,6 +132,12 @@ const Home = props => {
   const [loadeventresto, setLoadEventResto] = useState(true);
   const [imageEventResto, setImageEventResto] = useState([]);
 
+  const [statusUser, setStatusUser] = useState('');
+  const [modalImage, setModalImage] = useState(false);
+  const [imageGreetings, setImageGreetings] = useState([]);
+  const [modalShowImage, setmodalShowImage] = useState(false);
+  const [urlImageGreetings, setUrlGreetingsImage] = useState('');
+
   const [refreshing, setRefreshing] = useState(false);
   const dispatch = useDispatch();
 
@@ -243,6 +178,86 @@ const Home = props => {
       ),
     );
   }, []);
+
+  //untuk load data get chairman message
+  // (sebenernya terpakai hanya sekali, saat open screen pertama kali.
+  // jika tidak dibatasi dengan akhir[] maka akan menimbulkan load limit.
+  // tidak error parah, cuma mengganggu saja)
+  useEffect(async () => {
+    // console.log(
+    //   'url greetings chairman',
+    //   `http://34.87.121.155:2121/apiwebpbi/api/first_login_Get/` + email,
+    // );
+    await axios
+      .get(`http://34.87.121.155:2121/apiwebpbi/api/first_login_Get/` + email)
+      .then(res => {
+        console.log('res greetings', res.data.data);
+        const status_user = res.data.data[0].status;
+        // console.log('status user new old', status_user);
+        setStatusUser(status_user);
+
+        if (status_user == 'N') {
+          setModalImage(true); // sementara di jadiin false dulu, untuk hide modal.
+          getImageGreetings();
+        } else {
+          setModalImage(false);
+        }
+        setLoadNews(false);
+        // return res.data;
+      })
+      .catch(error => {
+        console.log('error res greeting', error);
+        // alert('error get');
+      });
+  }, []);
+
+  const getImageGreetings = async () => {
+    // console.log(
+    //   'url greetings chairman',
+    //   `http://34.87.121.155:2121/apiwebpbi/api/first_login_Get/` + email,
+    // );
+    await axios
+      .get(`http://34.87.121.155:2121/apiwebpbi/api/greetings_mobile`)
+      .then(res => {
+        // console.log('res greetings', res.data.data);
+        const image_greetings = res.data.data;
+        console.log('image_greetings', image_greetings);
+        setImageGreetings(image_greetings);
+        setLoadNews(false);
+        // return res.data;
+      })
+      .catch(error => {
+        console.log('error res image greeting', error);
+        // alert('error get');
+      });
+  };
+
+  const pressChairmanMessage = async () => {
+    //sementara ditutup dulu prosesnya update status dan tanggalnya
+    // setModalImage(false);
+
+    await axios
+      .post(`http://34.87.121.155:2121/apiwebpbi/api/first_login/` + email)
+      .then(res => {
+        console.log('res update tanggal greetings', res.data.data);
+        // console.log('status user new old', status_user);
+        setModalImage(false);
+        setLoadNews(false);
+        // return res.data;
+      })
+      .catch(error => {
+        console.log('error update tanggal greetings', error);
+        // alert('error get');
+      });
+
+    //setelah itu jalanin disini update data status jadi Old dan tanggal first_logindate today where email
+  };
+
+  const previewZoomGreeting = item => {
+    setUrlGreetingsImage(item);
+    setmodalShowImage(true);
+    // navigation.navigate('PreviewImageHome', {images: item});
+  };
 
   async function getLotNo() {
     console.log(
@@ -543,6 +558,7 @@ const Home = props => {
     dataImage();
     dataNewsAnnounce();
     dataPromoClubFacilities();
+
     console.log('datauser', user);
     console.log('about', data);
     fetchDataDue();
@@ -630,6 +646,180 @@ const Home = props => {
           <Text>data user dihome null</Text>
         ) : // <HeaderHome />
         null}
+
+        {/* Modal Greeting Chairman  */}
+        <View>
+          <Modal
+            isVisible={modalImage}
+            animationType={'slide'}
+            style={{height: '100%', padding: 0, margin: 0}}
+            onBackdropPress={() => pressChairmanMessage()}>
+            <View
+              style={{
+                backgroundColor: BaseColor.whiteColor,
+                height: '100%',
+                borderRadius: 30,
+                // justifyContent: 'center',
+              }}>
+              {/* Button close X  */}
+              <View
+                style={{flexDirection: 'row', width: '100%', marginBottom: 5}}>
+                <View
+                  style={{
+                    marginTop: 20,
+                    justifyContent: 'space-between',
+                    flex: 1,
+                  }}></View>
+                {/* <View
+                  style={{
+                    marginTop: 20,
+                    justifyContent: 'space-between',
+                    marginRight: 10,
+                  }}>
+                  <Pressable onPress={() => pressChairmanMessage()}>
+                    <View style={{width: 30, height: 20}}>
+                      <Icon name={'times'} size={20}></Icon>
+                    </View>
+                  </Pressable>
+                </View>
+              */}
+              </View>
+              {imageGreetings.map((item, index) => (
+                <View style={{flex: 1}} key={index}>
+                  <ImageBackground
+                    source={{uri: item.greetings_file}}
+                    // source={require('@assets/images/ChairmanMessage.jpeg')}
+                    style={{
+                      width: Dimensions.get('window').width,
+                      height: '100%',
+                      resizeMode: 'cover',
+                      // paddingVertical: 10,
+                    }}>
+                    {/* Button Next Here  */}
+                    <View
+                      style={{
+                        flex: 1,
+                        justifyContent: 'flex-end',
+                        marginBottom: 36,
+                      }}>
+                      <View style={{flexDirection: 'row', width: '100%'}}>
+                        <View
+                          style={{
+                            marginTop: 10,
+                            justifyContent: 'space-between',
+                            flex: 1,
+                            // backgroundColor: 'red',
+                            // width: '50%',
+                          }}>
+                          {/* <Text>halo</Text> */}
+                          <Pressable
+                            onPress={() =>
+                              previewZoomGreeting(item.greetings_file)
+                            }>
+                            <View
+                              style={{
+                                alignItems: 'center',
+                                flexDirection: 'row',
+                              }}>
+                              <Text
+                                style={{
+                                  paddingHorizontal: 10,
+                                  fontSize: 16,
+                                  color: colors.primary,
+                                }}>
+                                Preview Zoom
+                              </Text>
+                              <Icon
+                                name="search"
+                                solid
+                                size={16}
+                                color={colors.primary}
+                              />
+                            </View>
+                          </Pressable>
+                        </View>
+                        <View
+                          style={{
+                            marginTop: 10,
+                            justifyContent: 'space-between',
+                            // marginRight: 10,
+                            // flex: 1,
+                            // backgroundColor: 'blue',
+                            // width: '50%',
+                          }}>
+                          <Pressable onPress={() => pressChairmanMessage()}>
+                            <View
+                              style={{
+                                alignItems: 'center',
+                                marginRight: 20,
+                                flexDirection: 'row',
+                              }}>
+                              <Text
+                                style={{
+                                  paddingHorizontal: 10,
+                                  fontSize: 16,
+                                  color: colors.primary,
+                                }}>
+                                Next
+                              </Text>
+                              <Icon
+                                name="arrow-right"
+                                solid
+                                size={16}
+                                color={colors.primary}
+                              />
+                            </View>
+                          </Pressable>
+                        </View>
+                      </View>
+                    </View>
+                  </ImageBackground>
+                </View>
+              ))}
+            </View>
+          </Modal>
+        </View>
+        {/* Close Modal Greeting Chairman  */}
+
+        {/* Modal Show Image Greeting Chairman  */}
+        <View>
+          <Modal
+            // style={{margin: 10, padding: 10}}
+            isVisible={modalShowImage}
+            onBackdropPress={() => setmodalShowImage(false)}>
+            <View>
+              {/* Button close X  */}
+              <View
+                style={{flexDirection: 'row', width: '100%', marginBottom: 10}}>
+                <View
+                  style={{
+                    // marginTop: 10,
+                    justifyContent: 'space-between',
+                    flex: 1,
+                  }}></View>
+                <View
+                  style={{
+                    // marginTop: 10,
+                    justifyContent: 'space-between',
+                    marginRight: 10,
+                  }}>
+                  <Pressable onPress={() => setmodalShowImage(false)}>
+                    <View style={{width: 30, height: 20}}>
+                      <Icon name={'times'} size={20} color={'white'}></Icon>
+                    </View>
+                  </Pressable>
+                </View>
+              </View>
+              <Image
+                // key={key}
+                style={{width: '100%', height: '95%'}}
+                resizeMode="cover"
+                source={{uri: urlImageGreetings}}
+              />
+            </View>
+          </Modal>
+        </View>
+        {/* Modal Show Image Greeting Chairman  */}
 
         <ScrollView
           // contentContainerStyle={styles.paddingSrollView}
