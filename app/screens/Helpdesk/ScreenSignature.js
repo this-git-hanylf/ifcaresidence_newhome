@@ -47,7 +47,7 @@ import moment from 'moment';
 import Modal from 'react-native-modal';
 
 import Signature from 'react-native-signature-canvas';
-import RNFetchBlob from 'rn-fetch-blob';
+// import RNFetchBlob from 'rn-fetch-blob';
 
 export default function ScreenSignature({route}) {
   const {t, i18n} = useTranslation();

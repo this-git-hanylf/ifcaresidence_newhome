@@ -39,7 +39,7 @@ import {RadioButton} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 import ImagePicker from 'react-native-image-crop-picker';
-import RNFetchBlob from 'rn-fetch-blob';
+// import RNFetchBlob from 'rn-fetch-blob';
 import mime from 'mime';
 import Modal from 'react-native-modal';
 
@@ -445,13 +445,13 @@ export default function SubmitHelpdesk({route, props}) {
             marginTop: 0,
             paddingTop: 0,
           }}>
-          Work Request
+          Special Notes (Schedule Visit Arrangement)
         </Text>
         <TextInput
           multiline
           numberOfLines={4}
           blurOnSubmit
-          placeholder="Description"
+          placeholder="Special Notes"
           style={styles.textArea}
           onChangeText={text => setTextDescs(text)}
         />

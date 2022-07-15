@@ -21,7 +21,8 @@ import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 // import getUser from '../../selectors/UserSelectors';
 import Pdf from 'react-native-pdf';
-import RNFetchBlob from 'rn-fetch-blob';
+import ReactNativeBlobUtil from 'react-native-blob-util';
+// import RNFetchBlob from 'rn-fetch-blob';
 
 const PDFAttach = props => {
   const {navigation, route} = props;
@@ -29,6 +30,10 @@ const PDFAttach = props => {
   const paramsItem = route.params;
   const {t} = useTranslation();
   const {colors} = useTheme();
+  const source = {
+    uri: paramsItem.link_url,
+    cache: true,
+  };
   //   const [refreshing, setRefreshing] = useState(false);
   //   const [notification, setNotification] = useState(NotificationData);
   //   const users = useSelector(state => getUser(state));
@@ -38,7 +43,7 @@ const PDFAttach = props => {
   //   const [arrDataTowerUser, setArrDataTowerUser] = useState([]);
   //   const [spinner, setSpinner] = useState(true);
   //   const [dataNotif, setDataNotif] = useState([]);
-  const downloadFile = () => {
+  const downloadFile__ = () => {
     const url = paramsItem.link_url;
     console.log('url', url);
     const android = RNFetchBlob.android;
@@ -77,6 +82,49 @@ const PDFAttach = props => {
       });
   };
 
+  const downloadFile = () => {
+    const url = paramsItem.link_url;
+    console.log('url', url);
+    //  const android = RNFetchBlob.android;
+    let dirs = ReactNativeBlobUtil.fs.dirs;
+    //  console.log('dirs', dirs);
+    const title = paramsItem.doc_no + '_' + paramsItem.remark + '.pdf';
+    // send http request in a new thread (using native code)
+    ReactNativeBlobUtil.config({
+      // add this option that makes response data to be stored as a file,
+      // this is much more performant.
+      fileCache: true,
+
+      // android only options, these options be a no-op on IOS
+      addAndroidDownloads: {
+        path:
+          dirs.DownloadDir +
+          '/downloads/' +
+          paramsItem.doc_no +
+          '_' +
+          paramsItem.remark +
+          '.pdf',
+        useDownloadManager: true,
+        // Show notification when response data transmitted
+        notification: true,
+        // Title of download notification
+        title: title,
+        // File description (not notification description)
+        description: 'downloading content...',
+        mime: 'application/pdf',
+        // Make the file scannable  by media scanner
+        mediaScannable: true,
+      },
+    })
+      .fetch('GET', url, {
+        //some headers ..
+      })
+      .then(res => {
+        // the temp file path
+        console.log('The file saved to ', res.path());
+      });
+  };
+
   return (
     <SafeAreaView
       style={BaseStyle.safeAreaView}
@@ -110,8 +158,8 @@ const PDFAttach = props => {
           downloadFile();
         }}
       />
-      <View style={{flex: 1}}>
-        <Pdf
+      <View style={stylesCurrent.container}>
+        {/* <Pdf
           source={{
             uri: paramsItem.link_url,
             cache: true,
@@ -132,7 +180,25 @@ const PDFAttach = props => {
           password={'220359'}
           style={stylesCurrent.pdf}
           fitWidth={true}
+        /> */}
+        <Pdf
+          source={source}
+          onLoadComplete={(numberOfPages, filePath) => {
+            console.log(`Number of pages: ${numberOfPages}`);
+          }}
+          onPageChanged={(page, numberOfPages) => {
+            console.log(`Current page: ${page}`);
+          }}
+          onError={error => {
+            console.log(error);
+          }}
+          onPressLink={uri => {
+            console.log(`Link pressed: ${uri}`);
+          }}
+          password={'220359'}
+          style={stylesCurrent.pdf}
         />
+        {/* <Text>{paramsItem.link_url}</Text> */}
       </View>
     </SafeAreaView>
   );
@@ -141,6 +207,12 @@ const PDFAttach = props => {
 export default PDFAttach;
 
 const stylesCurrent = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginTop: 25,
+  },
   pdf: {
     flex: 1,
     width: Dimensions.get('window').width,

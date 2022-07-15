@@ -12,6 +12,10 @@ target 'IfcaResident' do
     :hermes_enabled => false
   )
 
+  pod 'react-native-blob-util', :path => '../node_modules/react-native-blob-util'
+
+  pod 'react-native-pdf', :path => '../node_modules/react-native-pdf'
+
   target 'IfcaResidentTests' do
     inherit! :complete
     # Pods for testing
