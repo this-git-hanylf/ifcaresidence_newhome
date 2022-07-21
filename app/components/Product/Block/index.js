@@ -69,21 +69,27 @@ const Block = ({
         marginVertical: 1,
       }}
       onPress={onPress}>
-      <ImageBackground
-        source={{uri: `${images[0].pict}`}}
-        style={styles.imageBackground}>
-        <Icon
-          name="heart"
-          solid={isFavorite}
-          size={24}
-          color={isFavorite ? colors.primary : BaseColor.whiteColor}
-          style={{position: 'absolute', top: 8, right: 8}}></Icon>
-        {salePercent ? (
-          <Tag small style={styles.salePercent}>
-            {salePercent}
-          </Tag>
-        ) : null}
-      </ImageBackground>
+      {images.map((item, index) =>
+        item.flag == 'Y' ? (
+          <ImageBackground
+            key={index}
+            source={{uri: `${item.pict}`}}
+            style={styles.imageBackground}>
+            {/* <Icon
+              name="heart"
+              solid={isFavorite}
+              size={24}
+              color={isFavorite ? colors.primary : BaseColor.whiteColor}
+              style={{position: 'absolute', top: 8, right: 8}}></Icon> */}
+            {salePercent ? (
+              <Tag small style={styles.salePercent}>
+                {salePercent}
+              </Tag>
+            ) : null}
+          </ImageBackground>
+        ) : null,
+      )}
+
       <View style={{paddingHorizontal: 16, paddingVertical: 8}}>
         <Text title3 semibold>
           {subject}

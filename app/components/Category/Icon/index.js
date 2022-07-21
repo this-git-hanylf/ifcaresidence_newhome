@@ -21,9 +21,8 @@ export default function CategoryIcon(props) {
       style={[styles.contain, {backgroundColor: colors.backgroundColor}, style]}
       onPress={onPress}
       activeOpacity={0.9}>
-      <View
-        style={[styles.iconContent, {backgroundColor: colors.primaryLight}]}>
-        <Icon name={icon} size={32} color={BaseColor.whiteColor} solid />
+      <View style={[styles.iconContent, {backgroundColor: colors.primary}]}>
+        <Icon name={icon} size={32} color={BaseColor.goldColor} solid />
       </View>
       <View style={{padding: 10}}>
         <Text headline semibold>

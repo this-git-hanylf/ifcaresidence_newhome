@@ -5,8 +5,9 @@ export const FCategoryData = [
     id: '4',
     screen: 'HouseRoles',
     icon: 'book',
-    title: 'HouserRoles',
-    subtitle: 'Display data with HouserRoles',
+    title: 'House Rules',
+    icon_url: require('../assets/images/icon_at_home/icon-5.jpeg'),
+    subtitle: '',
     user_facility: 'Y',
   },
   // {
@@ -22,7 +23,16 @@ export const FCategoryData = [
     screen: 'MeterInfo', //jadi meter info
     icon: 'bolt',
     title: 'Meter Info',
-    subtitle: 'Display data with Meter Info ',
+    subtitle: '',
+    user_facility: 'Y',
+  },
+
+  {
+    id: '2',
+    screen: 'ComingSoon',
+    icon: 'cart-plus',
+    title: 'Store',
+    subtitle: '',
     user_facility: 'Y',
   },
 
