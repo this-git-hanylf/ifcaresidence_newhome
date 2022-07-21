@@ -29,7 +29,7 @@ export const FCategoryData = [
 
   {
     id: '2',
-    screen: 'ComingSoon',
+    screen: 'Store',
     icon: 'cart-plus',
     title: 'Store',
     subtitle: '',

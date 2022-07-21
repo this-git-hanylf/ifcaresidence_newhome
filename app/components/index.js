@@ -170,3 +170,6 @@ export {default as ComingSoon} from './ComingSoon';
 
 //SearchInput
 export {default as SearchInput} from './SearchInput';
+
+//Store
+export {default as CounterSelectCheckout} from './Form/CounterSelectCheckout';

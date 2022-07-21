@@ -90,6 +90,9 @@ import ComingSoon from '../screens/ComingSoon';
 import EventResto from '../screens/EventResto';
 import ClubFacilities from '../screens/ClubFacilities';
 
+import ItemStore from '../screens/Store/ItemStore';
+import CartStore from '../screens/Store/CartStore';
+
 const Stack = createStackNavigator();
 
 export const WalletTabScreens = {
@@ -495,6 +498,16 @@ function MainStack() {
       <Stack.Screen
         name="ClubFacilities"
         component={ClubFacilities}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ItemStore"
+        component={ItemStore}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="CartStore"
+        component={CartStore}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

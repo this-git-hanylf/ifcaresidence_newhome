@@ -9,6 +9,8 @@ import {
   Header,
   Icon,
   colors,
+  PlaceholderLine,
+  Placeholder,
 } from '@components';
 import {BaseStyle, useTheme} from '@config';
 import {
@@ -18,52 +20,194 @@ import {
   HomeTopicData,
   PostListData,
 } from '@data';
+import * as Utils from '@utils';
 import axios from 'axios';
 import moment from 'moment';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
-import {FlatList, ScrollView, View, ActivityIndicator} from 'react-native';
+import {
+  FlatList,
+  ScrollView,
+  View,
+  ActivityIndicator,
+  Animated,
+  ImageBackground,
+} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {NewsList, NotFound, ProductGrid1} from '../../components';
+import {NewsList, NotFound, ProductGrid1, ProductGrid2} from '../../components';
 import List from '../../components/Product/List';
 import styles from './styles';
 import LottieView from 'lottie-react-native';
+import getProject from '../../selectors/ProjectSelector';
+import {useSelector, useDispatch} from 'react-redux';
+import {CheckBox, Badge} from 'react-native-elements';
+import ModalSelector from 'react-native-modal-selector';
+import getUser from '../../selectors/UserSelectors';
 
 const Store = props => {
-  const {navigation} = props;
+  // const {navigation} = props;
+  const {navigation, route} = props;
   const {t} = useTranslation();
   const {colors} = useTheme();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [spinner, setSpinner] = useState(true);
   const [hasError, setErrors] = useState(false);
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
+  const projectSelector = useSelector(state => getProject(state));
+  const user = useSelector(state => getUser(state));
+  console.log('project selector', projectSelector);
+  console.log('user selector', user);
 
-  const getdata = () => {
+  const [defaulTower, setDefaultTower] = useState(false);
+  const [checkedEntity, setCheckedEntity] = useState(false);
+  const [show, setShow] = useState(false);
+
+  const [entity, setEntity] = useState('');
+  const [projectno, setProjectNo] = useState('');
+  const [db_profile, setDb_Profile] = useState('');
+
+  const [defaultprojectName, setDefaultProjectName] = useState(true);
+  const [textProjectName, setTextProjectName] = useState('');
+  //   const [defaulTower, setDefaultTower] = projectSelector.length > 1 ? useState(false) : useState(true);
+  // const [checkedEntity, setCheckedEntity] =
+  //   projectSelector.length > 1 ? useState(false) : useState(true);
+
+  const [dataMember, setDataMember] = useState([]);
+  const [memberID, setMemberID] = useState('');
+  const [memberName, setMemberName] = useState('');
+  const [defaultMemberID, setDefaultMemberID] = useState(true);
+
+  useEffect(() => {
+    console.log('lengt project selector', projectSelector.Data.length);
+    if (projectSelector.Data.length > 1) {
+      setDefaultTower(false);
+    } else {
+      setDefaultTower(true);
+      setSpinner(false);
+      setCheckedEntity(true);
+      setShow(true);
+      setEntity(projectSelector.Data[0].entity_cd);
+      setProjectNo(projectSelector.Data[0].project_no);
+      setDb_Profile(projectSelector.Data[0].db_profile);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (defaultprojectName == true) {
+      setTextProjectName(projectSelector.Data[0]);
+    }
+  }, []);
+
+  const getMenuStore = () => {
+    const entity_cd = projectSelector.Data[0].entity_cd;
+    console.log('entity', entity_cd);
+    const project_no = projectSelector.Data[0].project_no;
+    console.log(
+      'url menu store',
+      `http://34.87.121.155:2121/apiwebpbi/api/pos/factype?entity_cd=${entity_cd}&project_no=${project_no}`,
+    );
     axios
       .get(
-        `http://34.87.121.155:2121/apiwebpbi/api/pos/factype/user?entity_cd=01&project_no=01&userid=ANDI`,
+        `http://34.87.121.155:2121/apiwebpbi/api/pos/factype?entity_cd=${entity_cd}&project_no=${project_no}`,
       )
       .then(res => {
-        console.log('ress :', res.data.data);
+        // console.log('ress :', res.data.data);
         setData(res.data.data);
+      });
+  };
+
+  const getMember = () => {
+    const entity_cd = projectSelector.Data[0].entity_cd;
+    console.log('entity', entity_cd);
+    const project_no = projectSelector.Data[0].project_no;
+    const email = user.user;
+    console.log(
+      'url menu store',
+      `http://34.87.121.155:2121/apiwebpbi/api/pos/member_mobile?entity_cd=${entity_cd}&project_no=${project_no}&email=${email}`,
+    );
+    axios
+      .get(
+        `http://34.87.121.155:2121/apiwebpbi/api/pos/member_mobile?entity_cd=${entity_cd}&project_no=${project_no}&email=${email}`,
+      )
+      .then(res => {
+        console.log('ress member:', res.data.Data);
+        const data = res.data.Data;
+        if (data.length > 1) {
+          setDefaultMemberID(false);
+          setMemberID(res.data.Data[0].member_id);
+          setMemberName(res.data.Data[0].member_name);
+        } else {
+          setDefaultMemberID(true);
+        }
+        setDataMember(res.data.Data);
       });
   };
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
+      getMenuStore();
+      getMember();
     }, 1000);
   }, []);
 
   useEffect(() => {
-    getdata();
+    // getMenuStore();
   });
 
+  const handleCheckChange = (index, data) => {
+    console.log('klik handle change', index);
+    setCheckedEntity(index);
+    setShow(true);
+
+    setEntity(data.entity_cd);
+    setProjectNo(data.project_no);
+    setDb_Profile(data.db_profile);
+  };
+
+  const onChangeprojectname = data => {
+    setCheckedEntity(true);
+    setShow(true);
+
+    setEntity(data.entity_cd);
+    setProjectNo(data.project_no);
+    setDb_Profile(data.db_profile);
+    setDefaultProjectName(false);
+    console.log('projectname', data);
+    setTextProjectName(data);
+  };
+
+  const onChangeMemberID = data => {
+    setDefaultMemberID(false);
+    setMemberID(data.member_id);
+    setMemberName(data.member_name);
+  };
+
+  const toItemStore = item => {
+    const dataForItemStore = {
+      entity_cd: entity,
+      project_no: projectno,
+      facility_type: item.facility_type,
+      member_id: memberID,
+      member_name: memberName,
+      audit_user: user.name,
+
+      // ...item,
+    };
+    console.log('for item store', dataForItemStore);
+    navigation.navigate('ItemStore', dataForItemStore);
+  };
+
+  // cfs_user_project_customer where email login. memberID == business-ID di table tersebut
+  //memberName mungkin join dari table atasnya
   const renderContent = () => {
     const mainNews = PostListData[0];
     return (
       <SafeAreaView
-        style={[BaseStyle.safeAreaView, {flex: 1}]}
-        edges={['right', 'top', 'left']}>
+        style={[BaseStyle.safeAreaView]}
+        forceInset={{top: 'always', bottom: 'always'}}>
         <Header
           title={t('Store')}
           renderLeft={() => {
@@ -80,15 +224,292 @@ const Store = props => {
             navigation.goBack();
           }}
         />
-        {/* <NotFound /> */}
-        <View style={{flex: 1, padding: 15, paddingTop: 10}}>
-          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-            {/* <View>
-                <Text>{data.title}</Text>
+        <ScrollView
+          onContentSizeChange={() => {
+            setHeightHeader(Utils.heightHeader());
+          }}
+          // showsHorizontalScrollIndicator={false}
+          // showsVerticalScrollIndicator={false}
+          overScrollMode={'never'}
+          style={{zIndex: 10}}
+          scrollEventThrottle={16}
+          onScroll={Animated.event(
+            [
+              {
+                nativeEvent: {
+                  contentOffset: {y: scrollY},
+                },
+              },
+            ],
+            {
+              useNativeDriver: false,
+            },
+          )}>
+          {/* CHOOSE PROJECT HERE */}
+          {spinner ? (
+            <View>
+              <Placeholder style={{marginVertical: 4, paddingHorizontal: 10}}>
+                <PlaceholderLine width={100} noMargin style={{height: 40}} />
+              </Placeholder>
+            </View>
+          ) : (
+            <View
+              style={{marginTop: 10, marginBottom: 5, marginHorizontal: 10}}>
+              <Text style={{color: '#3f3b38', fontSize: 14}}>
+                Choose Project
+              </Text>
+              <View
+                style={{
+                  paddingVertical: 5,
+                }}>
+                <ModalSelector
+                  style={{justifyContent: 'center'}}
+                  childrenContainerStyle={{
+                    color: '#CDB04A',
+                    // alignSelf: 'center',
+                    fontSize: 16,
+                    // top: 10,
+                    // flex: 1,
+                    justifyContent: 'center',
+                    fontWeight: '800',
+                    fontFamily: 'KaiseiHarunoUmi',
+                  }}
+                  data={projectSelector.Data}
+                  optionTextStyle={{color: '#333'}}
+                  selectedItemTextStyle={{color: '#3C85F1'}}
+                  accessible={true}
+                  keyExtractor={item => item.project_descs}
+                  // initValue={'ahlo'}
+                  labelExtractor={item => item.project_descs} //khusus untuk lotno
+                  cancelButtonAccessibilityLabel={'Cancel Button'}
+                  onChange={option => {
+                    onChangeprojectname(option);
+                  }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+
+                      paddingLeft: 10,
+                      paddingVertical: 5,
+                      backgroundColor: colors.primary,
+                      justifyContent: 'space-between',
+                      borderRadius: 12,
+                    }}>
+                    <Text
+                      style={{
+                        color: '#CDB04A',
+                        alignSelf: 'center',
+                        fontSize: 16,
+
+                        // top: 10,
+                        // flex: 1,
+                        // justifyContent: 'center',
+                        fontWeight: '800',
+                        fontFamily: 'KaiseiHarunoUmi',
+                      }}>
+                      {textProjectName.project_descs}
+                    </Text>
+                    <Icon
+                      name="caret-down"
+                      solid
+                      size={27}
+                      // color={colors.primary}
+                      style={{marginLeft: 10, marginRight: 10}}
+                      color={'#CDB04A'}
+                    />
+                  </View>
+                </ModalSelector>
+              </View>
+            </View>
+          )}
+
+          {/* CHOOSE MEMBER HERE */}
+          {spinner ? (
+            <View>
+              <Placeholder style={{marginVertical: 4, paddingHorizontal: 10}}>
+                <PlaceholderLine width={100} noMargin style={{height: 40}} />
+              </Placeholder>
+            </View>
+          ) : (
+            <View
+              style={{
+                marginTop: 5,
+                marginBottom: 20,
+
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <View style={{marginHorizontal: 10}}>
+                <Text style={{color: '#3f3b38', fontSize: 14}}>
+                  Choose Member ID
+                </Text>
+                <View
+                  style={{
+                    paddingVertical: 5,
+                  }}>
+                  <ModalSelector
+                    style={{justifyContent: 'center'}}
+                    childrenContainerStyle={{
+                      color: '#CDB04A',
+                      // alignSelf: 'center',
+                      fontSize: 16,
+                      // top: 10,
+                      // flex: 1,
+                      justifyContent: 'center',
+                      fontWeight: '800',
+                      fontFamily: 'KaiseiHarunoUmi',
+                    }}
+                    data={dataMember}
+                    optionTextStyle={{color: '#333'}}
+                    selectedItemTextStyle={{color: '#3C85F1'}}
+                    accessible={true}
+                    keyExtractor={item => item.card_no}
+                    // initValue={'ahlo'}
+                    labelExtractor={item => item.member_id} //khusus untuk lotno
+                    cancelButtonAccessibilityLabel={'Cancel Button'}
+                    onChange={option => {
+                      onChangeMemberID(option);
+                    }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        paddingHorizontal: 20,
+                        // paddingLeft: 10,
+                        paddingVertical: 5,
+                        backgroundColor: colors.primary,
+                        justifyContent: 'space-between',
+                        borderRadius: 12,
+                      }}>
+                      <Text
+                        style={{
+                          color: '#CDB04A',
+                          alignSelf: 'center',
+                          fontSize: 16,
+
+                          // top: 10,
+                          // flex: 1,
+                          // justifyContent: 'center',
+                          fontWeight: '800',
+                          fontFamily: 'KaiseiHarunoUmi',
+                        }}>
+                        {memberID}
+                      </Text>
+                      <Icon
+                        name="caret-down"
+                        solid
+                        size={26}
+                        // color={colors.primary}
+                        style={{marginLeft: 10}}
+                        color={'#CDB04A'}
+                      />
+                    </View>
+                  </ModalSelector>
+                </View>
+              </View>
+
+              <View style={{marginHorizontal: 10}}>
+                <Text style={{color: '#3f3b38', fontSize: 14}}>
+                  Member Name
+                </Text>
+                <View
+                  style={{
+                    marginVertical: 5,
+                    paddingHorizontal: 20,
+                    paddingVertical: 10,
+                    backgroundColor: colors.primary,
+                    justifyContent: 'center',
+                    borderRadius: 12,
+                  }}>
+                  <Text
+                    style={{
+                      color: '#CDB04A',
+                      alignSelf: 'center',
+                      fontSize: 16,
+                      flexWrap: 'wrap',
+                      flex: 1,
+                      // width: '80%',
+                      // top: 10,
+                      // flex: 1,
+                      // justifyContent: 'center',
+                      fontWeight: '800',
+                      fontFamily: 'KaiseiHarunoUmi',
+                    }}>
+                    {memberName}
+
+                    {/* Choose Projesadadact Chsasaoose Project Choose */}
+                  </Text>
+                </View>
+              </View>
+
+              {/* <View>
+                <Text style={{color: '#3f3b38', fontSize: 14, paddingLeft: 10}}>
+                  Member Name
+                </Text>
+                <Text>{memberName}</Text>
               </View> */}
+            </View>
+          )}
+
+          {/* CLOSE CHOOSE PROJECT HERE */}
+
+          {show && checkedEntity === true ? (
+            <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+              {data.map((item, index) => (
+                <View key={index.toString()} style={{width: '50%'}}>
+                  <TouchableOpacity
+                    style={{
+                      width: '100%',
+                      paddingRight: index % 2 == 0 ? 10 : 0,
+                      paddingLeft: index % 2 != 0 ? 10 : 0,
+                      marginBottom: 20,
+                      // borderColor: '#000',
+                      // borderWidth: 1,
+                    }}
+                    onPress={() => toItemStore(item)}>
+                    <ImageBackground
+                      source={require('@assets/images/logo.png')}
+                      style={styles.imageBackgroundGrid2}
+                      imageStyle={{borderRadius: 8}}></ImageBackground>
+
+                    <View>
+                      <Text
+                        subhead
+                        numberOfLines={2}
+                        style={{marginTop: 10, marginLeft: 10}}>
+                        {item.descs}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                  {/* <ProductGrid2
+                    style={{
+                      width: '100%',
+                      paddingRight: index % 2 == 0 ? 10 : 0,
+                      paddingLeft: index % 2 != 0 ? 10 : 0,
+                      marginBottom: 20,
+                      borderColor: '#000',
+                      borderWidth: 1,
+                    }}
+                    // description={item.description}
+                    title={item.descs}
+                    image={require('@assets/images/logo.png')}
+                    // costPrice={item.costPrice}
+                    // salePrice={item.salePrice}
+                    // onPress={() => {}}
+                    onPress={() => navigation.navigate('ItemStore', item)}
+                    // onPress={() => console.log('items for store', item)}
+                  /> */}
+                </View>
+              ))}
+            </View>
+          ) : null}
+        </ScrollView>
+        {/* <NotFound /> */}
+        {/* <View style={{flex: 1, padding: 15, paddingTop: 10}}>
+          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+          
             {data.map((item, index) => {
               return (
-                <View key={index} style={{width: '50%', height: 50}}>
+                <View key={index} style={{width: '50%', height: 200}}>
                   <ProductGrid1
                     key={index}
                     style={{
@@ -110,40 +531,7 @@ const Store = props => {
               );
             })}
           </View>
-        </View>
-
-        {/* <ScrollView contentContainerStyle={styles.paddingSrollView}>
-          {data.length > 0 ? (
-            <FlatList
-              scrollEnabled={false}
-              contentContainerStyle={styles.paddingFlatList}
-              data={data}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({item, index}) =>
-                item.status == 'Active' ? (
-                  <NewsList
-                    loading={loading}
-                    image={{uri: `${item.url_image}`}}
-                    subtitle={item.news_descs}
-                    title={item.news_title}
-                    source={item.source}
-                    date={moment(item.date_created).startOf('hour').fromNow()}
-                    style={{
-                      marginBottom: index == data.length - 1 ? 0 : 15,
-                    }}
-                    onPress={goPostDetail(item)}
-                  />
-                ) : null
-              }
-            />
-          ) : loading ? (
-            <View>
-              <ActivityIndicator size="large" color="#37BEB7" />
-            </View>
-          ) : (
-            <NotFound />
-          )}
-        </ScrollView> */}
+        </View> */}
       </SafeAreaView>
     );
   };

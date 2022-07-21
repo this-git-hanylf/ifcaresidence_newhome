@@ -6,12 +6,15 @@ import React, {useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 
-export default function FormCounterSelect(props) {
+export default function CounterSelectCheckout(props) {
   // const [value, setValue] = useState(props.value);
-  const [value, setValue] = useState(0);
-  const {style, onChange} = props;
+  console.log('props value counter', props.value);
+  const {style, onChange, CurrentValue} = props;
+  // const [value, setValue] =
+  //   CurrentValue > 1 ? useState(CurrentValue) : useState(0);
+  const [value, setValue] = useState(CurrentValue);
+  console.log('curent value di counter', CurrentValue);
   const {colors} = useTheme();
-  // console.log('value counter berapasi', value);
 
   const onHandleChange = type => {
     let valueNew = 0;
@@ -29,25 +32,25 @@ export default function FormCounterSelect(props) {
       style={[
         styles.contentPicker,
         {
-          backgroundColor: colors.card,
-          flexDirection: 'row',
+          backgroundColor: colors.background,
+          flexDirection: 'column',
         },
         style,
       ]}>
-      <TouchableOpacity onPress={() => onHandleChange('up')}>
+      {/* <TouchableOpacity onPress={() => onHandleChange('up')}>
         <Icon name="plus-circle" size={24} color={colors.primary} />
-      </TouchableOpacity>
-      <Text title2 style={{width: 40, textAlign: 'center'}}>
+      </TouchableOpacity> */}
+      <Text title2 style={{width: 'auto', textAlign: 'center'}}>
         {value}
       </Text>
-      <TouchableOpacity onPress={() => onHandleChange('down')}>
+      {/* <TouchableOpacity onPress={() => onHandleChange('down')}>
         <Icon name="minus-circle" size={24} color={BaseColor.grayColor} />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 }
 
-FormCounterSelect.propTypes = {
+CounterSelectCheckout.propTypes = {
   style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   label: PropTypes.string,
   detail: PropTypes.string,
@@ -55,7 +58,7 @@ FormCounterSelect.propTypes = {
   onChange: PropTypes.func,
 };
 
-FormCounterSelect.defaultProps = {
+CounterSelectCheckout.defaultProps = {
   style: {},
   label: 'Adults',
   detail: '>= 12 years',

@@ -1,13 +1,15 @@
 import Icon from '@components/Icon';
+import Tag from '@components/Tag';
 import Text from '@components/Text';
-import {BaseColor, Images, useTheme} from '@config';
+import {Images, useTheme} from '@config';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {ImageBackground, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import Loading from './Loading';
+import * as Utils from '@utils';
 
-const Grid2 = ({
+const List = ({
   description,
   title,
   style,
@@ -15,8 +17,11 @@ const Grid2 = ({
   costPrice,
   salePrice,
   onPress,
+  salePercent,
   isFavorite = false,
   loading = false,
+  pressBuy,
+  quantity,
 }) => {
   const {colors} = useTheme();
 
@@ -25,57 +30,65 @@ const Grid2 = ({
   }
 
   return (
-    <TouchableOpacity style={[styles.grid2, style]} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.contain, style]}
+      onPress={onPress}
+      activeOpacity={0.9}>
       <ImageBackground
         source={image}
-        style={styles.imageBackgroundGrid2}
+        style={styles.imageWishlist}
         imageStyle={{borderRadius: 8}}>
-        <Icon
-          name="heart"
-          solid={isFavorite}
-          size={16}
-          color={isFavorite ? colors.primary : BaseColor.whiteColor}
-          style={{position: 'absolute', top: 8, right: 8}}></Icon>
+        {salePercent ? (
+          <Tag small style={styles.salePercentList}>
+            {salePercent}
+          </Tag>
+        ) : null}
       </ImageBackground>
-
-      <View>
-        <Text subhead numberOfLines={2} style={{marginTop: 10, marginLeft: 10}}>
+      <View style={{paddingHorizontal: 10, flex: 1}}>
+        <Text headline numberOfLines={2}>
           {title}
         </Text>
-
-        {/* <View style={{flexDirection: 'row', marginTop: 12}}>
-          <Text subhead bold semibold>
-            {salePrice}
+        <View style={styles.viewText}>
+          <Text footnote grayColor numberOfLines={2}>
+            {description}
           </Text>
-          <Text subhead grayColor style={styles.costPrice}>
+        </View>
+        <View style={styles.viewText}>
+          <Text title3>{salePrice}</Text>
+          <Text title3 grayColor style={styles.costPrice}>
             {costPrice}
           </Text>
-        </View> */}
+        </View>
       </View>
     </TouchableOpacity>
   );
 };
 
-Grid2.propTypes = {
+List.propTypes = {
   description: PropTypes.string,
   title: PropTypes.string,
   style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   image: PropTypes.node.isRequired,
   costPrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   salePrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  salePercent: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onPress: PropTypes.func,
+  pressBuy: PropTypes.func,
   isFavorite: PropTypes.bool,
 };
 
-Grid2.defaultProps = {
+List.defaultProps = {
   description: '',
   title: '',
   style: {},
-  image: Images.eProduct,
+  // image: Images.eProduct,
+  image: '',
   costPrice: '',
   salePrice: '',
+  salePercent: '',
   onPress: () => {},
+  pressBuy: () => {},
   isFavorite: false,
 };
 
-export default Grid2;
+export default List;
