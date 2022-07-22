@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   TextInput,
   Text,
+  FormCounterSelect,
 } from '@components';
 import Checkout from '../Checkout';
 import {BaseColor, BaseStyle, useTheme} from '@config';
@@ -18,6 +19,8 @@ import {FlatList, RefreshControl, View} from 'react-native';
 
 import getProject from '../../../selectors/ProjectSelector';
 import {useSelector, useDispatch} from 'react-redux';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const sortOptionInit = [
   {
@@ -46,9 +49,13 @@ const CartStore = props => {
   const {navigation, route} = props;
   console.log('route from list store', route.params.itemsforCheckout);
 
-  const [dataListCheckout, setDataListCheckout] = useState(
-    route.params.itemsforCheckout,
-  );
+  const params = route.params.itemsforCheckout;
+  const [dataListCheckout, setDataListCheckout] = useState(params);
+
+  //  const storage_cart = await AsyncStorage.getItem('@storage_cart');
+  //   const parse_storage = JSON.parse(storage_cart);
+
+  //   console.log('store storage', parse_storage);
 
   const projectSelector = useSelector(state => getProject(state));
   // console.log('project selector', projectSelector);
@@ -64,29 +71,47 @@ const CartStore = props => {
 
   const [promotionCode, setPromotionCode] = useState('');
   const [totalHarga, setTotal] = useState(0);
+  // const [totalHargaAll, setTotalAll] = useState(0);
   const [totalQty, setQty] = useState(0);
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
+      // getData();
     }, 1000);
   }, []);
+
+  // const getData = async () => {
+  //   try {
+  //     const jsonValue = await AsyncStorage.getItem('jsonValusse');
+  //     console.log('store storage', jsonValue);
+  //     return jsonValue != null ? JSON.parse(jsonValue) : null;
+
+  //     // const parse = JSON.parse(jsonValue);
+  //     // console.log('parse store', parse);
+  //     // return parse;
+  //   } catch (e) {
+  //     // error reading value
+  //   }
+  // };
 
   // const itemFortotal = dataListCheckout.filter(dataListCheckout=>dataListCheckout.totalHarga)
 
   const itemFortotal = dataListCheckout.reduceRight((max, bills) => {
-    return (max += parseInt(bills.totalHarga));
+    // return (max += parseInt(bills.totalHarga));
+    return (max += parseInt(bills.default_price));
+    // default_price
   }, 0);
-  const itemForQuantity = dataListCheckout.reduceRight((max, bills) => {
-    return (max += parseInt(bills.quantity));
-  }, 0);
+  // const itemForQuantity = dataListCheckout.reduceRight((max, bills) => {
+  //   return (max += parseInt(bills.quantity));
+  // }, 0);
 
   useEffect(() => {
-    // setTambahItem(false)
+    setTambahItem(false);
     tambahItem == false ? setTotal(itemFortotal) : setTotal(totalHarga);
-    tambahItem == false ? setQty(itemForQuantity) : setQty(totalQty);
+    // tambahItem == false ? setQty(itemForQuantity) : setQty(totalQty);
   });
 
-  console.log('item for total', itemFortotal);
+  // console.log('item for total', itemFortotal);
 
   const onSelectFilter = selected => {
     setSortOption(
@@ -124,24 +149,24 @@ const CartStore = props => {
 
   const changeQty = (value, default_price) => {
     setTambahItem(true);
-    console.log('value qty', value);
+    // console.log('value qty', value);
 
-    console.log('databut default price', default_price);
-    console.log('set total harga', value * default_price);
-    const total_harga = dataListCheckout.map(item => {
-      return {
-        total_update: value * item.default_price,
-      };
-    });
-    const quantity = dataListCheckout.map(item => {
-      return {
-        qty_update: value,
-      };
-    });
-    console.log('qty_update', quantity);
-    console.log('total_uptade', total_harga[0].total_update);
+    // console.log('databut default price', default_price);
+    // console.log('set total harga', value * default_price);
+    // const total_harga = dataListCheckout.map(item => {
+    //   return {
+    //     total_update: value * item.default_price,
+    //   };
+    // });
+    // const quantity = dataListCheckout.map(item => {
+    //   return {
+    //     qty_update: value,
+    //   };
+    // });
+    // console.log('qty_update', quantity);
+    // console.log('total_uptade', total_harga[0].total_update);
     setQty(value);
-    setTotal(total_harga[0].total_update);
+    setTotal(totalQty * default_price);
   };
 
   const renderContent = () => {
@@ -197,6 +222,24 @@ const CartStore = props => {
             data={dataListCheckout}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item, index}) => (
+              // <View>
+              //   <FormCounterSelect
+              //     isRow={true}
+              //     label={''}
+              //     detail={''}
+              //     style={{
+              //       marginTop: 8,
+              //       backgroundColor: 'transparent',
+              //       padding: 0,
+              //       justifyContent: 'center',
+              //       flex: 0,
+              //     }}
+              //     onChange={value =>
+              //       changeQty(value, item.default_price, item, index)
+              //     }
+              //   />
+              // </View>
+
               <Checkout
                 loading={loading}
                 style={{marginTop: 10}}
@@ -217,7 +260,7 @@ const CartStore = props => {
                 // onDelete={() => onDelete()}
                 // onChange={total => console.log('total', total)}
                 onChange={value => changeQty(value, item.default_price)}
-                CurrentValue={item.quantity}
+                // CurrentValue={item.quantity}
               />
             )}
           />
@@ -237,6 +280,7 @@ const CartStore = props => {
           loading={loading}
           description={t('total_price')}
           price={totalHarga}
+          // price={'1000'}
           secondDescription={'Tax included'}
           textButton={t('checkout')}
           onPress={() => navigation.navigate('EShipping')}

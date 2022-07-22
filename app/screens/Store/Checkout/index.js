@@ -57,8 +57,8 @@ const Checkout = ({
                 padding: 0,
                 justifyContent: 'center',
               }}
-              // onChange={onChange}
-              CurrentValue={CurrentValue}
+              onChange={onChange}
+              // CurrentValue={CurrentValue}
             />
           </View>
           {/* <Text>{CurrentValue}</Text> */}

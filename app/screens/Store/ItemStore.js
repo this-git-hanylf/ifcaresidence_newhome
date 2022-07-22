@@ -37,6 +37,9 @@ import {ActivityIndicator} from 'react-native-paper';
 
 import Modal from 'react-native-modal';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {CheckBox, Badge} from 'react-native-elements';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 let timeoutChangeMode = null;
 
@@ -69,8 +72,9 @@ const Product = params => {
   const [showAddQuantity, setShowAddQuantity] = useState(false);
   const [showButtonToCart, setButtonToCart] = useState(false);
 
-  const [ArrayDataBuy, setArrayDataBuy] = useState([]);
+  const [ArrayDataBuy, setArrayDataBuy] = React.useState([]);
 
+  const [disableAddToCart, setDisableAddToCart] = useState(false);
   //   const {navigation, route} = props;
 
   const getItemStore = () => {
@@ -132,7 +136,7 @@ const Product = params => {
     setItemStoreFilter(newData);
   };
 
-  const pressBuy = item => {
+  const pressBuy = async (item, index) => {
     console.log('cek quantity', qty);
 
     // setShowAddQuantity(true);
@@ -147,15 +151,16 @@ const Product = params => {
     //   id === item.trx_code ? setQty(qty + item.quantity) : setQty(qty),
     // );
 
-    // const dataBuyNow = {
-    //   totalHarga: total,
-    //   quantity: qty,
-    //   ...item,
-    //   ...dataMember,
-    // };
+    const dataBuyNow = {
+      //   totalHarga: total,
+      //   quantity: qty,
+      ...item,
+      ...dataMember,
+      indexToCart: index,
+    };
 
-    // const array = [...ArrayDataBuy, dataBuyNow];
-    // console.log('array', array);
+    const arrayCart = [...ArrayDataBuy, dataBuyNow];
+    console.log('array', arrayCart);
 
     // var index = array.indexOf(id);
     // console.log('index of', index);
@@ -165,14 +170,28 @@ const Product = params => {
     //   array[index] = setQty(qty + item.quantity);
     // }
 
-    // setArrayDataBuy(array);
+    setArrayDataBuy(arrayCart);
 
     setButtonToCart(true);
+
+    setDisableAddToCart(true);
   };
 
-  const toCheckout = () => {
-    console.log('to checkout', ArrayDataBuy);
+  const toCheckout = async () => {
     navigation.navigate('CartStore', {itemsforCheckout: ArrayDataBuy});
+    //  navigation.navigate('EProductDetailStore', {item: item});
+    // try {
+    //   const jsonValue = JSON.stringify({ArrayDataBuy});
+    //   console.log('json', jsonValue);
+    //   const json = await AsyncStorage.setItem('@Value', jsonValue);
+    //   console.log('jsonnnnn', json);
+    // } catch (e) {
+    //   // saving error
+    //   console.log(e);
+    // }
+
+    // console.log('cek index array', ArrayDataBuy[0]);
+    // console.log('to checkout', ArrayDataBuy);
   };
 
   const renderItem = ({item, index}) => {
@@ -193,23 +212,42 @@ const Product = params => {
           // isFavorite={item.isFavorite}
           // salePercent={'30%'}
         />
-        <View style={{alignItems: 'flex-end'}}>
-          <TouchableOpacity
-            onPress={() => (qty == 0 ? alert('press add') : pressBuy(item))}
-            style={{
-              backgroundColor: Utils.parseHexTransparency(colors.primary, 30),
+        <View style={{alignItems: 'flex-end'}} key={index}>
+          {ArrayDataBuy[index] ? (
+            <TouchableOpacity
+              key={index}
+              disabled={true}
+              style={{
+                backgroundColor: Utils.parseHexTransparency(colors.primary, 30),
 
-              padding: 15,
-              width: 70,
-              borderRadius: 10,
+                padding: 15,
+                width: 150,
+                borderRadius: 10,
 
-              alignItems: 'center',
-            }}>
-            <Icon solid name="cart-plus" size={20} color={colors.primary} />
-          </TouchableOpacity>
+                alignItems: 'center',
+              }}>
+              <Text style={{color: colors.primary}}>Already in the cart</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              key={index}
+              onPress={() => pressBuy(item, index)}
+              style={{
+                backgroundColor: colors.primary,
+
+                padding: 15,
+                width: 150,
+                borderRadius: 10,
+
+                alignItems: 'center',
+              }}>
+              <Text style={{color: BaseColor.whiteColor}}>Add to cart</Text>
+            </TouchableOpacity>
+          )}
         </View>
+        <Text>{item.indexToCart}</Text>
 
-        <View>
+        {/* <View>
           <FormCounterSelect
             isRow={true}
             label={''}
@@ -221,9 +259,11 @@ const Product = params => {
               justifyContent: 'center',
               flex: 0,
             }}
-            onChange={value => changeQty(value, item.default_price, item)}
+            onChange={value =>
+              changeQty(value, item.default_price, item, index)
+            }
           />
-        </View>
+        </View> */}
       </View>
     );
   };
@@ -233,6 +273,37 @@ const Product = params => {
       <ActivityIndicator color={colors.primary} />
     ) : (
       <View style={{flex: 1}}>
+        <View
+          style={{
+            alignItems: 'flex-end',
+            marginHorizontal: 10,
+            marginBottom: 10,
+          }}>
+          <Button
+            onPress={() => toCheckout()}
+            style={{
+              //   marginTop: 10,
+              //   marginBottom: 20,
+              //   width: 70,
+              padding: 5,
+              // flex: 1,
+              // bottom: 0,
+            }}>
+            {/* {t('Cart')} */}
+            <Icon
+              solid
+              name="cart-plus"
+              size={20}
+              color={BaseColor.whiteColor}
+            />
+            <Badge
+              value={ArrayDataBuy.length}
+              status="success"
+              containerStyle={{position: 'absolute', top: 10, left: 40}}
+            />
+          </Button>
+        </View>
+
         <TextInput
           placeholder="Search"
           style={{
@@ -247,17 +318,7 @@ const Product = params => {
           onChangeText={text => searchFilterFunction(text.toUpperCase())}
           autoCorrect={false}
         />
-        <Button
-          onPress={() => toCheckout()}
-          medium
-          style={{
-            marginTop: 10,
-            marginBottom: 20,
-            // flex: 1,
-            // bottom: 0,
-          }}>
-          {t('check')}
-        </Button>
+
         <FlatList
           contentContainerStyle={{
             paddingHorizontal: 20,
@@ -281,17 +342,22 @@ const Product = params => {
     );
   };
 
-  const changeQty = (value, default_price, item) => {
-    // console.log('value qty', value);
+  const changeQty = (value, default_price, item, index) => {
+    console.log('value qty', value);
+    console.log('index ? ', index);
+    setQty(value);
+    setTotal(value * default_price);
 
     // console.log('databut default price', default_price);
     // console.log('set total harga', value * default_price);
 
     //   console.log('item change add', item);
 
+    // updateDataQty(item, index);
+
     const dataBuyNow = {
-      totalHarga: total,
-      quantity: qty,
+      totalHarga: value * default_price,
+      quantity: value,
       ...item,
       ...dataMember,
     };
@@ -300,18 +366,15 @@ const Product = params => {
     console.log('array di change qty', array);
 
     setArrayDataBuy(array);
+    toCheckout(index);
 
-    // const array_coba = array.filter(
-    //   element => element.trx_code == item.trx_code,
-    // );
-    const array_coba = array.filter(car => car.trx_code === item.trx_code);
-    console.log(array_coba);
-
-    // console.log('uni', unique);
-
-    setQty(value);
-    setTotal(value * default_price);
+    // const arrayTower = ArrayDataBuy;
   };
+
+  //   const tes = () => {
+  //     const qty__ = ArrayDataBuy;
+  //     console.log('qtyyy', qty__);
+  //   };
 
   const buyNow = () => {
     // setModalVisible(false); // harus di nyalain kalo mau abis klik buy now modal hilang

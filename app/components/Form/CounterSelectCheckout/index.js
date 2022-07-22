@@ -7,12 +7,12 @@ import {TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 
 export default function CounterSelectCheckout(props) {
-  // const [value, setValue] = useState(props.value);
+  const [value, setValue] = useState(props.value);
   console.log('props value counter', props.value);
   const {style, onChange, CurrentValue} = props;
   // const [value, setValue] =
   //   CurrentValue > 1 ? useState(CurrentValue) : useState(0);
-  const [value, setValue] = useState(CurrentValue);
+  // const [value, setValue] = useState(CurrentValue);
   console.log('curent value di counter', CurrentValue);
   const {colors} = useTheme();
 
@@ -37,15 +37,15 @@ export default function CounterSelectCheckout(props) {
         },
         style,
       ]}>
-      {/* <TouchableOpacity onPress={() => onHandleChange('up')}>
+      <TouchableOpacity onPress={() => onHandleChange('up')}>
         <Icon name="plus-circle" size={24} color={colors.primary} />
-      </TouchableOpacity> */}
+      </TouchableOpacity>
       <Text title2 style={{width: 'auto', textAlign: 'center'}}>
         {value}
       </Text>
-      {/* <TouchableOpacity onPress={() => onHandleChange('down')}>
+      <TouchableOpacity onPress={() => onHandleChange('down')}>
         <Icon name="minus-circle" size={24} color={BaseColor.grayColor} />
-      </TouchableOpacity> */}
+      </TouchableOpacity>
     </View>
   );
 }
