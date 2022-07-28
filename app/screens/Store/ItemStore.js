@@ -46,7 +46,7 @@ let timeoutChangeMode = null;
 const initialLayout = {width: Dimensions.get('window').width};
 
 const Product = params => {
-  console.log('routes di product', params.params);
+  //   console.log('routes di product', params.params);
   const [dataMember, setDataMember] = useState(params.params);
 
   const navigation = useNavigation();
@@ -137,44 +137,61 @@ const Product = params => {
   };
 
   const pressBuy = async (item, index) => {
+    //get trx_code by product ID
+    const entity_cd = projectSelector.Data[0].entity_cd;
+    console.log('entity', entity_cd);
+    const project_no = projectSelector.Data[0].project_no;
+    const trx_code = item.trx_code;
+    console.log('item yang akan diambil', item);
+    console.log(
+      'get trx_code by product ID',
+      `http://34.87.121.155:2121/apiwebpbi/api/pos/productID?entity_cd=${entity_cd}&project_no=${project_no}&trx_class=H&trx_code=${trx_code}`,
+    );
+    axios
+      .get(
+        `http://34.87.121.155:2121/apiwebpbi/api/pos/productID?entity_cd=${entity_cd}&project_no=${project_no}&trx_class=H&trx_code=${trx_code}`,
+      )
+      .then(res => {
+        console.log(res.data.Error);
+        if (res.data.Error == false) {
+          const datas = res.data.Data[0];
+
+          console.log('get trx_code by product ID', datas);
+          const dataBuyNow = {
+            //   totalHarga: total,
+            //   quantity: qty,
+
+            // ---- pengganti ...item
+            trx_code: item.trx_code,
+            trx_descs: item.descs,
+            unit_price: item.default_price,
+            currency_cd: datas.currency_cd,
+            currency_rate: datas.currency_cd,
+            discountTotal: 0,
+            discountPercent: 0,
+            // ---- pengganti ...item
+
+            tax_rate: datas.tax_rate,
+            // ...item,
+            ...dataMember,
+            indexToCart: index,
+          };
+
+          const arrayCart = [...ArrayDataBuy, dataBuyNow];
+          console.log('array', arrayCart);
+
+          setArrayDataBuy(arrayCart);
+
+          setButtonToCart(true);
+
+          setDisableAddToCart(true);
+          setSpinner(false);
+        } else {
+          setSpinner(false);
+        }
+      });
+
     console.log('cek quantity', qty);
-
-    // setShowAddQuantity(true);
-    // console.log('databuy', item);
-    // console.log('trx_code', item.trx_code);
-    // console.log('total awal', item.default_price);
-    //   setTotal(item.default_price);
-    const id = item.trx_code;
-    // console.log('id', id);
-
-    // ArrayDataBuy.map((item, index) =>
-    //   id === item.trx_code ? setQty(qty + item.quantity) : setQty(qty),
-    // );
-
-    const dataBuyNow = {
-      //   totalHarga: total,
-      //   quantity: qty,
-      ...item,
-      ...dataMember,
-      indexToCart: index,
-    };
-
-    const arrayCart = [...ArrayDataBuy, dataBuyNow];
-    console.log('array', arrayCart);
-
-    // var index = array.indexOf(id);
-    // console.log('index of', index);
-
-    // if (index !== -1) {
-    //   console.log('index', index);
-    //   array[index] = setQty(qty + item.quantity);
-    // }
-
-    setArrayDataBuy(arrayCart);
-
-    setButtonToCart(true);
-
-    setDisableAddToCart(true);
   };
 
   const toCheckout = async () => {

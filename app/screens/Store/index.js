@@ -77,6 +77,7 @@ const Store = props => {
   const [dataMember, setDataMember] = useState([]);
   const [memberID, setMemberID] = useState('');
   const [memberName, setMemberName] = useState('');
+  const [tenantNo, setTenantNo] = useState('');
   const [defaultMemberID, setDefaultMemberID] = useState(true);
 
   useEffect(() => {
@@ -138,6 +139,7 @@ const Store = props => {
           setDefaultMemberID(false);
           setMemberID(res.data.Data[0].member_id);
           setMemberName(res.data.Data[0].member_name);
+          setTenantNo(res.data.Data[0].tenant_no);
         } else {
           setDefaultMemberID(true);
         }
@@ -193,6 +195,7 @@ const Store = props => {
       member_id: memberID,
       member_name: memberName,
       audit_user: user.name,
+      tenant_no: tenantNo,
 
       // ...item,
     };

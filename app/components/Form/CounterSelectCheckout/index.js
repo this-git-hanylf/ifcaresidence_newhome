@@ -7,13 +7,14 @@ import {TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 
 export default function CounterSelectCheckout(props) {
-  const [value, setValue] = useState(props.value);
-  console.log('props value counter', props.value);
+  // const [value, setValue] = useState(props.value);
+  const [value, setValue] = useState(0);
+  // console.log('props value counter', props.value);
   const {style, onChange, CurrentValue} = props;
   // const [value, setValue] =
   //   CurrentValue > 1 ? useState(CurrentValue) : useState(0);
   // const [value, setValue] = useState(CurrentValue);
-  console.log('curent value di counter', CurrentValue);
+  // console.log('curent value di counter', CurrentValue);
   const {colors} = useTheme();
 
   const onHandleChange = type => {

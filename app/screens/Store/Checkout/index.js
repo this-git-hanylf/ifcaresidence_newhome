@@ -71,7 +71,7 @@ const Checkout = ({
             alignItems: 'center',
           }}>
           <Text footnote grayColor>
-            {secondDescription}
+            Tax excluded {Math.round(secondDescription * 100) / 100}%
           </Text>
           <TouchableOpacity onPress={onDelete}>
             <Text footnote accentColor>

@@ -130,57 +130,56 @@ const SignIn = props => {
           }}
         />
       </View>
+      <View style={styles.contain}>
+        <TextInput
+          style={[BaseStyle.textInput]}
+          onChangeText={emailChanged}
+          autoCorrect={false}
+          placeholder={t('input_id')}
+          value={email}
+          selectionColor={colors.primary}
+        />
+        <TextInput
+          style={[BaseStyle.textInput, {marginTop: 10}]}
+          onChangeText={passwordChanged}
+          autoCorrect={false}
+          placeholder={t('input_password')}
+          secureTextEntry={true}
+          value={password}
+          selectionColor={colors.primary}
+        />
+        <View style={{width: '100%', marginVertical: 16}}>
+          <Button
+            full
+            loading={loading}
+            style={{marginTop: 20}}
+            // onPress={loginUser}
+            onPress={loginklik}>
+            {t('sign_in')}
+          </Button>
+        </View>
+        <View style={styles.contentActionBottom}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ResetPassword')}>
+            <Text body2 grayColor>
+              {t('forgot_your_password')}
+            </Text>
+          </TouchableOpacity>
 
-      <KeyboardAvoidingView
+          <TouchableOpacity onPress={() => navigation.navigate('Skip')}>
+            <Text body2 primaryColor>
+              {t('Skip Login')}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* <KeyboardAvoidingView
         behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={offsetKeyboard}
         style={{
           flex: 1,
-        }}>
-        <View style={styles.contain}>
-          <TextInput
-            style={[BaseStyle.textInput]}
-            onChangeText={emailChanged}
-            autoCorrect={false}
-            placeholder={t('input_id')}
-            value={email}
-            selectionColor={colors.primary}
-          />
-          <TextInput
-            style={[BaseStyle.textInput, {marginTop: 10}]}
-            onChangeText={passwordChanged}
-            autoCorrect={false}
-            placeholder={t('input_password')}
-            secureTextEntry={true}
-            value={password}
-            selectionColor={colors.primary}
-          />
-          <View style={{width: '100%', marginVertical: 16}}>
-            <Button
-              full
-              loading={loading}
-              style={{marginTop: 20}}
-              // onPress={loginUser}
-              onPress={loginklik}>
-              {t('sign_in')}
-            </Button>
-          </View>
-          <View style={styles.contentActionBottom}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('ResetPassword')}>
-              <Text body2 grayColor>
-                {t('forgot_your_password')}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => navigation.navigate('Skip')}>
-              <Text body2 primaryColor>
-                {t('Skip Login')}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
+        }}></KeyboardAvoidingView> */}
     </SafeAreaView>
   );
 };

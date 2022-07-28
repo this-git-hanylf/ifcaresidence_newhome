@@ -12,11 +12,12 @@ import styles from './styles';
 import ModalSelector from 'react-native-modal-selector';
 import {BaseColor, BaseStyle, useTheme} from '@config';
 
-const ModalDropdown_lotno = props => {
+const ModalDropdown_ListPayment = props => {
   const {colors} = useTheme();
   const {t} = useTranslation();
   const cardColor = colors.card;
   const {options, icon, onApply, onSelectFilter, ...attrs} = props;
+  // console.log('props', props.data);
 
   return (
     <View {...attrs}>
@@ -28,7 +29,7 @@ const ModalDropdown_lotno = props => {
           <TextInput
             style={[{colors: '#000'}, _styles.input]}
             onFocus={() => this.selector.open()}
-            placeholder={'LotNo not Available. Please choose another Debtor.'}
+            placeholder={'Payment not Available'}
             editable={false}
             placeholderTextColor="red"
             value={props.value}
@@ -41,12 +42,13 @@ const ModalDropdown_lotno = props => {
           )}
 
           <ModalSelector
+            placeholder={'halo'}
             data={props.data}
             optionTextStyle={{color: '#333'}}
             selectedItemTextStyle={{color: '#3C85F1'}}
             accessible={true}
-            keyExtractor={item => item.lot_no}
-            labelExtractor={item => item.lot_no} //khusus untuk lotno
+            keyExtractor={item => item.trx_code}
+            labelExtractor={item => item.descs} //khusus untuk lotno
             cancelButtonAccessibilityLabel={'Cancel Button'}
             onChange={option => {
               props.onChange(option);
@@ -54,7 +56,8 @@ const ModalDropdown_lotno = props => {
             <TextInput
               style={[{colors: '#000'}, _styles.input]}
               onFocus={() => this.selector.open()}
-              placeholder={props.label}
+              // placeholder={props.label}
+              placeholder="Choose Payment Type"
               editable={false}
               placeholderTextColor="#a9a9a9"
               value={props.value}
@@ -67,21 +70,21 @@ const ModalDropdown_lotno = props => {
   );
 };
 
-ModalDropdown_lotno.defaultProps = {
+ModalDropdown_ListPayment.defaultProps = {
   options: [],
   onApply: () => {},
   onSelectFilter: () => {},
   icon: PropTypes.node,
 };
 
-ModalDropdown_lotno.propTypes = {
+ModalDropdown_ListPayment.propTypes = {
   options: PropTypes.array,
   onApply: PropTypes.func,
   onSelectFilter: PropTypes.func,
   icon: null,
 };
 
-export default ModalDropdown_lotno;
+export default ModalDropdown_ListPayment;
 
 const _styles = StyleSheet.create({
   input: {

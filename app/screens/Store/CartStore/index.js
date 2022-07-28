@@ -47,7 +47,7 @@ const sortOptionInit = [
 
 const CartStore = props => {
   const {navigation, route} = props;
-  console.log('route from list store', route.params.itemsforCheckout);
+  // console.log('route from list store', route.params.itemsforCheckout);
 
   const params = route.params.itemsforCheckout;
   const [dataListCheckout, setDataListCheckout] = useState(params);
@@ -71,8 +71,14 @@ const CartStore = props => {
 
   const [promotionCode, setPromotionCode] = useState('');
   const [totalHarga, setTotal] = useState(0);
-  // const [totalHargaAll, setTotalAll] = useState(0);
+  const [totalHargaParams, setTotalParams] = useState(0);
+  const [jumlahTotalHarga, setJumlahTotalHarga] = useState(0);
   const [totalQty, setQty] = useState(0);
+  const [totalTax, setTotalTax] = useState(0);
+
+  const [ArrayDataCheckout, setArrayDataCheckout] = useState([]);
+  const [taxRatePerItem, setTaxRatePerItem] = useState(0);
+
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
@@ -98,16 +104,17 @@ const CartStore = props => {
 
   const itemFortotal = dataListCheckout.reduceRight((max, bills) => {
     // return (max += parseInt(bills.totalHarga));
-    return (max += parseInt(bills.default_price));
-    // default_price
+    return (max += parseInt(bills.unit_price));
+    // unit_price
   }, 0);
   // const itemForQuantity = dataListCheckout.reduceRight((max, bills) => {
   //   return (max += parseInt(bills.quantity));
   // }, 0);
 
   useEffect(() => {
-    setTambahItem(false);
-    tambahItem == false ? setTotal(itemFortotal) : setTotal(totalHarga);
+    // setTambahItem(false);
+    // setTotalParams(itemFortotal);
+    // tambahItem == false ? setTotal(itemFortotal) : setTotal(totalHarga);
     // tambahItem == false ? setQty(itemForQuantity) : setQty(totalQty);
   });
 
@@ -147,26 +154,88 @@ const CartStore = props => {
     console.log('myarray', myArray);
   };
 
-  const changeQty = (value, default_price) => {
-    setTambahItem(true);
-    // console.log('value qty', value);
+  const changeQty = (value, unit_price, index, item) => {
+    // console.log('total qty kalo change qty', totalQty);
 
-    // console.log('databut default price', default_price);
-    // console.log('set total harga', value * default_price);
-    // const total_harga = dataListCheckout.map(item => {
-    //   return {
-    //     total_update: value * item.default_price,
-    //   };
-    // });
-    // const quantity = dataListCheckout.map(item => {
-    //   return {
-    //     qty_update: value,
-    //   };
-    // });
-    // console.log('qty_update', quantity);
-    // console.log('total_uptade', total_harga[0].total_update);
-    setQty(value);
-    setTotal(totalQty * default_price);
+    setTambahItem(true);
+    setTaxRatePerItem(item.tax_rate);
+
+    // setTotal(value * unit_price);
+
+    const totalAwal = value * unit_price;
+    const totalAwaldenganTax = totalAwal + (value * unit_price) / item.tax_rate;
+    const taxSebelumdiJumlah = (value * unit_price) / item.tax_rate;
+
+    const dataCheckout = {
+      totalHarga: value * unit_price,
+      trx_qty: value,
+      ...item,
+      // ...dataMember,
+      indexToCart: index,
+      count_tax_rate_per_item: (value * unit_price) / item.tax_rate,
+      total_harga_with_tax: totalAwaldenganTax,
+    };
+    console.log('databuy ???', dataCheckout);
+
+    const arrayCart = [...ArrayDataCheckout, dataCheckout];
+    console.log('array checkout', arrayCart);
+
+    const newArray = [
+      ...new Map(arrayCart.map(item => [item.trx_code, item])).values(),
+    ];
+
+    console.log('newarray', newArray);
+
+    // const filterCart = [...newArray];
+
+    setArrayDataCheckout(newArray);
+
+    const itemFortotal =
+      ArrayDataCheckout.length == 0
+        ? totalAwaldenganTax
+        : newArray.reduce(
+            (total, currentItem) =>
+              (total = total + currentItem.total_harga_with_tax),
+            0,
+          );
+
+    const itemFortax =
+      ArrayDataCheckout.length == 0
+        ? taxSebelumdiJumlah
+        : newArray.reduce(
+            (tax, currentItem) =>
+              (tax = tax + currentItem.count_tax_rate_per_item),
+            0,
+          );
+
+    // const total = newArray.reduce(
+    //   (total, currentItem) =>
+    //     (total = total + currentItem.total_harga_with_tax),
+    //   0,
+    // );
+
+    console.log('tes tax', itemFortax);
+    setTotalTax(itemFortax);
+    setTotal(itemFortotal);
+  };
+
+  const checkoutSave = () => {
+    console.log('dataListCheckout di button checkout save', dataListCheckout);
+
+    const formData = {
+      entity_cd: dataListCheckout[0].entity_cd, // sebenernya ini cukup ambil dari data array 0, karena termasuk member item yang sama disetiap array produk
+      project_no: dataListCheckout[0].project_no, // sebenernya ini cukup ambil dari data array 0, karena termasuk member item yang sama disetiap array produk
+      facility_type: dataListCheckout[0].facility_type, // sebenernya ini cukup ambil dari data array 0, karena termasuk member item yang sama disetiap array produk
+      member_id: dataListCheckout[0].member_id, // sebenernya ini cukup ambil dari data array 0, karena termasuk member item yang sama disetiap array produk
+      member_name: dataListCheckout[0].member_name, // sebenernya ini cukup ambil dari data array 0, karena termasuk member item yang sama disetiap array produk
+      audit_user: dataListCheckout[0].audit_user, // sebenernya ini cukup ambil dari data array 0, karena termasuk member item yang sama disetiap array produk
+      tenant_no: dataListCheckout[0].tenant_no,
+      datadetail: ArrayDataCheckout, // dapet dari isi redux (ini yg nantinya ada kode item, qty, total, dll)
+    };
+
+    console.log('formdata', formData);
+
+    navigation.navigate('DeliveryAndPayment', formData);
   };
 
   const renderContent = () => {
@@ -222,33 +291,15 @@ const CartStore = props => {
             data={dataListCheckout}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item, index}) => (
-              // <View>
-              //   <FormCounterSelect
-              //     isRow={true}
-              //     label={''}
-              //     detail={''}
-              //     style={{
-              //       marginTop: 8,
-              //       backgroundColor: 'transparent',
-              //       padding: 0,
-              //       justifyContent: 'center',
-              //       flex: 0,
-              //     }}
-              //     onChange={value =>
-              //       changeQty(value, item.default_price, item, index)
-              //     }
-              //   />
-              // </View>
-
               <Checkout
                 loading={loading}
                 style={{marginTop: 10}}
-                title={item.descs}
+                title={item.trx_descs}
                 // image={item.image}
                 image={require('@assets/images/logo.png')} //image di component checkoutnya sengaja di tutup, karena tidak pakai url uri
-                salePrice={item.default_price}
-                // description={item.description}
-                // secondDescription={item.secondDescription}
+                salePrice={item.unit_price}
+                // description={item.tax_rate}
+                secondDescription={item.tax_rate}
                 onDelete={() =>
                   setDataListCheckout(
                     dataListCheckout.filter(
@@ -259,7 +310,9 @@ const CartStore = props => {
                 }
                 // onDelete={() => onDelete()}
                 // onChange={total => console.log('total', total)}
-                onChange={value => changeQty(value, item.default_price)}
+                onChange={value =>
+                  changeQty(value, item.unit_price, index, item)
+                }
                 // CurrentValue={item.quantity}
               />
             )}
@@ -279,11 +332,13 @@ const CartStore = props => {
         <CardBooking
           loading={loading}
           description={t('total_price')}
+          // price={tambahItem == false ? itemFortotal : totalHarga}
           price={totalHarga}
           // price={'1000'}
           secondDescription={'Tax included'}
           textButton={t('checkout')}
-          onPress={() => navigation.navigate('EShipping')}
+          // onPress={() => navigation.navigate('EShipping')}
+          onPress={() => checkoutSave()}
         />
       </View>
     );

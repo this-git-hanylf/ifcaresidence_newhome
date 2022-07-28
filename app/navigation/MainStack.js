@@ -92,6 +92,7 @@ import ClubFacilities from '../screens/ClubFacilities';
 
 import ItemStore from '../screens/Store/ItemStore';
 import CartStore from '../screens/Store/CartStore';
+import DeliveryAndPayment from '../screens/Store/DeliveryAndPayment';
 
 const Stack = createStackNavigator();
 
@@ -508,6 +509,11 @@ function MainStack() {
       <Stack.Screen
         name="CartStore"
         component={CartStore}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="DeliveryAndPayment"
+        component={DeliveryAndPayment}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
