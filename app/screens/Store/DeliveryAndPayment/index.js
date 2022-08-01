@@ -707,7 +707,9 @@ export default function DeliveryAndPayment({route, navigation}) {
                   height: 40,
                 }}
                 onPress={() => onCloseModal()}>
-                <Text style={{fontSize: 13}}>{t('OK')}</Text>
+                <Text style={{fontSize: 13, color: colors.whiteColor}}>
+                  {t('OK')}
+                </Text>
               </Button>
             </View>
           </View>
@@ -757,7 +759,9 @@ export default function DeliveryAndPayment({route, navigation}) {
                   height: 40,
                 }}
                 onPress={() => onCloseAlertPayment()}>
-                <Text style={{fontSize: 13}}>{t('OK')}</Text>
+                <Text style={{fontSize: 13, color: colors.whiteColor}}>
+                  {t('OK')}
+                </Text>
               </Button>
             </View>
           </View>

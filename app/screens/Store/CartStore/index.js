@@ -22,6 +22,8 @@ import {useSelector, useDispatch} from 'react-redux';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import Modal from 'react-native-modal';
+
 const sortOptionInit = [
   {
     value: 'remove',
@@ -79,6 +81,8 @@ const CartStore = props => {
   const [ArrayDataCheckout, setArrayDataCheckout] = useState([]);
   const [taxRatePerItem, setTaxRatePerItem] = useState(0);
 
+  const [showAlert, setShowAlert] = useState(false);
+
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
@@ -88,9 +92,9 @@ const CartStore = props => {
 
   // const getData = async () => {
   //   try {
-  //     const jsonValue = await AsyncStorage.getItem('jsonValusse');
+  //     const jsonValue = await AsyncStorage.getItem('@storage_Key');
   //     console.log('store storage', jsonValue);
-  //     return jsonValue != null ? JSON.parse(jsonValue) : null;
+  //     // return jsonValue != null ? JSON.parse(jsonValue) : null;
 
   //     // const parse = JSON.parse(jsonValue);
   //     // console.log('parse store', parse);
@@ -219,6 +223,10 @@ const CartStore = props => {
     setTotal(itemFortotal);
   };
 
+  const onCloseAlert = () => {
+    setShowAlert(false);
+  };
+
   const checkoutSave = () => {
     console.log('dataListCheckout di button checkout save', dataListCheckout);
 
@@ -338,8 +346,62 @@ const CartStore = props => {
           secondDescription={'Tax included'}
           textButton={t('checkout')}
           // onPress={() => navigation.navigate('EShipping')}
-          onPress={() => checkoutSave()}
+          onPress={() =>
+            totalHarga == 0 ? setShowAlert(true) : checkoutSave()
+          }
         />
+
+        {/* ---- MODAL ALERT UNTUK SUKSES PAYMENT ---- */}
+        <View>
+          <Modal
+            isVisible={showAlert}
+            style={{height: '100%'}}
+            onBackdropPress={() => onCloseAlert()}>
+            <View
+              style={{
+                // flex: 1,
+
+                // alignContent: 'center',
+                padding: 10,
+                backgroundColor: '#fff',
+                // height: ,
+                borderRadius: 8,
+              }}>
+              <View style={{alignItems: 'center'}}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                    color: colors.primary,
+                    marginBottom: 10,
+                  }}>
+                  {'Alert'}
+                </Text>
+                <Text>You have to set the quantity</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                }}>
+                <Button
+                  style={{
+                    marginTop: 10,
+                    // marginBottom: 10,
+
+                    width: 70,
+                    height: 40,
+                  }}
+                  onPress={() => onCloseAlert()}>
+                  <Text style={{fontSize: 13, color: colors.whiteColor}}>
+                    {t('OK')}
+                  </Text>
+                </Button>
+              </View>
+            </View>
+          </Modal>
+        </View>
+        {/* ---- CLOSE MODAL ALERT UNTUK SUKSES PAYMENT ---- */}
       </View>
     );
   };
