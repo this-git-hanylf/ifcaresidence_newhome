@@ -94,29 +94,53 @@ const History = () => {
 
     console.log(
       'url data history',
-      `http://34.87.121.155:2121/apiwebpbi/api/pos/getStatus?entity_cd=${entity_cd}&project_no=${project_no}&status=C&email=${email}`,
+      `http://34.87.121.155:2121/apiwebpbi/api/pos/getStatusMobile?entity_cd=${entity_cd}&project_no=${project_no}&email=${email}`,
     );
     axios
       .get(
-        `http://34.87.121.155:2121/apiwebpbi/api/pos/getStatus?entity_cd=${entity_cd}&project_no=${project_no}&status=C&email=${email}`,
+        `http://34.87.121.155:2121/apiwebpbi/api/pos/getStatusMobile?entity_cd=${entity_cd}&project_no=${project_no}&email=${email}`,
       )
       .then(res => {
-        console.log('ress member:', res.data.Data);
+        const data = res.data.Data;
 
-        console.log(res.data.Error);
+        const filterDataStatusC = data
+          .filter(item => item.bill_status === 'C')
+          .map(items => items);
+
+        const filterDataStatusX = data
+          .filter(item => item.bill_status === 'X')
+          .map(items => items);
+
+        const joinDataHistoryAwal = [
+          ...filterDataStatusC,
+          ...filterDataStatusX,
+        ];
+
         if (res.data.Error == false) {
           const datas = res.data;
           const arrLocation = datas.Data;
 
-          //   console.log('bank arrLocationsdsa', arrLocation);
+          const filterDataStatusC = arrLocation
+            .filter(item => item.bill_status === 'C')
+            .map(items => items);
 
-          setDataHistoryFilter(arrLocation);
+          const filterDataStatusX = arrLocation
+            .filter(item => item.bill_status === 'X')
+            .map(items => items);
+
+          console.log('status X', filterDataStatusX);
+
+          const joinDataHistory = [...filterDataStatusC, ...filterDataStatusX];
+
+          console.log(' filterData', joinDataHistory);
+
+          setDataHistoryFilter(joinDataHistory);
           setSpinner(false);
         } else {
           setSpinner(false);
         }
 
-        setDataHistory(res.data.Data);
+        setDataHistory(joinDataHistoryAwal);
       });
   };
 
@@ -253,29 +277,54 @@ const Payment = () => {
 
     console.log(
       'url data history',
-      `http://34.87.121.155:2121/apiwebpbi/api/pos/getStatus?entity_cd=${entity_cd}&project_no=${project_no}&status=N&email=${email}`,
+      `http://34.87.121.155:2121/apiwebpbi/api/pos/getStatusMobile?entity_cd=${entity_cd}&project_no=${project_no}&email=${email}`,
     );
     axios
       .get(
-        `http://34.87.121.155:2121/apiwebpbi/api/pos/getStatus?entity_cd=${entity_cd}&project_no=${project_no}&status=N&email=${email}`,
+        `http://34.87.121.155:2121/apiwebpbi/api/pos/getStatusMobile?entity_cd=${entity_cd}&project_no=${project_no}&email=${email}`,
       )
       .then(res => {
-        console.log('ress member:', res.data.Data);
+        const data = res.data.Data;
 
-        console.log(res.data.Error);
+        const filterDataStatusN = data
+          .filter(item => item.bill_status === 'N')
+          .map(items => items);
+
+        const filterDataStatusD = data
+          .filter(item => item.bill_status === 'D')
+          .map(items => items);
+
+        const joinDataPaymentAwal = [
+          ...filterDataStatusN,
+          ...filterDataStatusD,
+        ];
+
         if (res.data.Error == false) {
           const datas = res.data;
           const arrLocation = datas.Data;
 
-          //   console.log('bank arrLocationsdsa', arrLocation);
+          const filterDataStatusN = arrLocation
+            .filter(item => item.bill_status === 'N')
+            .map(items => items);
 
-          setDataPaymentFilter(arrLocation);
+          const filterDataStatusD = arrLocation
+            .filter(item => item.bill_status === 'D')
+            .map(items => items);
+
+          const joinDataPaymentAwal = [
+            ...filterDataStatusN,
+            ...filterDataStatusD,
+          ];
+
+          console.log(' filterData', joinDataPaymentAwal);
+
+          setDataPaymentFilter(joinDataPaymentAwal);
           setSpinner(false);
         } else {
           setSpinner(false);
         }
 
-        setDataPayment(res.data.Data);
+        setDataPayment(joinDataPaymentAwal);
       });
   };
 
@@ -374,7 +423,7 @@ export default function RiwayatPesanan() {
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    {key: 'payment', title: 'Payment'},
+    {key: 'payment', title: 'Pending'},
     {key: 'history', title: 'History'},
   ]);
   const renderScene = SceneMap({
