@@ -93,6 +93,8 @@ import ClubFacilities from '../screens/ClubFacilities';
 import ItemStore from '../screens/Store/ItemStore';
 import CartStore from '../screens/Store/CartStore';
 import DeliveryAndPayment from '../screens/Store/DeliveryAndPayment';
+import RiwayatPesanan from '../screens/Store/RiawayatPesanan';
+import FChooseFriend from '../screens/FChooseFriend';
 
 const Stack = createStackNavigator();
 
@@ -514,6 +516,16 @@ function MainStack() {
       <Stack.Screen
         name="DeliveryAndPayment"
         component={DeliveryAndPayment}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="RiwayatPesanan"
+        component={RiwayatPesanan}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="FChooseFriend"
+        component={FChooseFriend}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

@@ -12,7 +12,7 @@ import {
   PlaceholderLine,
   Placeholder,
 } from '@components';
-import {BaseStyle, useTheme} from '@config';
+import {BaseStyle, useTheme, BaseColor} from '@config';
 import {
   HomeChannelData,
   HomeListData,
@@ -248,6 +248,29 @@ const Store = props => {
               useNativeDriver: false,
             },
           )}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'flex-end',
+              alignItems: 'flex-end',
+              marginRight: 10,
+            }}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: colors.primary,
+                paddingVertical: 10,
+                paddingHorizontal: 15,
+                borderRadius: 10,
+              }}
+              onPress={() => navigation.navigate('RiwayatPesanan')}
+              // onPress={() => navigation.navigate('FChooseFriend')}
+            >
+              <Text style={{color: BaseColor.whiteColor, fontSize: 14}}>
+                Order History
+              </Text>
+            </TouchableOpacity>
+          </View>
+
           {/* CHOOSE PROJECT HERE */}
           {spinner ? (
             <View>
