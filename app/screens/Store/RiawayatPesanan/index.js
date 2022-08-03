@@ -155,9 +155,30 @@ const History = () => {
             //   borderStyle: 'solid',
           }
         }>
-        <View>
-          <Text>{moment(item.audit_date).format('MMM DD YYYY, hh:mm:ss')}</Text>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <View style={{flexDirection: 'row'}}>
+            <Text>Bill No : </Text>
+            <Text
+              style={{
+                fontSize: 14,
+                // color: BaseColor.grayColor
+                color: colors.primary,
+              }}>
+              {item.bill_no}
+            </Text>
+          </View>
+          <View>
+            <Text>
+              {moment(item.audit_date).format('MMM DD YYYY, hh:mm:ss')}
+            </Text>
+          </View>
         </View>
+
         <View
           style={{
             flex: 1,
@@ -165,23 +186,27 @@ const History = () => {
             justifyContent: 'space-between',
           }}>
           <Text style={{fontWeight: 'bold', fontSize: 14}}>
-            {item.bill_name}
+            {item.bill_name} - {item.lot_no}
           </Text>
-          <Text>{numFormat(item.total_amt)}</Text>
         </View>
-        <View>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
           <Text
             style={{
               fontSize: 14,
               // color: BaseColor.grayColor
               color: colors.primary,
             }}>
-            {item.bill_no}
+            Status :{' '}
+            {item.bill_status == 'C' ? 'Order Completed' : 'Order Canceled'}
           </Text>
+          <Text>{numFormat(item.total_amt)}</Text>
         </View>
-        <View>
-          <Text>{item.lot_no}</Text>
-        </View>
+
         <Divider style={{marginVertical: 15}} />
       </View>
     );
@@ -339,9 +364,30 @@ const Payment = () => {
             //   borderStyle: 'solid',
           }
         }>
-        <View>
-          <Text>{moment(item.audit_date).format('MMM DD YYYY, hh:mm:ss')}</Text>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <View style={{flexDirection: 'row'}}>
+            <Text>Bill No : </Text>
+            <Text
+              style={{
+                fontSize: 14,
+                // color: BaseColor.grayColor
+                color: colors.primary,
+              }}>
+              {item.bill_no}
+            </Text>
+          </View>
+          <View>
+            <Text>
+              {moment(item.audit_date).format('MMM DD YYYY, hh:mm:ss')}
+            </Text>
+          </View>
         </View>
+
         <View
           style={{
             flex: 1,
@@ -349,23 +395,27 @@ const Payment = () => {
             justifyContent: 'space-between',
           }}>
           <Text style={{fontWeight: 'bold', fontSize: 14}}>
-            {item.bill_name}
+            {item.bill_name} - {item.lot_no}
           </Text>
-          <Text>{numFormat(item.total_amt)}</Text>
         </View>
-        <View>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
           <Text
             style={{
               fontSize: 14,
               // color: BaseColor.grayColor
               color: colors.primary,
             }}>
-            {item.bill_no}
+            Status :{' '}
+            {item.bill_status == 'C' ? 'Order Completed' : 'Order Canceled'}
           </Text>
+          <Text>{numFormat(item.total_amt)}</Text>
         </View>
-        <View>
-          <Text>{item.lot_no}</Text>
-        </View>
+
         <Divider style={{marginVertical: 15}} />
       </View>
     );
