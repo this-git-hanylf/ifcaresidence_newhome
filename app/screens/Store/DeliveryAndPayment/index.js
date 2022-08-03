@@ -314,6 +314,7 @@ export default function DeliveryAndPayment({route, navigation}) {
 
   const onCloseAlertPayment = () => {
     setModalSuccessPayment(false);
+    navigation.navigate('Store');
   };
 
   const onCheckOut = () => {
@@ -346,8 +347,8 @@ export default function DeliveryAndPayment({route, navigation}) {
       debtor_acct: dataParams.tenant_no, // dapet dari choose member_id di screen index.js choose member id
       lot_no: text_lotno.lot_no, //
       audit_user: dataParams.audit_user, // udah dijelasin di sebelumnya ka
-      cash: amountPaid, // ini tuh nominal kita bayar berapa ka
-      return: balancetoPay, // ini nominal kembaliannya
+      cash: amountPaid == '' ? 0 : amountPaid, // ini tuh nominal kita bayar berapa ka
+      return: balancetoPay == '' ? 0 : balancetoPay, // ini nominal kembaliannya
       datadetail: dataParams.datadetail, // udah dijelasin di sebelumnya ka
     };
     console.log('form data payment', formData);
